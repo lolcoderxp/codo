@@ -2,52 +2,80 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexus Cyber AI UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Nexus Dynamic UI</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
             -webkit-font-smoothing: antialiased;
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
             background-color: #000000;
+            
+            /* جلوگیری از برعکس شدن جهت المان‌ها در هاست */
+            direction: rtl !important;
+            text-align: right !important;
+        }
+
+        body {
             color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            min-height: 100vh;
-            padding: 20px 16px 24px 16px;
-            overflow: hidden;
+            padding-top: max(16px, env(safe-area-inset-top));
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+            padding-left: max(16px, env(safe-area-inset-left));
+            padding-right: max(16px, env(safe-area-inset-right));
             position: relative;
         }
 
-        /* پس‌زمینه هولوگرام و نوری */
-        .ambient-glow {
+        /* زمینه شبکه‌ای زنده */
+        .cyber-grid {
             position: absolute;
-            top: 35%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90vw;
-            max-width: 420px;
-            height: 420px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(0, 0, 0, 0) 75%);
-            pointer-events: none;
+            inset: 0;
+            background-size: 30px 30px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at 50% 45%, black 20%, transparent 75%);
+            -webkit-mask-image: radial-gradient(circle at 50% 45%, black 20%, transparent 75%);
             z-index: 0;
-            animation: pulseGlow 4s infinite ease-in-out;
+            pointer-events: none;
         }
 
-        @keyframes pulseGlow {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.95; }
+        /* هاله نور مرکز */
+        .ambient-glow-core {
+            position: absolute;
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75vw;
+            max-width: 300px;
+            height: 75vw;
+            max-height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 50%, transparent 70%);
+            filter: blur(25px);
+            pointer-events: none;
+            z-index: 0;
+            animation: corePulse 5s infinite ease-in-out alternate;
+        }
+
+        @keyframes corePulse {
+            0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.9; }
         }
 
         .main-container {
@@ -57,82 +85,21 @@
             justify-content: center;
             flex: 1;
             width: 100%;
-            max-width: 360px;
-            z-index: 1;
+            z-index: 2;
         }
 
+        /* بخش آواتارها */
         .graphic-wrapper {
             position: relative;
-            width: 310px;
-            height: 140px;
+            width: 100%;
+            max-width: 280px;
+            height: 90px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
+            direction: ltr !important;
         }
-
-        /* هسته فوق‌العاده بزرگ و خفن در مرکز */
-        .hologram-core {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 120px;
-            height: 120px;
-            pointer-events: none;
-            z-index: 3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .core-ring-out {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            border: 1px dashed rgba(255, 255, 255, 0.35);
-            animation: spinClockwise 8s linear infinite;
-        }
-
-        .core-ring-1 {
-            position: absolute;
-            inset: 10px;
-            border-radius: 50%;
-            border: 1.5px solid transparent;
-            border-top-color: #ffffff;
-            border-bottom-color: rgba(255, 255, 255, 0.3);
-            animation: spinCounter 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-
-        .core-ring-2 {
-            position: absolute;
-            inset: 22px;
-            border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-left-color: #ffffff;
-            animation: spinClockwise 3s ease-in-out infinite;
-        }
-
-        .core-ring-3 {
-            position: absolute;
-            inset: 34px;
-            border-radius: 50%;
-            border: 1px dashed rgba(255, 255, 255, 0.6);
-            animation: spinCounter 2s linear infinite;
-        }
-
-        .core-center-node {
-            width: 14px;
-            height: 14px;
-            background: #ffffff;
-            border-radius: 50%;
-            box-shadow: 0 0 25px 8px rgba(255, 255, 255, 0.95);
-            animation: nodePulse 1.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes spinClockwise { 100% { transform: rotate(360deg); } }
-        @keyframes spinCounter { 100% { transform: rotate(-360deg); } }
-        @keyframes nodePulse { 0% { transform: scale(0.8); opacity: 0.6; } 100% { transform: scale(1.35); opacity: 1; } }
 
         .svg-canvas {
             position: absolute;
@@ -142,100 +109,145 @@
             height: 100%;
             z-index: 1;
             pointer-events: none;
-            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.5));
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
         }
 
-        .laser-stream-1 { stroke-dasharray: 50 150; stroke-dashoffset: 200; animation: streamFast 1.3s linear infinite; }
-        .laser-stream-2 { stroke-dasharray: 30 170; stroke-dashoffset: -200; animation: streamFast 1.6s linear infinite; }
-        .laser-stream-3 { stroke-dasharray: 15 185; stroke-dashoffset: 200; animation: streamFast 2s linear infinite; }
+        .laser-path-1 {
+            stroke-dasharray: 40 160;
+            animation: laserFlow 2s linear infinite;
+        }
 
-        @keyframes streamFast { 100% { stroke-dashoffset: 0; } }
+        .laser-path-2 {
+            stroke-dasharray: 40 160;
+            animation: laserFlowRev 2.4s linear infinite;
+        }
 
-        /* آواتارهای ساده‌تر و شیک (کوچک‌تر از هسته) */
+        @keyframes laserFlow {
+            0% { stroke-dashoffset: 200; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        @keyframes laserFlowRev {
+            0% { stroke-dashoffset: -200; }
+            100% { stroke-dashoffset: 0; }
+        }
+
         .avatar-container {
             position: relative;
-            width: 58px;
-            height: 58px;
+            width: clamp(52px, 15vw, 64px);
+            height: clamp(52px, 15vw, 64px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 2;
-            animation: floatLevitate 4s ease-in-out infinite;
+            animation: float3D 4.5s ease-in-out infinite;
         }
 
-        .avatar-container.user { animation-delay: -2s; }
+        .avatar-container.user { animation-delay: -2.25s; }
 
-        @keyframes floatLevitate {
+        @keyframes float3D {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-6px); }
         }
 
-        /* حلقه مینی‌مال و شیک دور آواتارها */
-        .avatar-clean-orbit {
+        .orbit-ring {
             position: absolute;
-            inset: -4px;
+            inset: -5px;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-top-color: #ffffff;
-            animation: spinClockwise 4s linear infinite;
+            border: 1.5px solid transparent;
+            border-top-color: rgba(255, 255, 255, 0.9);
+            border-right-color: rgba(255, 255, 255, 0.2);
+            animation: spinOrbit 3.5s linear infinite;
+        }
+
+        .avatar-container.user .orbit-ring {
+            animation-duration: 4.5s;
+            animation-direction: reverse;
+        }
+
+        @keyframes spinOrbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .avatar-box {
-            width: 48px;
-            height: 48px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(15, 15, 15, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+
+        .avatar-box svg.ai-svg {
+            width: 55%;
+            height: 55%;
+            flex: none;
+        }
+
+        .avatar-box svg.user-svg {
+            width: 50%;
+            height: 50%;
+            flex: none;
+        }
+
+        /* عنوان صفحه (بدون خط چشمک‌زن) */
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            padding: 0 10px;
         }
 
         .main-title {
-            font-size: 21px;
+            font-size: clamp(17px, 4.8vw, 21px);
             font-weight: 700;
             color: #ffffff;
             text-align: center;
             letter-spacing: -0.3px;
-            background: linear-gradient(180deg, #ffffff 30%, rgba(255, 255, 255, 0.45) 100%);
+            background: linear-gradient(180deg, #ffffff 30%, rgba(255, 255, 255, 0.5) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 8px 20px rgba(0, 0, 0, 0.9);
         }
 
+        /* باکس ورودی چت */
         .input-card-wrapper {
             position: relative;
             width: 100%;
-            max-width: 360px;
+            max-width: 400px;
             border-radius: 26px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(255, 255, 255, 0.12) 100%);
+            padding: 1.5px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.18) 100%);
             z-index: 10;
-            transition: max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 1), 0 0 15px rgba(0, 0, 0, 0.8);
-            will-change: max-width, box-shadow;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+            direction: rtl !important;
         }
 
         .input-card-wrapper:focus-within {
-            max-width: 380px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.35) 100%);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.12), 0 25px 50px rgba(0, 0, 0, 1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.4) 100%);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.12), 0 20px 40px rgba(0, 0, 0, 0.9);
         }
 
         .input-card {
             width: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(35px) saturate(190%);
-            -webkit-backdrop-filter: blur(35px) saturate(190%);
+            background: rgba(12, 12, 12, 0.85);
+            backdrop-filter: blur(35px) saturate(200%);
+            -webkit-backdrop-filter: blur(35px) saturate(200%);
             border-radius: 25px;
             padding: 12px 14px;
             display: flex;
             flex-direction: column;
             gap: 10px;
             box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            direction: rtl !important;
         }
 
         .chat-input {
@@ -243,69 +255,140 @@
             border: none;
             outline: none;
             background: transparent;
-            font-size: 14.5px;
+            font-size: 15px;
             color: #ffffff;
-            direction: rtl;
-            padding: 4px 4px;
+            direction: rtl !important;
+            text-align: right !important;
+            padding: 2px 2px;
+            font-weight: 400;
+            resize: none;
+            max-height: 100px;
+            min-height: 24px;
+            line-height: 1.4;
         }
 
-        .chat-input::placeholder { color: rgba(255, 255, 255, 0.35); }
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.35);
+        }
 
-        .bottom-row { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
-        .right-buttons { display: flex; align-items: center; gap: 8px; }
+        /* چیدمان اجباری دکمه‌ها برای هاست */
+        .bottom-row {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            direction: rtl !important;
+            flex-direction: row !important;
+        }
 
-        .btn-plus, .btn-search {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+        .right-buttons {
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            direction: rtl !important;
+            flex-direction: row !important;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             color: #ffffff;
             backdrop-filter: blur(15px);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s ease;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-plus { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .btn-search { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+        .action-btn:active { transform: scale(0.92); }
 
-        .btn-plus:active, .btn-search:active { transform: scale(0.93); }
+        .btn-icon-only {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        .btn-text-icon {
+            padding: 6px 12px;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 500;
+            gap: 5px;
+        }
+
+        .btn-text-icon.active {
+            background: rgba(255, 255, 255, 0.22);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .voice-wave {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 12px;
+        }
+
+        .voice-bar {
+            width: 2px;
+            height: 100%;
+            background-color: #ffffff;
+            border-radius: 2px;
+            animation: waveAnimate 1.2s ease-in-out infinite alternate;
+        }
+
+        .voice-bar:nth-child(2) { animation-delay: 0.2s; }
+        .voice-bar:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes waveAnimate {
+            0% { height: 20%; opacity: 0.4; }
+            100% { height: 100%; opacity: 1; }
+        }
 
         .btn-send {
-            width: 36px; height: 36px; border-radius: 50%; border: none; background-color: #ffffff; color: #000000;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: 0 4px 18px rgba(255, 255, 255, 0.25); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #ffffff;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.35;
+            pointer-events: none;
+            transition: all 0.25s ease;
         }
-        .btn-send:active { transform: scale(0.88); }
+
+        .btn-send.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-send:active { transform: scale(0.9) !important; }
     </style>
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
 
-    <div class="ambient-glow"></div>
+    <div class="cyber-grid"></div>
+    <div class="ambient-glow-core"></div>
 
     <div class="main-container">
         <div class="graphic-wrapper">
-            <!-- هسته غول‌پیکر نوری مرکز -->
-            <div class="hologram-core">
-                <div class="core-ring-out"></div>
-                <div class="core-ring-1"></div>
-                <div class="core-ring-2"></div>
-                <div class="core-ring-3"></div>
-                <div class="core-center-node"></div>
-            </div>
-
-            <!-- شبکه جریانات لیزری -->
-            <svg class="svg-canvas" viewBox="0 0 310 140" fill="none">
-                <!-- خطوط تاری پس‌زمینه -->
-                <path d="M 35 70 C 110 15, 200 125, 275 70" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1.5" fill="none" />
-                <path d="M 35 70 C 110 125, 200 15, 275 70" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1.5" fill="none" />
-                <path d="M 35 70 L 275 70" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1" fill="none" />
-
-                <!-- پرتوی لیزری پرسرعت متصل به هسته بزرگ -->
-                <path d="M 35 70 C 110 15, 200 125, 275 70" stroke="url(#laserGrad)" stroke-width="3" stroke-linecap="round" fill="none" class="laser-stream-1" />
-                <path d="M 35 70 C 110 125, 200 15, 275 70" stroke="url(#laserGrad)" stroke-width="3" stroke-linecap="round" fill="none" class="laser-stream-2" />
-                <path d="M 35 70 L 275 70" stroke="url(#laserGrad)" stroke-width="2" stroke-linecap="round" fill="none" class="laser-stream-3" />
+            <svg class="svg-canvas" viewBox="0 0 280 90" fill="none">
+                <path d="M 32 45 C 100 15, 180 75, 248 45" stroke="rgba(255, 255, 255, 0.08)" stroke-width="2" fill="none" />
+                <path d="M 32 45 C 100 75, 180 15, 248 45" stroke="rgba(255, 255, 255, 0.08)" stroke-width="2" fill="none" />
+                
+                <path d="M 32 45 C 100 15, 180 75, 248 45" stroke="url(#laser1)" stroke-width="3" stroke-linecap="round" fill="none" class="laser-path-1" />
+                <path d="M 32 45 C 100 75, 180 15, 248 45" stroke="url(#laser2)" stroke-width="3" stroke-linecap="round" fill="none" class="laser-path-2" />
 
                 <defs>
-                    <linearGradient id="laserGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <linearGradient id="laser1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
+                        <stop offset="50%" stop-color="#ffffff" stop-opacity="1" />
+                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                    </linearGradient>
+                    <linearGradient id="laser2" x1="100%" y1="0%" x2="0%" y2="0%">
                         <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
                         <stop offset="50%" stop-color="#ffffff" stop-opacity="1" />
                         <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
@@ -315,56 +398,64 @@
 
             <!-- آواتار هوش مصنوعی -->
             <div class="avatar-container ai">
-                <div class="avatar-clean-orbit"></div>
+                <div class="orbit-ring"></div>
                 <div class="avatar-box">
-                    <svg fill="#ffffff" width="20" height="20" viewBox="0 0 24 24">
-                        <path d="M11.995 0c2.204-.001 3.701 2.07 4.497 3.874.374.849.672 1.728.892 2.638a.09.09 0 00.066.066c.885.209 1.728.486 2.529.83 1.17.504 2.236 1.17 3.076 2.13.195.224.386.52.574.89.78 1.539.27 3.194-.905 4.35-1.412 1.39-3.384 2.137-5.264 2.608a.058.058 0 00-.044.047c-.036.227-.184.734-.443 1.522-.71 2.16-2.34 5.044-4.966 5.045-2.625.001-4.258-2.88-4.97-5.04-.26-.788-.408-1.295-.446-1.522a.059.059 0 00-.043-.047c-1.88-.468-3.853-1.214-5.267-2.602-1.177-1.155-1.688-2.81-.909-4.35.188-.37.378-.666.573-.89.839-.962 1.905-1.628 3.074-2.133a15.26 15.26 0 012.529-.833.087.087 0 00.065-.066c.22-.91.516-1.79.89-2.639C8.296 2.072 9.791.001 11.994 0zm5.915 8.994l.176 1.29a.068.068 0 00.026.043c.415.318.687.68.815 1.083a1.996 1.996 0 01-1.846 2.596 2.001 2.001 0 01-2.058-2.282c.075-.52.359-.977.852-1.369a.052.052 0 00.02-.047c-.102-.978-.311-1.911-.559-2.993-.3-1.31-.727-2.529-1.45-3.705a3.868 3.868 0 00-.506-.665c-.48-.494-.997-.897-1.696-.728-.476.116-1.069.654-1.34 1.043a10.085 10.085 0 00-1.399 2.938.02.02 0 00.022.016l1.588-.074a.07.07 0 00.046-.02c.638-.632 1.57-.76 2.337-.308.318.187.569.478.754.873.456.977-.123 2.14-1.06 2.482-.879.321-1.8-.006-2.294-.809a.068.068 0 00-.061-.032 23.52 23.52 0 00-2.412.209c-.676.094-1.403.296-2.014.5-.692.228-1.347.52-1.965.876-.885.51-2.189 1.567-1.536 2.725.119.211.233.373.343.487.89.92 2 1.415 3.3 1.852a.022.022 0 00.029-.023l-.157-1.145a.068.068 0 00-.033-.05 2.08 2.08 0 01-.848-.96c-.415-.925-.03-1.983.792-2.49a2.004 2.004 0 012.415.239c.345.315.623.855.642 1.356.026.697-.253 1.239-.782 1.703a.057.057 0 00-.02.05c.165 1.255.485 2.545.787 3.705.262 1.004.69 2.098 1.296 3.041.315.49.697.92 1.135 1.189.526.323 1.05.312 1.57-.033.666-.442 1.045-1.034 1.47-1.822a9.514 9.514 0 00.77-1.89.017.017 0 00-.018-.014l-1.336.063a.06.06 0 00-.05.033 1.822 1.822 0 01-1.279 1.008 1.85 1.85 0 01-1.878-.665c-.558-.723-.557-1.598-.003-2.32a1.78 1.78 0 011.063-.668c.6-.133 1.164.016 1.693.447a.076.076 0 00.051.017c.83-.027 1.64-.098 2.431-.213.62-.09 1.364-.288 1.908-.442a11.537 11.537 0 002.236-.9c.732-.386 1.634-1.033 1.89-1.847.4-1.269-1.44-2.406-2.352-2.802-.637-.277-1.13-.467-1.479-.57a.02.02 0 00-.019.003.02.02 0 00-.006.009.022.022 0 000 .01z"></path>
-                    </svg>
+                    <svg fill="currentColor" fill-rule="evenodd" class="ai-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>bilibili index</title><path d="M11.995 0c2.204-.001 3.701 2.07 4.497 3.874.374.849.672 1.728.892 2.638a.09.09 0 00.066.066c.885.209 1.728.486 2.529.83 1.17.504 2.236 1.17 3.076 2.13.195.224.386.52.574.89.78 1.539.27 3.194-.905 4.35-1.412 1.39-3.384 2.137-5.264 2.608a.058.058 0 00-.044.047c-.036.227-.184.734-.443 1.522-.71 2.16-2.34 5.044-4.966 5.045-2.625.001-4.258-2.88-4.97-5.04-.26-.788-.408-1.295-.446-1.522a.059.059 0 00-.043-.047c-1.88-.468-3.853-1.214-5.267-2.602-1.177-1.155-1.688-2.81-.909-4.35.188-.37.378-.666.573-.89.839-.962 1.905-1.628 3.074-2.133a15.26 15.26 0 012.529-.833.087.087 0 00.065-.066c.22-.91.516-1.79.89-2.639C8.296 2.072 9.791.001 11.994 0zm5.915 8.994l.176 1.29a.068.068 0 00.026.043c.415.318.687.68.815 1.083a1.996 1.996 0 01-1.846 2.596 2.001 2.001 0 01-2.058-2.282c.075-.52.359-.977.852-1.369a.052.052 0 00.02-.047c-.102-.978-.311-1.911-.559-2.993-.3-1.31-.727-2.529-1.45-3.705a3.868 3.868 0 00-.506-.665c-.48-.494-.997-.897-1.696-.728-.476.116-1.069.654-1.34 1.043a10.085 10.085 0 00-1.399 2.938.02.02 0 00.022.016l1.588-.074a.07.07 0 00.046-.02c.638-.632 1.57-.76 2.337-.308.318.187.569.478.754.873.456.977-.123 2.14-1.06 2.482-.879.321-1.8-.006-2.294-.809a.068.068 0 00-.061-.032 23.52 23.52 0 00-2.412.209c-.676.094-1.403.296-2.014.5-.692.228-1.347.52-1.965.876-.885.51-2.189 1.567-1.536 2.725.119.211.233.373.343.487.89.92 2 1.415 3.3 1.852a.022.022 0 00.029-.023l-.157-1.145a.068.068 0 00-.033-.05 2.08 2.08 0 01-.848-.96c-.415-.925-.03-1.983.792-2.49a2.004 2.004 0 012.415.239c.345.315.623.855.642 1.356.026.697-.253 1.239-.782 1.703a.057.057 0 00-.02.05c.165 1.255.485 2.545.787 3.705.262 1.004.69 2.098 1.296 3.041.315.49.697.92 1.135 1.189.526.323 1.05.312 1.57-.033.666-.442 1.045-1.034 1.47-1.822a9.514 9.514 0 00.77-1.89.017.017 0 00-.018-.014l-1.336.063a.06.06 0 00-.05.033 1.822 1.822 0 01-1.279 1.008 1.85 1.85 0 01-1.878-.665c-.558-.723-.557-1.598-.003-2.32a1.78 1.78 0 011.063-.668c.6-.133 1.164.016 1.693.447a.076.076 0 00.051.017c.83-.027 1.64-.098 2.431-.213.62-.09 1.364-.288 1.908-.442a11.537 11.537 0 002.236-.9c.732-.386 1.634-1.033 1.89-1.847.4-1.269-1.44-2.406-2.352-2.802-.637-.277-1.13-.467-1.479-.57a.02.02 0 00-.019.003.02.02 0 00-.006.009.022.022 0 000 .01z"></path></svg>
                 </div>
             </div>
 
             <!-- آواتار کاربر -->
             <div class="avatar-container user">
-                <div class="avatar-clean-orbit"></div>
+                <div class="orbit-ring"></div>
                 <div class="avatar-box">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="9" r="3" stroke="#ffffff" stroke-width="1.5"></circle>
-                        <path d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path>
-                        <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path>
-                    </svg>
+                    <svg class="user-svg" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="9" r="3" stroke="#ffffff" stroke-width="1.5"></circle> <path d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path> <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
                 </div>
             </div>
         </div>
 
         <div class="title-container">
-            <h1 class="main-title">چطور می‌تونم کمکت کنم؟</h1>
+            <h1 class="main-title" id="typewriter"></h1>
         </div>
     </div>
 
+    <!-- ورودی چت -->
     <div class="input-card-wrapper">
         <div class="input-card">
-            <input type="text" class="chat-input" placeholder="سوالت رو اینجا بپرس..." />
+            <textarea class="chat-input" id="chatInput" rows="1" placeholder="هرچیزی می‌خواهی بپرس..."></textarea>
 
             <div class="bottom-row">
                 <div class="right-buttons">
-                    <button class="btn-plus">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <button class="action-btn btn-icon-only" title="افزودن فایل">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                         </svg>
                     </button>
                     
-                    <button class="btn-search">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <button class="action-btn btn-text-icon" id="btnSearch">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
-                        <span>جست‌وجو</span>
+                        <span>وب</span>
+                    </button>
+
+                    <button class="action-btn btn-icon-only" id="btnVoice">
+                        <div class="voice-wave" id="voiceWave" style="display: none;">
+                            <span class="voice-bar"></span>
+                            <span class="voice-bar"></span>
+                            <span class="voice-bar"></span>
+                        </div>
+                        <svg id="micIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                            <line x1="12" y1="19" x2="12" y2="23"></line>
+                        </svg>
                     </button>
                 </div>
 
-                <button class="btn-send">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <button class="btn-send" id="btnSend">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="12" y1="19" x2="12" y2="5"></line>
                         <polyline points="5 12 12 5 19 12"></polyline>
                     </svg>
@@ -374,9 +465,65 @@
     </div>
 
     <script>
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'a' || e.key === 'u' || e.key === 's')) {
-                e.preventDefault();
+        // تایپ ساده‌ی کاراکتر به کاراکتر بدون خط چشمک‌زن
+        const textToType = "امروز چطور می‌تونم کمکت کنم؟";
+        const typewriterEl = document.getElementById('typewriter');
+        let charIndex = 0;
+
+        function typeText() {
+            if (charIndex < textToType.length) {
+                typewriterEl.textContent += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeText, 45);
+            }
+        }
+        setTimeout(typeText, 300);
+
+        // تنظیم خودکار ارتفاع ورودی
+        const input = document.getElementById('chatInput');
+        const btnSend = document.getElementById('btnSend');
+
+        input.addEventListener('input', () => {
+            input.style.height = 'auto';
+            input.style.height = Math.min(input.scrollHeight, 100) + 'px';
+
+            if (input.value.trim().length > 0) {
+                btnSend.classList.add('active');
+            } else {
+                btnSend.classList.remove('active');
+            }
+        });
+
+        // ارسال پیام
+        btnSend.addEventListener('click', sendMessage);
+
+        function sendMessage() {
+            if (input.value.trim() === '') return;
+            input.value = '';
+            input.style.height = 'auto';
+            btnSend.classList.remove('active');
+        }
+
+        // جست‌وجو و وویس
+        document.getElementById('btnSearch').addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+
+        const btnVoice = document.getElementById('btnVoice');
+        const micIcon = document.getElementById('micIcon');
+        const voiceWave = document.getElementById('voiceWave');
+        let isRecording = false;
+
+        btnVoice.addEventListener('click', () => {
+            isRecording = !isRecording;
+            if (isRecording) {
+                micIcon.style.display = 'none';
+                voiceWave.style.display = 'flex';
+                btnVoice.style.borderColor = 'rgba(255,255,255,0.6)';
+            } else {
+                micIcon.style.display = 'block';
+                voiceWave.style.display = 'none';
+                btnVoice.style.borderColor = 'rgba(255,255,255,0.14)';
             }
         });
     </script>
