@@ -2,790 +2,1542 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Nexus Dynamic UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remax AI · MAX Wallet</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        :root {
+            --pure-black: #000000;
+            --pure-white: #ffffff;
+            --dark-surface: #0a0a0a;
+            --card-surface: #121212;
+            --muted-gray: #737373;
+            --success-green: #22c55e;
+            --gold: #fbbf24;
+            --gold-dark: #d97706;
+            --gold-glow: rgba(251, 191, 36, 0.4);
+            --purple: #a855f7;
+            --purple-glow: rgba(168, 85, 247, 0.4);
+            --cyan: #06b6d4;
+            --cyan-glow: rgba(6, 182, 212, 0.4);
+            --pink: #ec4899;
+            --pink-glow: rgba(236, 72, 153, 0.4);
+            --green: #22c55e;
+            --green-glow: rgba(34, 197, 94, 0.4);
+            
+            --shadow-3d: 
+                0 20px 40px rgba(0, 0, 0, 0.95),
+                0 0 0 1px rgba(255, 255, 255, 0.12),
+                inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            
+            --shadow-card-3d: 
+                0 10px 25px rgba(0, 0, 0, 0.8),
+                0 1px 0 rgba(255, 255, 255, 0.15) inset,
+                0 -1px 0 rgba(0, 0, 0, 0.8) inset;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -webkit-user-select: none;
+            font-family: 'Vazirmatn', sans-serif;
             user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100vh;
-            height: 100dvh;
-            overflow: hidden;
-            background-color: #000000;
-            direction: rtl !important;
-            text-align: right !important;
         }
 
         body {
-            color: #ffffff;
+            background-color: var(--pure-black);
+            color: var(--pure-white);
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: max(16px, env(safe-area-inset-top));
-            padding-bottom: 0px;
-            padding-left: max(16px, env(safe-area-inset-left));
-            padding-right: max(16px, env(safe-area-inset-right));
-            position: relative;
-        }
-
-        .cyber-grid {
-            position: absolute;
-            inset: 0;
-            background-size: 30px 30px;
+            justify-content: right;
+            padding: 30px;
+            min-height: 100vh;
             background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            mask-image: radial-gradient(circle at 50% 45%, black 20%, transparent 75%);
-            -webkit-mask-image: radial-gradient(circle at 50% 45%, black 20%, transparent 75%);
-            z-index: 0;
-            pointer-events: none;
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 80%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+            overflow-x: hidden;
         }
 
-        .ambient-glow-core {
-            position: absolute;
-            top: 42%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 75vw;
-            max-width: 300px;
-            height: 75vw;
-            max-height: 300px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 50%, transparent 70%);
-            filter: blur(25px);
-            pointer-events: none;
-            z-index: 0;
-            animation: corePulse 5s infinite ease-in-out alternate;
-        }
-
-        @keyframes corePulse {
-            0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0.5; }
-            100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.9; }
-        }
-
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            width: 100%;
-            z-index: 2;
-        }
-
-        .graphic-wrapper {
+        .sidebar-container {
             position: relative;
-            width: 100%;
-            max-width: 280px;
-            height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            direction: ltr !important;
+            width: 360px;
+            height: 92vh;
         }
 
-        .svg-canvas {
+        .sidebar-panel {
             position: absolute;
             top: 0;
-            left: 0;
+            right: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
-        }
-
-        .laser-path-1 {
-            stroke-dasharray: 40 160;
-            animation: laserFlow 2s linear infinite;
-        }
-
-        .laser-path-2 {
-            stroke-dasharray: 40 160;
-            animation: laserFlowRev 2.4s linear infinite;
-        }
-
-        @keyframes laserFlow {
-            0% { stroke-dashoffset: 200; }
-            100% { stroke-dashoffset: 0; }
-        }
-
-        @keyframes laserFlowRev {
-            0% { stroke-dashoffset: -200; }
-            100% { stroke-dashoffset: 0; }
-        }
-
-        .avatar-container {
-            position: relative;
-            width: clamp(52px, 15vw, 64px);
-            height: clamp(52px, 15vw, 64px);
+            background: var(--dark-surface);
+            border-radius: 40px;
+            padding: 26px 20px;
+            box-shadow: var(--shadow-3d);
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            gap: 18px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .sidebar-panel::-webkit-scrollbar { width: 0; }
+
+        .sidebar-panel.active {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            pointer-events: all;
             z-index: 2;
-            animation: float3D 4.5s ease-in-out infinite;
         }
 
-        .avatar-container.user { animation-delay: -2.25s; }
-
-        @keyframes float3D {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
+        .sidebar-panel.hidden-left {
+            opacity: 0;
+            transform: translateX(40px) scale(0.95);
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .orbit-ring {
-            position: absolute;
-            inset: -5px;
+        .sidebar-panel.hidden-right {
+            opacity: 0;
+            transform: translateX(-40px) scale(0.95);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ===== پروفایل هدر ===== */
+        .profile-header-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-surface);
+            padding: 12px 16px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-card-3d);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            flex-shrink: 0;
+        }
+
+        .credit-badge-trigger {
+            background: linear-gradient(135deg, var(--gold), #f59e0b);
+            color: var(--pure-black);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--gold-glow);
+            transition: all 0.25s ease;
+        }
+
+        .credit-badge-trigger:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 25px var(--gold-glow);
+        }
+
+        .user-info-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-details {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .welcome-text {
+            font-size: 11px;
+            color: var(--muted-gray);
+        }
+
+        .edit-profile-link {
+            font-size: 12px;
+            color: var(--pure-white);
+            text-decoration: none;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            border: 1.5px solid transparent;
-            border-top-color: rgba(255, 255, 255, 0.9);
-            border-right-color: rgba(255, 255, 255, 0.2);
-            animation: spinOrbit 3.5s linear infinite;
+            background: var(--pure-black);
+            border: 2px solid var(--pure-white);
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
         }
 
-        .avatar-container.user .orbit-ring {
-            animation-duration: 4.5s;
-            animation-direction: reverse;
-        }
-
-        @keyframes spinOrbit {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .avatar-box {
+        .avatar-wrapper img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            background: rgba(15, 15, 15, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(25px) saturate(200%);
-            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            object-fit: cover;
+        }
+
+        .avatar-wrapper .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
-            overflow: hidden;
+            opacity: 0;
+            color: var(--pure-white);
+            font-size: 12px;
         }
 
-        .avatar-box svg.ai-svg {
-            width: 55%;
-            height: 55%;
-            flex: none;
-        }
+        .avatar-wrapper:hover .overlay { opacity: 1; }
+        #file-input { display: none; }
 
-        .avatar-box svg.user-svg {
-            width: 50%;
-            height: 50%;
-            flex: none;
-        }
-
-        .title-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 32px;
-            padding: 0 10px;
-        }
-
-        .main-title {
-            font-size: clamp(17px, 4.8vw, 21px);
-            font-weight: 700;
-            color: #ffffff;
-            text-align: center;
-            letter-spacing: -0.3px;
-            background: linear-gradient(180deg, #ffffff 30%, rgba(255, 255, 255, 0.5) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* ==================== iOS-Style Chat Toolbar (Glassmorphism) ==================== */
-        .input-card-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 440px;
-            border-radius: 28px;
-            padding: 2px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(40px) saturate(220%);
-            -webkit-backdrop-filter: blur(40px) saturate(220%);
-            z-index: 10;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            direction: rtl !important;
-            margin-bottom: 10px;
-        }
-
-        .input-card-wrapper:focus-within {
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.9);
-        }
-
-        .input-card {
-            width: 100%;
-            background: rgba(20, 20, 20, 0.7);
-            backdrop-filter: blur(30px) saturate(200%);
-            -webkit-backdrop-filter: blur(30px) saturate(200%);
-            border-radius: 26px;
-            padding: 10px 14px;
+        /* ===== منوها ===== */
+        .menu-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
-            direction: rtl !important;
         }
 
-        .chat-input {
-            width: 100%;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 16px;
-            color: #ffffff;
-            direction: rtl !important;
-            text-align: right !important;
-            padding: 4px 2px;
-            font-weight: 400;
-            resize: none;
-            max-height: 100px;
-            min-height: 28px;
-            line-height: 1.5;
-        }
-
-        .chat-input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 300;
-        }
-
-        .bottom-row {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            direction: rtl !important;
-            flex-direction: row !important;
-            padding-top: 2px;
-        }
-
-        .right-buttons {
-            display: flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-            direction: rtl !important;
-            flex-direction: row !important;
-        }
-
-        .action-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #ffffff;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            transition: all 0.2s ease;
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 20px;
+            color: var(--pure-white);
+            text-decoration: none;
             cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background: var(--card-surface);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: var(--shadow-card-3d);
+        }
+
+        .menu-item-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .menu-item-content i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+            color: var(--muted-gray);
+        }
+
+        .menu-item:hover .menu-item-content i { color: var(--pure-white); }
+
+        .section-title {
+            font-size: 11px;
+            color: var(--muted-gray);
+            margin: 2px 8px -6px 0;
+            font-weight: 700;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .service-card {
+            background: var(--card-surface);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--pure-white);
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: var(--shadow-card-3d);
+            transition: all 0.2s ease;
+        }
+
+        .service-card:hover {
+            background: var(--pure-white);
+            color: var(--pure-black);
+        }
+
+        .sub-tag {
+            font-size: 11px;
+            color: var(--muted-gray);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .badge-new {
+            background: var(--pure-white);
+            color: var(--pure-black);
+            font-size: 10px;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        /* ============================================ */
+        /* ===== مودال کیف پول ===== */
+        /* ============================================ */
+
+        .wallet-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 20px;
         }
 
-        .action-btn:active { 
-            transform: scale(0.90);
-            background: rgba(255, 255, 255, 0.2);
+        .wallet-modal-overlay.show {
+            opacity: 1;
+            pointer-events: all;
         }
 
-        .action-btn.btn-text-icon {
-            border-radius: 20px;
-            width: auto;
-            height: 34px;
-            padding: 0 14px;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.06);
+        .wallet-modal {
+            width: 100%;
+            max-width: 1100px;
+            max-height: 92vh;
+            background: linear-gradient(160deg, #0f0f0f 0%, #050505 100%);
+            border-radius: 36px;
+            padding: 28px 24px;
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.95),
+                0 0 0 1px rgba(255, 255, 255, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(30px);
+            opacity: 0;
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .action-btn.btn-text-icon.active {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
+        .wallet-modal-overlay.show .wallet-modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
         }
 
-        .action-btn.btn-text-icon svg {
-            width: 15px;
-            height: 15px;
-        }
+        .wallet-modal::-webkit-scrollbar { width: 0; }
 
-        .voice-wave {
+        /* هدر مودال */
+        .wallet-modal-header {
             display: flex;
             align-items: center;
-            gap: 2px;
-            height: 14px;
+            justify-content: space-between;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .voice-bar {
-            width: 2.5px;
-            height: 100%;
-            background-color: #ffffff;
-            border-radius: 2px;
-            animation: waveAnimate 1.2s ease-in-out infinite alternate;
+        .wallet-modal-title {
+            font-size: 18px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .voice-bar:nth-child(2) { animation-delay: 0.2s; }
-        .voice-bar:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes waveAnimate {
-            0% { height: 20%; opacity: 0.4; }
-            100% { height: 100%; opacity: 1; }
+        .wallet-modal-title .icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--gold), #f59e0b);
+            color: var(--pure-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            box-shadow: 0 4px 15px var(--gold-glow);
         }
 
-        .btn-send {
+        .wallet-modal-close {
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            border: none;
-            background: #ffffff;
-            color: #000000;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--pure-white);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            opacity: 0.3;
-            pointer-events: none;
-            transition: all 0.25s ease;
-            box-shadow: 0 2px 12px rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            font-size: 15px;
         }
 
-        .btn-send.active {
-            opacity: 1;
-            pointer-events: auto;
-            box-shadow: 0 2px 20px rgba(255, 255, 255, 0.2);
+        .wallet-modal-close:hover {
+            background: var(--pure-white);
+            color: var(--pure-black);
+            transform: rotate(90deg);
         }
 
-        .btn-send:active { transform: scale(0.88) !important; }
-        .btn-send svg path { fill: #000000; }
-
-        /* ==================== iOS Glassmorphism Keyboard ==================== */
-        .keyboard-container {
+        /* ===== کارت موجودی ===== */
+        .balance-card-new {
             position: relative;
-            width: 100%;
-            max-width: 440px;
-            margin-left: auto;
-            margin-right: auto;
-            background: rgba(30, 30, 30, 0.85);
-            backdrop-filter: blur(40px) saturate(220%);
-            -webkit-backdrop-filter: blur(40px) saturate(220%);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 28px 28px 0 0;
-            padding: 10px 6px max(12px, env(safe-area-inset-bottom)) 6px;
+            background: linear-gradient(145deg, #1e1e1e 0%, #0f0f0f 100%);
+            border-radius: 26px;
+            padding: 32px 22px 24px;
+            box-shadow: 
+                0 18px 36px rgba(0, 0, 0, 0.95),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            z-index: 20;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.9);
-            direction: ltr !important;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .keyboard-container.hidden {
-            transform: translateY(100%);
-            opacity: 0;
-            pointer-events: none;
+        .balance-card-new::before {
+            content: '';
             position: absolute;
-            bottom: 0;
+            top: 14px;
+            left: 18px;
+            right: 18px;
+            height: 1px;
+            background-image: linear-gradient(90deg, rgba(255,255,255,0.3) 50%, transparent 50%);
+            background-size: 12px 1px;
+            background-repeat: repeat-x;
+            z-index: 1;
         }
 
-        .keyboard-handle-bar {
-            width: 40px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 3px;
-            margin: 0 auto 8px auto;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .keyboard-handle-bar:hover {
-            background: rgba(255, 255, 255, 0.7);
+        .balance-card-new::after {
+            content: '';
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 55%;
+            height: 56px;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border-radius: 0 0 36px 36px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            z-index: 0;
         }
 
-        .keyboard-row {
+        .balance-label-text {
+            font-size: 12px;
+            color: var(--muted-gray);
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+            margin-top: 16px;
+        }
+
+        .balance-amount-display {
+            font-size: 38px;
+            font-weight: 900;
+            color: var(--pure-white);
+            letter-spacing: -1px;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            width: 100%;
-            margin-bottom: 5px;
+            align-items: baseline;
+            gap: 6px;
+            position: relative;
+            z-index: 2;
+            direction: ltr;
+            text-shadow: 0 0 30px var(--gold-glow);
         }
 
-        .key-btn {
-            flex: 1;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.12);
-            border: none;
-            border-radius: 10px;
-            color: #ffffff;
+        .balance-amount-display .currency-label {
+            font-size: 14px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* دکمه‌های عملیات */
+        .action-buttons-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .action-btn-item {
+            background: linear-gradient(145deg, #151515, #0a0a0a);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 14px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            transition: all 0.25s ease;
+        }
+
+        .action-btn-item:hover {
+            background: linear-gradient(145deg, #1e1e1e, #111);
+            border-color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 28px rgba(0, 0, 0, 0.8),
+                0 0 20px var(--gold-glow);
+        }
+
+        .action-btn-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: var(--pure-white);
+            transition: all 0.25s ease;
+        }
+
+        .action-btn-item:hover .action-btn-icon {
+            background: var(--gold);
+            color: var(--pure-black);
+            border-color: var(--gold);
+        }
+
+        .action-btn-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--pure-white);
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* ============================================ */
+        /* ===== اشتراک‌ها — به سبک عکس ===== */
+        /* ============================================ */
+
+        .plans-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 6px;
+        }
+
+        .plans-title {
             font-size: 18px;
-            font-weight: 500;
+            font-weight: 900;
+            color: var(--pure-white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plans-title i {
+            color: var(--gold);
+            font-size: 20px;
+            filter: drop-shadow(0 0 10px var(--gold-glow));
+        }
+
+        .plans-subtitle {
+            font-size: 11px;
+            color: var(--muted-gray);
+            font-weight: 600;
+        }
+
+        /* تب‌های بالای اشتراک‌ها */
+        .plans-tabs {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 5px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .plan-tab {
+            padding: 10px 22px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--muted-gray);
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.2);
-            transition: all 0.1s ease;
-            touch-action: manipulation;
-            font-family: -apple-system, 'Vazirmatn', sans-serif;
-            min-width: 10px;
-            padding: 0 3px;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .key-btn:active, .key-btn.pressed {
-            background: rgba(255, 255, 255, 0.45);
-            transform: scale(0.94);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        .plan-tab.active {
+            background: linear-gradient(135deg, var(--purple), #7c3aed);
+            color: var(--pure-white);
+            box-shadow: 0 4px 20px var(--purple-glow);
         }
 
-        .key-btn.special {
+        .plan-tab:hover:not(.active) {
+            color: var(--pure-white);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* گرید ۵ ستونه */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        /* کارت پلن */
+        .plan-card {
+            position: relative;
+            border-radius: 24px;
+            padding: 22px 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: linear-gradient(160deg, #141414, #0a0a0a);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 10px 24px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            min-height: 460px;
+        }
+
+        /* افکت shine */
+        .plan-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+            transition: left 0.7s ease;
+            pointer-events: none;
+        }
+
+        .plan-card:hover::after {
+            left: 100%;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+        }
+
+        /* رنگ‌بندی کارت‌ها بر اساس تم مشکی-طلایی */
+        .plan-card.free {
+            border-color: rgba(115, 115, 115, 0.3);
+            background: linear-gradient(160deg, #141414, #0a0a0a);
+        }
+        .plan-card.free:hover {
+            border-color: var(--muted-gray);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.85), 0 0 25px rgba(115, 115, 115, 0.3);
+        }
+
+        .plan-card.basic {
+            border-color: rgba(34, 197, 94, 0.3);
+            background: linear-gradient(160deg, #0d1a12, #0a0f0c);
+        }
+        .plan-card.basic:hover {
+            border-color: var(--green);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.85), 0 0 30px var(--green-glow);
+        }
+
+        .plan-card.plus {
+            border-color: rgba(168, 85, 247, 0.35);
+            background: linear-gradient(160deg, #15101f, #0d0a14);
+        }
+        .plan-card.plus:hover {
+            border-color: var(--purple);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.85), 0 0 30px var(--purple-glow);
+        }
+
+        .plan-card.pro {
+            border-color: rgba(6, 182, 212, 0.35);
+            background: linear-gradient(160deg, #0a1820, #060d12);
+        }
+        .plan-card.pro:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.85), 0 0 30px var(--cyan-glow);
+        }
+
+        .plan-card.promax {
+            border-color: rgba(251, 191, 36, 0.4);
+            background: linear-gradient(160deg, #1f1a0e, #0f0a04);
+            animation: promaxPulse 3s ease-in-out infinite;
+        }
+        .plan-card.promax:hover {
+            border-color: var(--gold);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.85), 0 0 40px var(--gold-glow);
+        }
+
+        @keyframes promaxPulse {
+            0%, 100% { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.7), 0 0 0 rgba(251, 191, 36, 0); }
+            50% { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.7), 0 0 25px rgba(251, 191, 36, 0.3); }
+        }
+
+        /* لوگو/آیکون پلن */
+        .plan-logo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .plan-logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .plan-card.free .plan-logo-icon {
+            background: rgba(115, 115, 115, 0.15);
+            color: var(--muted-gray);
+            border: 1px solid rgba(115, 115, 115, 0.25);
+        }
+
+        .plan-card.basic .plan-logo-icon {
+            background: rgba(34, 197, 94, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .plan-card.plus .plan-logo-icon {
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--purple);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            box-shadow: 0 0 15px var(--purple-glow);
+        }
+
+        .plan-card.pro .plan-logo-icon {
+            background: rgba(6, 182, 212, 0.12);
+            color: var(--cyan);
+            border: 1px solid rgba(6, 182, 212, 0.35);
+        }
+
+        .plan-card.promax .plan-logo-icon {
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--gold);
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .plan-name {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--pure-white);
+            text-align: right;
+        }
+
+        .plan-card.promax .plan-name { color: var(--gold); }
+        .plan-card.plus .plan-name { color: var(--purple); }
+        .plan-card.pro .plan-name { color: var(--cyan); }
+        .plan-card.basic .plan-name { color: var(--green); }
+
+        /* قیمت */
+        .plan-price {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            margin-top: 2px;
+        }
+
+        .plan-price-value {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--pure-white);
+            direction: ltr;
+        }
+
+        .plan-price-period {
+            font-size: 10px;
+            color: var(--muted-gray);
+            font-weight: 600;
+        }
+
+        .plan-validity {
+            font-size: 9.5px;
+            color: var(--muted-gray);
+            font-weight: 600;
+            text-align: left;
+            margin-top: -4px;
+        }
+
+        /* دکمه خرید */
+        .plan-buy-btn {
+            margin-top: 8px;
+            border: none;
+            padding: 11px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .plan-card.free .plan-buy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--muted-gray);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+        }
+
+        .plan-card.basic .plan-buy-btn {
+            background: linear-gradient(135deg, var(--green), #16a34a);
+            color: var(--pure-white);
+            box-shadow: 0 4px 15px var(--green-glow);
+        }
+
+        .plan-card.plus .plan-buy-btn {
+            background: linear-gradient(135deg, var(--purple), #7c3aed);
+            color: var(--pure-white);
+            box-shadow: 0 4px 15px var(--purple-glow);
+        }
+
+        .plan-card.pro .plan-buy-btn {
+            background: linear-gradient(135deg, var(--cyan), #0891b2);
+            color: var(--pure-white);
+            box-shadow: 0 4px 15px var(--cyan-glow);
+        }
+
+        .plan-card.promax .plan-buy-btn {
+            background: linear-gradient(135deg, var(--gold), #f59e0b);
+            color: var(--pure-black);
+            box-shadow: 0 4px 20px var(--gold-glow);
+        }
+
+        .plan-buy-btn:hover {
+            transform: scale(1.03);
+            filter: brightness(1.15);
+        }
+
+        /* لیست ویژگی‌ها */
+        .plan-features {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-top: 8px;
+            flex: 1;
+        }
+
+        .plan-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            font-size: 10px;
+            color: var(--pure-white);
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .plan-feature i {
+            font-size: 9px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .plan-card.free .plan-feature i { color: var(--muted-gray); }
+        .plan-card.basic .plan-feature i { color: var(--green); }
+        .plan-card.plus .plan-feature i { color: var(--purple); }
+        .plan-card.pro .plan-feature i { color: var(--cyan); }
+        .plan-card.promax .plan-feature i { color: var(--gold); }
+
+        .plan-feature.highlight {
+            color: var(--gold);
+            font-weight: 800;
+        }
+
+        .plan-card.plus .plan-feature.highlight { color: var(--purple); }
+        .plan-card.pro .plan-feature.highlight { color: var(--cyan); }
+
+        /* لینک مشاهده امکانات کامل */
+        .plan-more-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--muted-gray);
+            cursor: pointer;
+            padding: 6px 0;
+            margin-top: 4px;
+            transition: all 0.2s ease;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .plan-more-link:hover {
+            color: var(--pure-white);
+        }
+
+        /* ===== بخش‌های پایین ===== */
+        .wallet-section-title {
+            font-size: 13px;
+            font-weight: 900;
+            color: var(--pure-white);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .wallet-section-title i {
+            color: var(--gold);
+            font-size: 14px;
+        }
+
+        .progress-section {
+            background: var(--card-surface);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 14px 16px;
+            box-shadow: var(--shadow-card-3d);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .progress-bar-bg {
+            height: 8px;
             background: rgba(255, 255, 255, 0.08);
-            font-size: 16px;
-            color: #ddd;
+            border-radius: 20px;
+            overflow: hidden;
         }
 
-        .key-btn.wide-15 { flex: 1.5; }
-        .key-btn.wide-2 { flex: 2.2; }
-        .key-btn.space { 
-            flex: 4.5; 
-            font-size: 14px; 
-            opacity: 0.7;
-            letter-spacing: 1px;
-            background: rgba(255, 255, 255, 0.08);
+        .progress-bar-fill {
+            height: 100%;
+            width: 34%;
+            background: linear-gradient(90deg, var(--gold), #f59e0b);
+            border-radius: 20px;
+            box-shadow: 0 0 12px var(--gold-glow);
+            transition: width 0.3s ease;
         }
 
-        .key-btn.active-shift {
-            background: rgba(255, 255, 255, 0.85);
-            color: #000000;
-            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+        .reward-hint {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: var(--gold);
+            font-weight: 600;
         }
 
-        .key-btn[data-key="BACK"] { font-size: 18px; }
-        .key-btn[data-key="ENTER"] { font-size: 16px; background: rgba(50, 130, 255, 0.3); color: #fff; }
-        .key-btn[data-key="LANG"] { font-size: 14px; font-weight: 600; }
-        .key-btn[data-key="SHIFT"] { font-size: 20px; }
+        .reward-hint i {
+            font-size: 12px;
+        }
 
-        @media (max-width: 420px) {
-            .key-btn { height: 42px; font-size: 15px; }
-            .key-btn.special { font-size: 13px; }
-            .keyboard-row { gap: 4px; }
-            .action-btn { width: 32px; height: 32px; }
-            .action-btn.btn-text-icon { height: 30px; padding: 0 10px; font-size: 12px; }
-            .btn-send { width: 34px; height: 34px; }
+        .club-points-banner {
+            background: linear-gradient(145deg, #181818, #0e0e0e);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-card-3d);
+            flex-shrink: 0;
+        }
+
+        .club-text-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .btn-exchange {
+            background: var(--pure-white);
+            color: var(--pure-black);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 10.5px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-exchange:hover {
+            background: var(--gold);
+            transform: scale(1.05);
+        }
+
+        /* ریسپانسیو */
+        @media (max-width: 1000px) {
+            .plans-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+            .wallet-modal {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
-<body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
+<body>
 
-    <div class="cyber-grid"></div>
-    <div class="ambient-glow-core"></div>
+    <div class="sidebar-container">
+        
+        <!-- ================================================== -->
+        <!-- ۱. سایدبار اصلی                                    -->
+        <!-- ================================================== -->
+        <aside class="sidebar-panel active" id="mainSidebar">
+            
+            <div class="profile-header-box">
+                <div class="credit-badge-trigger" onclick="openWalletModal()" title="کیف پول MAX">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span id="credit-count">۳,۸۵۰</span>
+                </div>
 
-    <div class="main-container">
-        <div class="graphic-wrapper">
-            <svg class="svg-canvas" viewBox="0 0 280 90" fill="none">
-                <path d="M 32 45 C 100 15, 180 75, 248 45" stroke="rgba(255, 255, 255, 0.08)" stroke-width="2" fill="none" />
-                <path d="M 32 45 C 100 75, 180 15, 248 45" stroke="rgba(255, 255, 255, 0.08)" stroke-width="2" fill="none" />
-                <path d="M 32 45 C 100 15, 180 75, 248 45" stroke="url(#laser1)" stroke-width="3" stroke-linecap="round" fill="none" class="laser-path-1" />
-                <path d="M 32 45 C 100 75, 180 15, 248 45" stroke="url(#laser2)" stroke-width="3" stroke-linecap="round" fill="none" class="laser-path-2" />
-                <defs>
-                    <linearGradient id="laser1" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
-                        <stop offset="50%" stop-color="#ffffff" stop-opacity="1" />
-                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-                    </linearGradient>
-                    <linearGradient id="laser2" x1="100%" y1="0%" x2="0%" y2="0%">
-                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
-                        <stop offset="50%" stop-color="#ffffff" stop-opacity="1" />
-                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-                    </linearGradient>
-                </defs>
-            </svg>
-
-            <div class="avatar-container ai">
-                <div class="orbit-ring"></div>
-                <div class="avatar-box">
-                    <svg fill="currentColor" fill-rule="evenodd" class="ai-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>bilibili index</title><path d="M11.995 0c2.204-.001 3.701 2.07 4.497 3.874.374.849.672 1.728.892 2.638a.09.09 0 00.066.066c.885.209 1.728.486 2.529.83 1.17.504 2.236 1.17 3.076 2.13.195.224.386.52.574.89.78 1.539.27 3.194-.905 4.35-1.412 1.39-3.384 2.137-5.264 2.608a.058.058 0 00-.044.047c-.036.227-.184.734-.443 1.522-.71 2.16-2.34 5.044-4.966 5.045-2.625.001-4.258-2.88-4.97-5.04-.26-.788-.408-1.295-.446-1.522a.059.059 0 00-.043-.047c-1.88-.468-3.853-1.214-5.267-2.602-1.177-1.155-1.688-2.81-.909-4.35.188-.37.378-.666.573-.89.839-.962 1.905-1.628 3.074-2.133a15.26 15.26 0 012.529-.833.087.087 0 00.065-.066c.22-.91.516-1.79.89-2.639C8.296 2.072 9.791.001 11.994 0zm5.915 8.994l.176 1.29a.068.068 0 00.026.043c.415.318.687.68.815 1.083a1.996 1.996 0 01-1.846 2.596 2.001 2.001 0 01-2.058-2.282c.075-.52.359-.977.852-1.369a.052.052 0 00.02-.047c-.102-.978-.311-1.911-.559-2.993-.3-1.31-.727-2.529-1.45-3.705a3.868 3.868 0 00-.506-.665c-.48-.494-.997-.897-1.696-.728-.476.116-1.069.654-1.34 1.043a10.085 10.085 0 00-1.399 2.938.02.02 0 00.022.016l1.588-.074a.07.07 0 00.046-.02c.638-.632 1.57-.76 2.337-.308.318.187.569.478.754.873.456.977-.123 2.14-1.06 2.482-.879.321-1.8-.006-2.294-.809a.068.068 0 00-.061-.032 23.52 23.52 0 00-2.412.209c-.676.094-1.403.296-2.014.5-.692.228-1.347.52-1.965.876-.885.51-2.189 1.567-1.536 2.725.119.211.233.373.343.487.89.92 2 1.415 3.3 1.852a.022.022 0 00.029-.023l-.157-1.145a.068.068 0 00-.033-.05 2.08 2.08 0 01-.848-.96c-.415-.925-.03-1.983.792-2.49a2.004 2.004 0 012.415.239c.345.315.623.855.642 1.356.026.697-.253 1.239-.782 1.703a.057.057 0 00-.02.05c.165 1.255.485 2.545.787 3.705.262 1.004.69 2.098 1.296 3.041.315.49.697.92 1.135 1.189.526.323 1.05.312 1.57-.033.666-.442 1.045-1.034 1.47-1.822a9.514 9.514 0 00.77-1.89.017.017 0 00-.018-.014l-1.336.063a.06.06 0 00-.05.033 1.822 1.822 0 01-1.279 1.008 1.85 1.85 0 01-1.878-.665c-.558-.723-.557-1.598-.003-2.32a1.78 1.78 0 011.063-.668c.6-.133 1.164.016 1.693.447a.076.076 0 00.051.017c.83-.027 1.64-.098 2.431-.213.62-.09 1.364-.288 1.908-.442a11.537 11.537 0 002.236-.9c.732-.386 1.634-1.033 1.89-1.847.4-1.269-1.44-2.406-2.352-2.802-.637-.277-1.13-.467-1.479-.57a.02.02 0 00-.019.003.02.02 0 00-.006.009.022.022 0 000 .01z"></path></svg>
+                <div class="user-info-box">
+                    <div class="user-details">
+                        <span class="welcome-text">خوش آمدید</span>
+                        <span class="edit-profile-link" onclick="editProfile()">ویرایش حساب کاربری</span>
+                    </div>
+                    <div class="avatar-wrapper" onclick="document.getElementById('file-input').click()">
+                        <img id="avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=RemaxMono" alt="Avatar">
+                        <div class="overlay"><i class="fa-solid fa-camera"></i></div>
+                    </div>
+                    <input type="file" id="file-input" accept="image/*">
                 </div>
             </div>
 
-            <div class="avatar-container user">
-                <div class="orbit-ring"></div>
-                <div class="avatar-box">
-                    <svg class="user-svg" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="9" r="3" stroke="#ffffff" stroke-width="1.5"></circle> <path d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path> <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+            <div class="menu-list">
+                <div class="menu-item">
+                    <div class="menu-item-content">
+                        <span class="sub-tag">ChatGPT 5.5</span>
+                        <span>مدل ها</span>
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-item-content">
+                        <span>تاریخچه گفتگوها</span>
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+                    <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
                 </div>
             </div>
-        </div>
 
-        <div class="title-container">
-            <h1 class="main-title" id="typewriter"></h1>
-        </div>
+            <div class="section-title">سرویس های اصلی</div>
+            <div class="services-grid">
+                <a href="#" class="service-card">
+                    <i class="fa-solid fa-clapperboard"></i>
+                    <span>ویدیو</span>
+                </a>
+                <a href="#" class="service-card">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>تصویر</span>
+                </a>
+                <a href="#" class="service-card">
+                    <i class="fa-solid fa-music"></i>
+                    <span>موزیک</span>
+                </a>
+                <a href="#" class="service-card">
+                    <i class="fa-solid fa-shapes"></i>
+                    <span>گالری</span>
+                </a>
+            </div>
+
+            <div class="section-title">امکانات و ابزارها</div>
+            <div class="menu-list">
+                <div class="menu-item">
+                    <div class="menu-item-content">
+                        <span>دستیارهای تخصصی</span>
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-item-content">
+                        <span>جعبه ابزار هوشمند</span>
+                        <i class="fa-solid fa-toolbox"></i>
+                    </div>
+                    <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-item-content">
+                        <span class="badge-new">جدید</span>
+                        <span>صداگذاری و دوبله</span>
+                        <i class="fa-solid fa-wave-square"></i>
+                    </div>
+                    <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-item-content">
+                        <span>کانال اختصاصی پرامپت</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
+                </div>
+            </div>
+
+            <div class="menu-list" style="margin-top: auto;">
+                <div class="menu-item">
+                    <div class="menu-item-content">
+                        <span>پشتیبانی آنلاین</span>
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-item-content">
+                        <span>تنظیمات عمومی</span>
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
     </div>
 
-    <!-- ==================== iOS-Style Chat Toolbar ==================== -->
-    <div class="input-card-wrapper">
-        <div class="input-card">
-            <textarea class="chat-input" id="chatInput" rows="1" placeholder="هرچیزی می‌خواهی بپرس..." readonly></textarea>
+    <!-- ================================================== -->
+    <!-- مودال کیف پول — با پکیج‌های اشتراک خفن              -->
+    <!-- ================================================== -->
+    <div class="wallet-modal-overlay" id="walletModalOverlay">
+        <div class="wallet-modal">
+            
+            <!-- هدر مودال -->
+            <div class="wallet-modal-header">
+                <div class="wallet-modal-title">
+                    <div class="icon-wrap">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <span>کیف پول MAX</span>
+                </div>
+                <div class="wallet-modal-close" onclick="closeWalletModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
 
-            <div class="bottom-row">
-                <div class="right-buttons">
-                    <button class="action-btn" title="افزودن فایل">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                    
-                    <button class="action-btn btn-text-icon" id="btnSearch">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M22 22L20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span>وب</span>
-                    </button>
+            <!-- کارت موجودی -->
+            <div class="balance-card-new">
+                <div class="balance-label-text">موجودی فعلی شما</div>
+                <div class="balance-amount-display" id="maxBalanceDisplay">
+                    ۳,۸۵۰ <span class="currency-label">MAX</span>
+                </div>
+            </div>
 
-                    <button class="action-btn" id="btnVoice">
-                        <div class="voice-wave" id="voiceWave" style="display: none;">
-                            <span class="voice-bar"></span>
-                            <span class="voice-bar"></span>
-                            <span class="voice-bar"></span>
+            <!-- سه دکمه عملیات -->
+            <div class="action-buttons-row">
+                <div class="action-btn-item" onclick="increaseMax()">
+                    <div class="action-btn-icon">
+                        <i class="fa-solid fa-arrow-down-left"></i>
+                    </div>
+                    <span class="action-btn-label">افزایش<br>موجودی</span>
+                </div>
+                <div class="action-btn-item" onclick="transferMax()">
+                    <div class="action-btn-icon">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                    </div>
+                    <span class="action-btn-label">انتقال<br>MAX</span>
+                </div>
+                <div class="action-btn-item" onclick="claimDailyBonus()">
+                    <div class="action-btn-icon">
+                        <i class="fa-solid fa-gift"></i>
+                    </div>
+                    <span class="action-btn-label">جایزه<br>روزانه</span>
+                </div>
+            </div>
+
+            <!-- ===== اشتراک‌ها — خفن به سبک عکس ===== -->
+            <div class="plans-header">
+                <div class="plans-title">
+                    <i class="fa-solid fa-crown"></i>
+                    <span>خرید اشتراک</span>
+                </div>
+                <div class="plans-subtitle">۵ پلن حرفه‌ای</div>
+            </div>
+
+            <!-- تب‌ها -->
+            <div class="plans-tabs">
+                <div class="plan-tab active">
+                    <i class="fa-solid fa-crown"></i>
+                    <span>اشتراک هوش مصنوعی</span>
+                </div>
+                <div class="plan-tab">
+                    <i class="fa-solid fa-robot"></i>
+                    <span>بسته تولید محتوا</span>
+                </div>
+            </div>
+
+            <!-- گرید ۵ پلن -->
+            <div class="plans-grid">
+
+                <!-- پلن رایگان -->
+                <div class="plan-card free">
+                    <div class="plan-logo">
+                        <div class="plan-logo-icon">
+                            <i class="fa-solid fa-seedling"></i>
                         </div>
-                        <svg id="micIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 8V13C18 16.3137 15.3137 19 12 19C8.68629 19 6 16.3137 6 13V8C6 4.68629 8.68629 2 12 2C13.777 2 15.3736 2.7725 16.4722 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M10 6.5C10 6.5 10.4727 6 12 6C13.5273 6 14 6.5 14 6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M10 9.5C10 9.5 10.4727 9 12 9C13.5273 9 14 9.5 14 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M21 11V13C21 16.5337 18.9634 19.5918 16 21.0645M3 11V13C3 17.9706 7.02944 22 12 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
+                        <div class="plan-name">رایگان</div>
+                    </div>
+                    <div class="plan-price">
+                        <div class="plan-price-value">۰</div>
+                        <div class="plan-price-period">تومان / ماه</div>
+                    </div>
+                    <div class="plan-validity">بدون محدودیت زمانی</div>
+                    <button class="plan-buy-btn" disabled>
+                        <i class="fa-solid fa-check"></i>
+                        رایگان فعال است
                     </button>
+                    <div class="plan-features">
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۱۰ پیام رایگان در روز</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۱ تصویر در هفته (Nano Banana Lite)</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۲ درخواست تبدیل متن به گفتار (TTS)</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>دسترسی به مدل‌های پایه</span></div>
+                    </div>
+                    <div class="plan-more-link" onclick="alert('امکانات کامل پلن رایگان')">
+                        <span>مشاهده امکانات کامل اشتراک</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
                 </div>
 
-                <button class="btn-send" id="btnSend">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14.2199 21.63C13.0399 21.63 11.3699 20.8 10.0499 16.83L9.32988 14.67L7.16988 13.95C3.20988 12.63 2.37988 10.96 2.37988 9.78001C2.37988 8.61001 3.20988 6.93001 7.16988 5.60001L15.6599 2.77001C17.7799 2.06001 19.5499 2.27001 20.6399 3.35001C21.7299 4.43001 21.9399 6.21001 21.2299 8.33001L18.3999 16.82C17.0699 20.8 15.3999 21.63 14.2199 21.63ZM7.63988 7.03001C4.85988 7.96001 3.86988 9.06001 3.86988 9.78001C3.86988 10.5 4.85988 11.6 7.63988 12.52L10.1599 13.36C10.3799 13.43 10.5599 13.61 10.6299 13.83L11.4699 16.35C12.3899 19.13 13.4999 20.12 14.2199 20.12C14.9399 20.12 16.0399 19.13 16.9699 16.35L19.7999 7.86001C20.3099 6.32001 20.2199 5.06001 19.5699 4.41001C18.9199 3.76001 17.6599 3.68001 16.1299 4.19001L7.63988 7.03001Z" fill="#000000"/>
-                        <path d="M10.11 14.4C9.92005 14.4 9.73005 14.33 9.58005 14.18C9.29005 13.89 9.29005 13.41 9.58005 13.12L13.16 9.53C13.45 9.24 13.93 9.24 14.22 9.53C14.51 9.82 14.51 10.3 14.22 10.59L10.64 14.18C10.5 14.33 10.3 14.4 10.11 14.4Z" fill="#000000"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
+                <!-- پلن پایه -->
+                <div class="plan-card basic">
+                    <div class="plan-logo">
+                        <div class="plan-logo-icon">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div class="plan-name">پایه</div>
+                    </div>
+                    <div class="plan-price">
+                        <div class="plan-price-value">۱۹۹,۰۰۰</div>
+                        <div class="plan-price-period">تومان / ماه</div>
+                    </div>
+                    <div class="plan-validity">اعتبار ۳۰ روزه</div>
+                    <button class="plan-buy-btn" onclick="buyPlan('پایه', 199000)">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        خرید
+                    </button>
+                    <div class="plan-features">
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۱۰ پیام در هر ۳ ساعت</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>امکان تولید تصویر</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۴۰ واحد صدا در هفته</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۱ واحد ویدیو در هفته</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۱ اپلیکیشن در هفته</span></div>
+                    </div>
+                    <div class="plan-more-link" onclick="alert('امکانات کامل پلن پایه')">
+                        <span>مشاهده امکانات کامل اشتراک</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
 
-    <!-- ==================== iOS Keyboard ==================== -->
-    <div class="keyboard-container" id="customKeyboard">
-        <div class="keyboard-handle-bar" id="keyboardHandle" title="بستن کیبورد"></div>
-        <div id="keyboardRows"></div>
+                <!-- پلن پلاس -->
+                <div class="plan-card plus">
+                    <div class="plan-logo">
+                        <div class="plan-logo-icon">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="plan-name">پلاس</div>
+                    </div>
+                    <div class="plan-price">
+                        <div class="plan-price-value">۵۳۹,۰۰۰</div>
+                        <div class="plan-price-period">تومان / ماه</div>
+                    </div>
+                    <div class="plan-validity">اعتبار ۳۰ روزه</div>
+                    <button class="plan-buy-btn" onclick="buyPlan('پلاس', 539000)">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        خرید
+                    </button>
+                    <div class="plan-features">
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۲۰ پیام در هر ۳ ساعت</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>امکان تولید تصویر</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۸۰ واحد صدا در هفته</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۳ واحد ویدیو در هفته</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۳ اپلیکیشن در هفته</span></div>
+                        <div class="plan-feature highlight"><i class="fa-solid fa-check"></i><span>دسترسی به مدل‌های پیشرفته‌تر</span></div>
+                    </div>
+                    <div class="plan-more-link" onclick="alert('امکانات کامل پلن پلاس')">
+                        <span>مشاهده امکانات کامل اشتراک</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <!-- پلن پرو -->
+                <div class="plan-card pro">
+                    <div class="plan-logo">
+                        <div class="plan-logo-icon">
+                            <i class="fa-solid fa-gem"></i>
+                        </div>
+                        <div class="plan-name">پرو</div>
+                    </div>
+                    <div class="plan-price">
+                        <div class="plan-price-value">۱,۲۳۹,۰۰۰</div>
+                        <div class="plan-price-period">تومان / ماه</div>
+                    </div>
+                    <div class="plan-validity">اعتبار ۳۰ روزه</div>
+                    <button class="plan-buy-btn" onclick="buyPlan('پرو', 1239000)">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        خرید
+                    </button>
+                    <div class="plan-features">
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۳۰ پیام در هر ۳ ساعت</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>امکان تولید تصویر</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۱۵۰ واحد صدا در هفته</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۱۰ واحد ویدیو در هفته</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۳ اپلیکیشن در هفته</span></div>
+                        <div class="plan-feature highlight"><i class="fa-solid fa-check"></i><span>دسترسی به مدل‌های حرفه‌ای</span></div>
+                    </div>
+                    <div class="plan-more-link" onclick="alert('امکانات کامل پلن پرو')">
+                        <span>مشاهده امکانات کامل اشتراک</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <!-- پلن پرو مکس -->
+                <div class="plan-card promax">
+                    <div class="plan-logo">
+                        <div class="plan-logo-icon">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <div class="plan-name">پرو مکس</div>
+                    </div>
+                    <div class="plan-price">
+                        <div class="plan-price-value">۵,۵۹۹,۰۰۰</div>
+                        <div class="plan-price-period">تومان / ماه</div>
+                    </div>
+                    <div class="plan-validity">اعتبار ۳۰ روزه</div>
+                    <button class="plan-buy-btn" onclick="buyPlan('پرو مکس', 5599000)">
+                        <i class="fa-solid fa-crown"></i>
+                        خرید
+                    </button>
+                    <div class="plan-features">
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۱۱۰ پیام در هر ۳ ساعت</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>امکان تولید تصویر</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۴۰۰ واحد صدا در هفته</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۳۰ واحد ویدیو در هفته</span></div>
+                        <div class="plan-feature"><i class="fa-solid fa-check"></i><span>۱۵ اپلیکیشن در هفته</span></div>
+                        <div class="plan-feature highlight"><i class="fa-solid fa-check"></i><span>دسترسی به کامل‌ترین مجموعه مدل‌ها</span></div>
+                    </div>
+                    <div class="plan-more-link" onclick="alert('امکانات کامل پلن پرو مکس')">
+                        <span>مشاهده امکانات کامل اشتراک</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- پیشرفت امتیاز -->
+            <div class="wallet-section-title">
+                <i class="fa-solid fa-trophy"></i>
+                <span>امتیاز باشگاه MAX</span>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span>پیشرفت تا پرمیوم ۳ روزه</span>
+                    <span id="progressPercent">۳۴٪</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill" style="width: 34%;"></div>
+                </div>
+                <div class="reward-hint">
+                    <i class="fa-solid fa-crown" style="color: var(--gold);"></i>
+                    <span>با رسیدن به ۱۰,۰۰۰ MAX، ۳ روز اشتراک پرمیوم رایگان دریافت کنید!</span>
+                </div>
+            </div>
+
+            <!-- امتیاز باشگاه -->
+            <div class="club-points-banner">
+                <button class="btn-exchange" onclick="exchangePoints()">تبدیل به MAX</button>
+                <div class="club-text-details">
+                    <span style="font-size: 12px; font-weight: 800;" id="pointsDisplay">۱,۴۵۰ امتیاز باشگاه</span>
+                    <span style="font-size: 10px; color: var(--muted-gray);">هر ۱۰ امتیاز = ۱ MAX</span>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <script>
-        const textToType = "امروز چطور می‌تونم کمکت کنم؟";
-        const typewriterEl = document.getElementById('typewriter');
-        let charIndex = 0;
+        let maxBalance = 3850;
+        let clubPoints = 1450;
+        let dailyBonusClaimed = false;
+        const PREMIUM_THRESHOLD = 10000;
 
-        function typeText() {
-            if (charIndex < textToType.length) {
-                typewriterEl.textContent += textToType.charAt(charIndex);
-                charIndex++;
-                setTimeout(typeText, 45);
-            }
-        }
-        setTimeout(typeText, 300);
-
-        const input = document.getElementById('chatInput');
-        const btnSend = document.getElementById('btnSend');
-
-        function updateInputState() {
-            input.style.height = 'auto';
-            input.style.height = Math.min(input.scrollHeight, 100) + 'px';
-
-            if (input.value.trim().length > 0) {
-                btnSend.classList.add('active');
-            } else {
-                btnSend.classList.remove('active');
-            }
+        function toPersianNum(num) {
+            return num.toLocaleString('fa-IR');
         }
 
-        btnSend.addEventListener('click', sendMessage);
-
-        function sendMessage() {
-            if (input.value.trim() === '') return;
-            input.value = '';
-            updateInputState();
+        function updateUI() {
+            document.getElementById('maxBalanceDisplay').innerHTML = 
+                toPersianNum(maxBalance) + ' <span class="currency-label">MAX</span>';
+            
+            document.getElementById('credit-count').innerText = toPersianNum(maxBalance);
+            
+            document.getElementById('pointsDisplay').innerText = 
+                toPersianNum(clubPoints) + ' امتیاز باشگاه';
+            
+            const progress = Math.min((maxBalance / PREMIUM_THRESHOLD) * 100, 100);
+            document.getElementById('progressBarFill').style.width = progress + '%';
+            document.getElementById('progressPercent').innerText = toPersianNum(Math.round(progress)) + '٪';
         }
 
-        document.getElementById('btnSearch').addEventListener('click', function() {
-            this.classList.toggle('active');
-        });
+        function openWalletModal() {
+            document.getElementById('walletModalOverlay').classList.add('show');
+        }
 
-        const btnVoice = document.getElementById('btnVoice');
-        const micIcon = document.getElementById('micIcon');
-        const voiceWave = document.getElementById('voiceWave');
-        let isRecording = false;
+        function closeWalletModal() {
+            document.getElementById('walletModalOverlay').classList.remove('show');
+        }
 
-        btnVoice.addEventListener('click', () => {
-            isRecording = !isRecording;
-            if (isRecording) {
-                micIcon.style.display = 'none';
-                voiceWave.style.display = 'flex';
-                btnVoice.style.borderColor = 'rgba(255,255,255,0.5)';
-                btnVoice.style.background = 'rgba(255,255,255,0.15)';
-            } else {
-                micIcon.style.display = 'block';
-                voiceWave.style.display = 'none';
-                btnVoice.style.borderColor = 'rgba(255,255,255,0.12)';
-                btnVoice.style.background = 'rgba(255,255,255,0.08)';
+        document.getElementById('walletModalOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'walletModalOverlay') {
+                closeWalletModal();
             }
         });
 
-        /* ==================== iOS Keyboard Logic ==================== */
-        const keyboardContainer = document.getElementById('customKeyboard');
-        const keyboardRows = document.getElementById('keyboardRows');
-        const keyboardHandle = document.getElementById('keyboardHandle');
-
-        let currentLang = 'fa';
-        let isShift = false;
-
-        const layouts = {
-            fa: [
-                ['ض', 'ص', 'ث', 'ق', 'ف', 'غ', 'ع', 'ه', 'خ', 'ح', 'ج', 'چ'],
-                ['ش', 'س', 'ی', 'ب', 'ل', 'ا', 'ت', 'ن', 'م', 'ک', 'گ'],
-                ['BACK', 'ظ', 'ط', 'ز', 'ر', 'ذ', 'د', 'پ', 'و', 'ENTER'],
-                ['LANG', 'NUM', 'SPACE', '.', 'HIDE']
-            ],
-            en: [
-                ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-                ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-                ['SHIFT', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'BACK'],
-                ['LANG', 'NUM', 'SPACE', '.', 'ENTER']
-            ],
-            num: [
-                ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-                ['@', '#', '$', '%', '&', '-', '+', '(', ')', '/'],
-                ['=', '*', '"', '\'', ':', ';', '!', '?', 'BACK'],
-                ['LANG', 'ABC', 'SPACE', ',', 'ENTER']
-            ]
-        };
-
-        function renderKeyboard() {
-            keyboardRows.innerHTML = '';
-            let currentLayout = layouts[currentLang];
-
-            currentLayout.forEach((row) => {
-                const rowEl = document.createElement('div');
-                rowEl.className = 'keyboard-row';
-
-                row.forEach(key => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'key-btn';
-                    btn.setAttribute('data-key', key);
-
-                    let displayKey = key;
-
-                    if (currentLang === 'en' && isShift && key.length === 1 && key !== 'SHIFT') {
-                        displayKey = key.toUpperCase();
-                    }
-
-                    if (key === 'BACK') {
-                        btn.classList.add('special', 'wide-15');
-                        btn.innerHTML = '⌫';
-                    } else if (key === 'ENTER') {
-                        btn.classList.add('special', 'wide-15');
-                        btn.innerHTML = '↵';
-                    } else if (key === 'SPACE') {
-                        btn.classList.add('space');
-                        btn.innerText = currentLang === 'fa' ? 'فاصله' : 'Space';
-                    } else if (key === 'LANG') {
-                        btn.classList.add('special', 'wide-15');
-                        btn.innerText = currentLang === 'fa' ? 'EN' : 'فا';
-                    } else if (key === 'NUM') {
-                        btn.classList.add('special');
-                        btn.innerText = '123';
-                    } else if (key === 'ABC') {
-                        btn.classList.add('special');
-                        btn.innerText = 'ABC';
-                    } else if (key === 'SHIFT') {
-                        btn.classList.add('special', 'wide-15');
-                        if (isShift) btn.classList.add('active-shift');
-                        btn.innerHTML = '⇧';
-                    } else if (key === 'HIDE') {
-                        btn.classList.add('special');
-                        btn.innerHTML = '⌨';
-                    } else {
-                        btn.innerText = displayKey;
-                    }
-
-                    btn.addEventListener('click', (e) => handleKeyPress(key, displayKey, e));
-                    rowEl.appendChild(btn);
-                });
-
-                keyboardRows.appendChild(rowEl);
-            });
+        function buyPlan(name, price) {
+            if (confirm('آیا از خرید اشتراک ' + name + ' به مبلغ ' + toPersianNum(price) + ' تومان مطمئن هستید؟')) {
+                alert('✅ اشتراک ' + name + ' با موفقیت خریداری شد!');
+            }
         }
 
-        function handleKeyPress(rawKey, displayKey, e) {
-            e.preventDefault();
-
-            if (rawKey === 'BACK') {
-                input.value = input.value.slice(0, -1);
-            } else if (rawKey === 'ENTER') {
-                input.value += '\n';
-            } else if (rawKey === 'SPACE') {
-                input.value += ' ';
-            } else if (rawKey === 'LANG') {
-                currentLang = currentLang === 'fa' ? 'en' : 'fa';
-                isShift = false;
-                renderKeyboard();
-            } else if (rawKey === 'NUM') {
-                currentLang = 'num';
-                renderKeyboard();
-            } else if (rawKey === 'ABC') {
-                currentLang = 'fa';
-                renderKeyboard();
-            } else if (rawKey === 'SHIFT') {
-                isShift = !isShift;
-                renderKeyboard();
-            } else if (rawKey === 'HIDE') {
-                keyboardContainer.classList.add('hidden');
-            } else {
-                input.value += displayKey;
-                if (isShift && currentLang === 'en') {
-                    isShift = false;
-                    renderKeyboard();
+        function increaseMax() {
+            const amount = prompt("چند MAX افزایش یابد؟", "100");
+            if (amount !== null && amount.trim() !== "") {
+                const val = parseInt(amount.replace(/,/g, ''), 10);
+                if (!isNaN(val) && val > 0) {
+                    maxBalance += val;
+                    updateUI();
+                    alert('✅ ' + toPersianNum(val) + ' MAX به موجودی اضافه شد.');
+                } else {
+                    alert('عدد وارد شده معتبر نیست.');
                 }
             }
-
-            updateInputState();
-            input.focus();
         }
 
-        input.addEventListener('click', () => {
-            keyboardContainer.classList.remove('hidden');
+        function transferMax() {
+            const amount = prompt("چند MAX انتقال می‌دهید؟ (حداقل ۱۰)", "50");
+            if (amount !== null && amount.trim() !== "") {
+                const val = parseInt(amount.replace(/,/g, ''), 10);
+                if (!isNaN(val) && val > 0) {
+                    if (val > maxBalance) {
+                        alert('موجودی کافی نیست!');
+                        return;
+                    }
+                    maxBalance -= val;
+                    const bonus = Math.floor(val * 0.05);
+                    maxBalance += bonus;
+                    updateUI();
+                    alert('✅ ' + toPersianNum(val) + ' MAX انتقال یافت.\n' + toPersianNum(bonus) + ' MAX پاداش انتقال دریافت کردید!');
+                } else {
+                    alert('عدد وارد شده معتبر نیست.');
+                }
+            }
+        }
+
+        function claimDailyBonus() {
+            if (dailyBonusClaimed) {
+                alert('⏳ جایزه امروز را قبلاً دریافت کرده‌اید. فردا دوباره سر بزنید!');
+                return;
+            }
+            const bonus = 50;
+            maxBalance += bonus;
+            dailyBonusClaimed = true;
+            updateUI();
+            alert('🎁 ' + toPersianNum(bonus) + ' MAX جایزه روزانه دریافت کردید!');
+        }
+
+        function exchangePoints() {
+            if (clubPoints <= 0) {
+                alert('امتیاز کافی برای تبدیل ندارید.');
+                return;
+            }
+            const pts = parseInt(prompt("چند امتیاز تبدیل شود؟ (هر ۱۰ امتیاز = ۱ MAX)", clubPoints.toString()), 10);
+            if (!isNaN(pts) && pts > 0 && pts <= clubPoints) {
+                const maxGained = Math.floor(pts / 10);
+                if (maxGained === 0) {
+                    alert('حداقل ۱۰ امتیاز برای تبدیل لازم است.');
+                    return;
+                }
+                clubPoints -= pts;
+                maxBalance += maxGained;
+                updateUI();
+                alert('✅ ' + toPersianNum(pts) + ' امتیاز به ' + toPersianNum(maxGained) + ' MAX تبدیل شد.');
+            }
+        }
+
+        const fileInput = document.getElementById('file-input');
+        const avatarImg = document.getElementById('avatar-img');
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => { avatarImg.src = event.target.result; };
+                reader.readAsDataURL(file);
+            }
         });
 
-        keyboardHandle.addEventListener('click', () => {
-            keyboardContainer.classList.add('hidden');
+        function editProfile() {
+            const newName = prompt("نام کاربری جدید:", "کاربر MAX");
+            if (newName !== null && newName.trim() !== "") {
+                alert('نام کاربری به ' + newName + ' تغییر یافت.');
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeWalletModal();
+            }
         });
 
-        renderKeyboard();
+        updateUI();
     </script>
 </body>
 </html>
