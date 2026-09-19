@@ -1,2262 +1,1368 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#000000">
-    <title>Remax AI · MAX Wallet</title>
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --pure-black: #000000;
-            --pure-white: #ffffff;
-            --sky-blue: #A0CFEC;
-            --sky-blue-dark: #7BB8DD;
-            --sky-blue-glow: rgba(160, 207, 236, 0.4);
-            
-            --dark-surface: #0a0a0a;
-            --card-surface: #121212;
-            --card-surface-2: #1a1a1a;
-            --muted-gray: #737373;
-            
-            --sidebar-expanded: 360px;
-            --sidebar-collapsed: 76px;
-            
-            --shadow-3d: 
-                0 20px 40px rgba(0, 0, 0, 0.95),
-                0 0 0 1px rgba(160, 207, 236, 0.1);
-            
-            --shadow-card-3d: 
-                0 10px 25px rgba(0, 0, 0, 0.8),
-                0 1px 0 rgba(160, 207, 236, 0.1) inset;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Vazirmatn', sans-serif;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            width: 100%;
-            min-height: 100vh;
-            background: var(--pure-black);
-            color: var(--pure-white);
-            overflow-x: hidden;
-        }
-
-        /* ============================================ */
-        /* ===== دسکتاپ ===== */
-        /* ============================================ */
-
-        .desktop-layout {
-            display: flex;
-            justify-content: flex-end;
-            min-height: 100vh;
-            padding: 30px;
-        }
-
-        .sidebar-container {
-            position: relative;
-            height: calc(100vh - 60px);
-            max-height: 850px;
-            width: var(--sidebar-expanded);
-            transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .sidebar-container.collapsed {
-            width: var(--sidebar-collapsed);
-        }
-
-        .sidebar-panel {
-            position: absolute;
-            inset: 0;
-            background: var(--dark-surface);
-            border-radius: 40px;
-            padding: 26px 20px;
-            box-shadow: var(--shadow-3d);
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            transition: padding 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .sidebar-panel::-webkit-scrollbar { width: 0; }
-
-        .sidebar-container.collapsed .sidebar-panel {
-            padding: 22px 12px;
-            border-radius: 32px;
-            align-items: center;
-        }
-
-        .sidebar-expanded-only {
-            opacity: 1;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .sidebar-container.collapsed .sidebar-expanded-only {
-            opacity: 0;
-            transform: translateX(-20px);
-            pointer-events: none;
-            position: absolute;
-            width: 0;
-            height: 0;
-            overflow: hidden;
-        }
-
-        .profile-header-box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--card-surface);
-            padding: 12px 16px;
-            border-radius: 30px;
-            box-shadow: var(--shadow-card-3d);
-            border: 1px solid rgba(160, 207, 236, 0.1);
-            flex-shrink: 0;
-        }
-
-        .credit-badge-trigger {
-            background: linear-gradient(135deg, var(--sky-blue), var(--sky-blue-dark));
-            color: var(--pure-black);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px var(--sky-blue-glow);
-            transition: all 0.25s ease;
-            position: relative;
-            overflow: hidden;
-            border: none;
-        }
-
-        .credit-badge-trigger::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-            animation: shine 3s ease-in-out infinite;
-        }
-
-        @keyframes shine {
-            0% { left: -100%; }
-            50%, 100% { left: 100%; }
-        }
-
-        .user-info-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-details {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .welcome-text {
-            font-size: 11px;
-            color: var(--muted-gray);
-        }
-
-        .edit-profile-link {
-            font-size: 12px;
-            color: var(--pure-white);
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .avatar-wrapper {
-            position: relative;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--pure-black);
-            border: 2px solid var(--sky-blue);
-            overflow: hidden;
-            cursor: pointer;
-            box-shadow: 0 0 12px var(--sky-blue-glow);
-            flex-shrink: 0;
-        }
-
-        .avatar-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .avatar-wrapper .overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            color: var(--pure-white);
-            font-size: 12px;
-        }
-
-        .avatar-wrapper:hover .overlay { opacity: 1; }
-        #file-input { display: none; }
-
-        .account-icon-collapsed {
-            display: none;
-            width: 52px;
-            height: 52px;
-            border-radius: 18px;
-            background: var(--card-surface);
-            border: 1px solid rgba(160, 207, 236, 0.15);
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .account-icon-collapsed svg {
-            width: 26px;
-            height: 26px;
-        }
-
-        .account-icon-collapsed svg circle,
-        .account-icon-collapsed svg path {
-            stroke: var(--sky-blue);
-        }
-
-        .sidebar-container.collapsed .account-icon-collapsed {
-            display: flex;
-        }
-
-        .menu-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            border-radius: 20px;
-            color: var(--pure-white);
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: all 0.25s ease;
-        }
-
-        .menu-item:hover {
-            background: var(--card-surface);
-            border-color: rgba(160, 207, 236, 0.15);
-        }
-
-        .menu-item-content {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            font-size: 13.5px;
-            font-weight: 600;
-        }
-
-        .menu-item-content i {
-            font-size: 16px;
-            width: 20px;
-            text-align: center;
-            color: var(--sky-blue);
-        }
-
-        .section-title {
-            font-size: 11px;
-            color: var(--muted-gray);
-            margin: 2px 8px -6px 0;
-            font-weight: 700;
-            width: 100%;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            width: 100%;
-        }
-
-        .service-card {
-            background: var(--card-surface);
-            border: 1px solid rgba(160, 207, 236, 0.08);
-            border-radius: 22px;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: var(--pure-white);
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .service-card:hover {
-            background: linear-gradient(135deg, var(--sky-blue), var(--sky-blue-dark));
-            color: var(--pure-black);
-        }
-
-        .service-card i {
-            color: var(--sky-blue);
-            font-size: 16px;
-        }
-
-        .sub-tag {
-            font-size: 11px;
-            color: var(--sky-blue);
-            border: 1px solid rgba(160, 207, 236, 0.3);
-            padding: 2px 8px;
-            border-radius: 10px;
-            background: rgba(160, 207, 236, 0.08);
-        }
-
-        .badge-new {
-            background: linear-gradient(135deg, var(--sky-blue), var(--sky-blue-dark));
-            color: var(--pure-black);
-            font-size: 10px;
-            font-weight: 900;
-            padding: 2px 8px;
-            border-radius: 12px;
-        }
-
-        .collapsed-icons {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-            align-items: center;
-            flex: 1;
-            margin-top: 4px;
-        }
-
-        .sidebar-container.collapsed .collapsed-icons {
-            display: flex;
-        }
-
-        .collapsed-icon-item {
-            width: 52px;
-            height: 52px;
-            border-radius: 18px;
-            background: var(--card-surface);
-            border: 1px solid rgba(160, 207, 236, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--sky-blue);
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .collapsed-icon-item.special {
-            background: linear-gradient(135deg, var(--sky-blue), var(--sky-blue-dark));
-            color: var(--pure-black);
-            border-color: var(--sky-blue);
-        }
-
-        .collapsed-divider {
-            width: 32px;
-            height: 1px;
-            background: rgba(160, 207, 236, 0.15);
-            margin: 4px 0;
-            flex-shrink: 0;
-        }
-
-        .collapsed-spacer {
-            flex: 1;
-            min-height: 20px;
-        }
-
-        .sidebar-toggle {
-            width: 52px;
-            height: 52px;
-            border-radius: 18px;
-            background: var(--card-surface);
-            border: 1px solid rgba(160, 207, 236, 0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--sky-blue);
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-
-        .sidebar-container:not(.collapsed) .sidebar-toggle {
-            width: 100%;
-            height: 48px;
-            border-radius: 18px;
-            gap: 8px;
-            margin-top: auto;
-        }
-
-        .sidebar-container:not(.collapsed) .sidebar-toggle::after {
-            content: 'بستن سایدبار';
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        /* ============================================ */
-        /* ===== 💰 کیف پول FULL SCREEN ===== */
-        /* ============================================ */
-
-        .wallet-fullscreen {
-            position: fixed;
-            inset: 0;
-            background: 
-                radial-gradient(circle at 50% 0%, rgba(160, 207, 236, 0.12) 0%, transparent 50%),
-                linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(100%);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden;
-        }
-
-        .wallet-fullscreen.show {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateX(0);
-        }
-
-        .wallet-fullscreen-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            padding-top: max(16px, env(safe-area-inset-top));
-            border-bottom: 1px solid rgba(160, 207, 236, 0.1);
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            flex-shrink: 0;
-        }
-
-        .wallet-back-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            background: rgba(160, 207, 236, 0.08);
-            border: 1px solid rgba(160, 207, 236, 0.2);
-            color: var(--sky-blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.25s ease;
-        }
-
-        .wallet-back-btn:active {
-            transform: scale(0.92);
-            background: var(--sky-blue);
-            color: var(--pure-black);
-        }
-
-        .wallet-fullscreen-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 900;
-        }
-
-        .wallet-fullscreen-title i {
-            color: var(--sky-blue);
-            font-size: 18px;
-            filter: drop-shadow(0 0 10px var(--sky-blue-glow));
-        }
-
-        .wallet-header-spacer {
-            width: 42px;
-        }
-
-        .wallet-content {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 20px 0 40px;
-            padding-bottom: max(40px, env(safe-area-inset-bottom));
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .wallet-content::-webkit-scrollbar { width: 0; }
-
-        /* کارت موجودی */
-        .balance-hero {
-            position: relative;
-            border-radius: 28px;
-            padding: 40px 24px 28px;
-            margin: 0 20px;
-            background: linear-gradient(145deg, #1a1a1a 0%, #0a0a0a 100%);
-            border: 1px solid rgba(160, 207, 236, 0.2);
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.95),
-                0 0 40px rgba(160, 207, 236, 0.1),
-                inset 0 1px 0 rgba(160, 207, 236, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .balance-hero::before {
-            content: '';
-            position: absolute;
-            top: 16px;
-            left: 24px;
-            right: 24px;
-            height: 1px;
-            background-image: linear-gradient(90deg, rgba(160,207,236,0.5) 50%, transparent 50%);
-            background-size: 10px 1px;
-            background-repeat: repeat-x;
-            box-shadow: 0 0 20px rgba(160, 207, 236, 0.3);
-        }
-
-        .balance-hero::after {
-            content: '';
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 65%;
-            height: 70px;
-            background: linear-gradient(145deg, #262626, #151515);
-            border-radius: 0 0 45px 45px;
-            box-shadow: 
-                0 15px 30px rgba(0, 0, 0, 0.8),
-                inset 0 -1px 0 rgba(160, 207, 236, 0.15);
-        }
-
-        .balance-hero-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(160, 207, 236, 0.15) 0%, transparent 70%);
-            pointer-events: none;
-            animation: heroPulse 4s ease-in-out infinite;
-        }
-
-        @keyframes heroPulse {
-            0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
-        }
-
-        .balance-hero-label {
-            font-size: 13px;
-            color: var(--muted-gray);
-            font-weight: 600;
-            position: relative;
-            z-index: 2;
-            margin-top: 20px;
-        }
-
-        .balance-hero-amount {
-            font-size: 52px;
-            font-weight: 900;
-            color: var(--pure-white);
-            letter-spacing: -2px;
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-            position: relative;
-            z-index: 2;
-            direction: ltr;
-            text-shadow: 0 0 40px var(--sky-blue-glow);
-        }
-
-        .balance-hero-amount .currency-label {
-            font-size: 18px;
-            color: var(--sky-blue);
-            font-weight: 700;
-            letter-spacing: 0;
-        }
-
-        /* دکمه‌های عملیات */
-        .wallet-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            padding: 0 20px;
-            flex-shrink: 0;
-        }
-
-        .wallet-action-btn {
-            background: linear-gradient(145deg, #151515, #0a0a0a);
-            border: 1px solid rgba(160, 207, 236, 0.12);
-            border-radius: 22px;
-            padding: 18px 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            font-family: inherit;
-            color: var(--pure-white);
-        }
-
-        .wallet-action-btn:active {
-            transform: scale(0.95);
-            border-color: var(--sky-blue);
-            box-shadow: 0 0 30px var(--sky-blue-glow);
-        }
-
-        .wallet-action-btn .action-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
-            background: rgba(160, 207, 236, 0.08);
-            border: 1.5px solid rgba(160, 207, 236, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: var(--sky-blue);
-        }
-
-        .wallet-action-btn:active .action-icon {
-            background: var(--sky-blue);
-            color: var(--pure-black);
-        }
-
-        .wallet-action-btn .action-label {
-            font-size: 11.5px;
-            font-weight: 800;
-            text-align: center;
-            line-height: 1.3;
-        }
-
-        /* ============================================ */
-        /* ===== 🎠 اسلایدر پکیج‌ها با انیمیشن ===== */
-        /* ============================================ */
-
-        .plans-section {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 4px;
-        }
-
-        .plans-section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-        }
-
-        .plans-section-title {
-            font-size: 18px;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .plans-section-title i {
-            color: var(--sky-blue);
-            font-size: 20px;
-            filter: drop-shadow(0 0 12px var(--sky-blue-glow));
-        }
-
-        .plans-section-subtitle {
-            font-size: 11px;
-            color: var(--muted-gray);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .plans-section-subtitle i {
-            animation: swipeHint 1.5s ease-in-out infinite;
-        }
-
-        @keyframes swipeHint {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(-6px); }
-        }
-
-        /* کانتینر اسلایدر */
-        .plans-carousel {
-            position: relative;
-            width: 100%;
-            overflow: visible;
-        }
-
-        .plans-track {
-            display: flex;
-            gap: 16px;
-            padding: 20px 20px 30px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            /* انیمیشن نرم */
-            scroll-behavior: smooth;
-        }
-
-        .plans-track::-webkit-scrollbar { 
-            height: 0;
-            display: none;
-        }
-
-        .plan-card-mobile {
-            position: relative;
-            flex: 0 0 78%;
-            max-width: 320px;
-            scroll-snap-align: center;
-            border-radius: 26px;
-            padding: 24px 20px 22px;
-            background: linear-gradient(145deg, #141414, #0a0a0a);
-            border: 1px solid rgba(160, 207, 236, 0.12);
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            overflow: hidden;
-            /* انیمیشن ورودی/خروجی کارت‌ها */
-            transition: 
-                transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.4s ease,
-                box-shadow 0.4s ease,
-                border-color 0.4s ease,
-                filter 0.4s ease;
-            transform: scale(0.88);
-            opacity: 0.6;
-            filter: brightness(0.7);
-        }
-
-        /* کارت فعال (در مرکز) */
-        .plan-card-mobile.active {
-            transform: scale(1);
-            opacity: 1;
-            filter: brightness(1);
-            border-color: rgba(160, 207, 236, 0.35);
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.9),
-                0 0 40px rgba(160, 207, 236, 0.2);
-            z-index: 2;
-        }
-
-        .plan-card-mobile.featured {
-            background: linear-gradient(145deg, #14202a, #0a1015);
-            border-color: rgba(160, 207, 236, 0.3);
-        }
-
-        .plan-card-mobile.featured.active {
-            border-color: var(--sky-blue);
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.9),
-                0 0 50px var(--sky-blue-glow);
-        }
-
-        /* افکت نوری */
-        .plan-card-mobile::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(160, 207, 236, 0.2) 0%, transparent 70%);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .plan-card-mobile.active::before {
-            opacity: 1;
-        }
-
-        /* هدر پکیج */
-        .plan-mobile-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .plan-mobile-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .plan-mobile-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 18px;
-            background: rgba(160, 207, 236, 0.1);
-            color: var(--sky-blue);
-            border: 1px solid rgba(160, 207, 236, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
-            transition: all 0.4s ease;
-        }
-
-        .plan-card-mobile.active .plan-mobile-icon {
-            background: linear-gradient(135deg, rgba(160, 207, 236, 0.25), rgba(160, 207, 236, 0.08));
-            box-shadow: 0 0 25px var(--sky-blue-glow);
-            transform: scale(1.05);
-        }
-
-        .plan-card-mobile.featured .plan-mobile-icon {
-            background: linear-gradient(135deg, rgba(160, 207, 236, 0.3), rgba(160, 207, 236, 0.1));
-            border-color: rgba(160, 207, 236, 0.5);
-        }
-
-        .plan-mobile-name {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .plan-mobile-name strong {
-            font-size: 17px;
-            font-weight: 900;
-            color: var(--pure-white);
-        }
-
-        .plan-mobile-name span {
-            font-size: 11px;
-            color: var(--muted-gray);
-            font-weight: 600;
-        }
-
-        .plan-mobile-badge {
-            font-size: 10px;
-            font-weight: 900;
-            padding: 5px 12px;
-            border-radius: 10px;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .plan-mobile-badge.popular {
-            background: linear-gradient(135deg, var(--sky-blue), var(--sky-blue-dark));
-            color: var(--pure-black);
-            box-shadow: 0 0 20px var(--sky-blue-glow);
-            animation: badgePulse 2s ease-in-out infinite;
-        }
-
-        .plan-mobile-badge.best {
-            background: linear-gradient(135deg, #ffffff, #e0e0e0);
-            color: var(--pure-black);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-            animation: badgePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-        }
-
-        /* قیمت */
-        .plan-mobile-price {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            padding: 14px 0;
-            border-top: 1px solid rgba(160, 207, 236, 0.1);
-            border-bottom: 1px solid rgba(160, 207, 236, 0.1);
-            position: relative;
-            z-index: 2;
-        }
-
-        .plan-mobile-price-value {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--pure-white);
-            direction: ltr;
-            letter-spacing: -0.5px;
-            text-shadow: 0 0 20px rgba(160, 207, 236, 0.2);
-        }
-
-        .plan-mobile-price-period {
-            font-size: 11px;
-            color: var(--muted-gray);
-            font-weight: 600;
-        }
-
-        /* ویژگی‌ها */
-        .plan-mobile-features {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .plan-mobile-feature {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 11.5px;
-            color: var(--pure-white);
-            font-weight: 600;
-        }
-
-        .plan-mobile-feature i {
-            font-size: 10px;
-            color: var(--sky-blue);
-            flex-shrink: 0;
-            filter: drop-shadow(0 0 4px var(--sky-blue-glow));
-        }
-
-        .plan-mobile-feature.highlight {
-            color: var(--sky-blue);
-            font-weight: 800;
-            grid-column: 1 / -1;
-            background: rgba(160, 207, 236, 0.08);
-            padding: 8px 12px;
-            border-radius: 10px;
-            margin: 0 -4px;
-        }
-
-        /* دکمه خرید */
-        .plan-mobile-buy-btn {
-            border: none;
-            padding: 16px;
-            border-radius: 16px;
-            font-size: 14px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            background: linear-gradient(135deg, var(--sky-blue), var(--sky-blue-dark));
-            color: var(--pure-black);
-            box-shadow: 0 6px 20px var(--sky-blue-glow);
-            position: relative;
-            overflow: hidden;
-            font-family: inherit;
-            margin-top: 4px;
-            z-index: 2;
-        }
-
-        .plan-mobile-buy-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .plan-mobile-buy-btn:active::before {
-            left: 100%;
-        }
-
-        .plan-mobile-buy-btn:active {
-            transform: scale(0.97);
-        }
-
-        .plan-card-mobile.featured .plan-mobile-buy-btn {
-            background: var(--pure-white);
-            color: var(--pure-black);
-        }
-
-        .plan-mobile-buy-btn:disabled {
-            background: rgba(160, 207, 236, 0.15);
-            color: var(--muted-gray);
-            box-shadow: none;
-            cursor: not-allowed;
-        }
-
-        /* نقطه‌های اسلایدر (Dots) */
-        .plans-dots {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            padding: 0 20px;
-        }
-
-        .plan-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(160, 207, 236, 0.2);
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .plan-dot.active {
-            width: 28px;
-            border-radius: 10px;
-            background: linear-gradient(90deg, var(--sky-blue), var(--sky-blue-dark));
-            box-shadow: 0 0 15px var(--sky-blue-glow);
-        }
-
-        /* ============================================ */
-        /* ===== مودال تنظیمات ===== */
-        /* ============================================ */
-
-        .wallet-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1500;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 24px;
-        }
-
-        .wallet-modal-overlay.show {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .wallet-modal {
-            width: 100%;
-            max-width: 500px;
-            max-height: 92vh;
-            background: linear-gradient(160deg, #0f0f0f 0%, #050505 100%);
-            border-radius: 32px;
-            padding: 28px 24px;
-            box-shadow: 
-                0 40px 80px rgba(0, 0, 0, 0.95),
-                0 0 0 1px rgba(160, 207, 236, 0.12);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
-            transform: scale(0.9) translateY(30px);
-            opacity: 0;
-            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .wallet-modal-overlay.show .wallet-modal {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
-
-        .wallet-modal::-webkit-scrollbar { width: 0; }
-
-        .wallet-modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 14px;
-            border-bottom: 1px solid rgba(160, 207, 236, 0.1);
-        }
-
-        .wallet-modal-title {
-            font-size: 18px;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .wallet-modal-title .icon-wrap {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--sky-blue), var(--sky-blue-dark));
-            color: var(--pure-black);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 17px;
-        }
-
-        .wallet-modal-close {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: rgba(160, 207, 236, 0.05);
-            border: 1px solid rgba(160, 207, 236, 0.15);
-            color: var(--pure-white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 15px;
-            font-family: inherit;
-        }
-
-        .toggle-switch {
-            width: 48px;
-            height: 28px;
-            border-radius: 20px;
-            background: rgba(160, 207, 236, 0.15);
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(160, 207, 236, 0.2);
-            flex-shrink: 0;
-            font-family: inherit;
-            padding: 0;
-        }
-
-        .toggle-switch.active {
-            background: linear-gradient(135deg, var(--sky-blue), var(--sky-blue-dark));
-            border-color: var(--sky-blue);
-        }
-
-        .toggle-knob {
-            position: absolute;
-            top: 3px;
-            right: 3px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--pure-white);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .toggle-switch.active .toggle-knob {
-            right: calc(100% - 23px);
-            background: var(--pure-black);
-        }
-
-        /* ============================================ */
-        /* ===== 📱 موبایل ===== */
-        /* ============================================ */
-
-        @media (max-width: 1100px) {
-            .plans-slider {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .desktop-layout {
-                display: block;
-                padding: 0;
-                min-height: 100vh;
-                min-height: 100dvh;
-            }
-
-            .sidebar-container,
-            .sidebar-container.collapsed {
-                width: 100%;
-                height: auto;
-                max-height: none;
-                position: relative;
-            }
-
-            .sidebar-panel {
-                position: relative;
-                border-radius: 0;
-                padding: 20px 18px 28px;
-                padding-top: max(20px, env(safe-area-inset-top));
-                padding-bottom: max(28px, env(safe-area-inset-bottom));
-                min-height: 100vh;
-                min-height: 100dvh;
-                gap: 16px;
-                box-shadow: none;
-                background: 
-                    radial-gradient(circle at 20% 0%, rgba(160, 207, 236, 0.08) 0%, transparent 40%),
-                    radial-gradient(circle at 80% 100%, rgba(160, 207, 236, 0.05) 0%, transparent 50%),
-                    var(--dark-surface);
-            }
-
-            .sidebar-container .sidebar-expanded-only {
-                opacity: 1 !important;
-                transform: none !important;
-                position: static !important;
-                width: auto !important;
-                height: auto !important;
-                overflow: visible !important;
-                pointer-events: all !important;
-            }
-
-            .sidebar-container .collapsed-icons,
-            .sidebar-container .account-icon-collapsed,
-            .sidebar-container .sidebar-toggle {
-                display: none !important;
-            }
-
-            .sidebar-container .profile-header-box {
-                display: flex !important;
-            }
-
-            .profile-header-box {
-                padding: 14px 16px;
-                border-radius: 24px;
-                background: linear-gradient(135deg, rgba(160, 207, 236, 0.08) 0%, rgba(18, 18, 18, 0.95) 60%);
-                border: 1px solid rgba(160, 207, 236, 0.2);
-            }
-
-            .credit-badge-trigger {
-                padding: 9px 14px;
-                font-size: 12px;
-                border-radius: 16px;
-            }
-
-            .avatar-wrapper {
-                width: 46px;
-                height: 46px;
-                box-shadow: 
-                    0 0 0 3px rgba(160, 207, 236, 0.15),
-                    0 0 20px var(--sky-blue-glow);
-            }
-
-            .menu-item {
-                padding: 15px 16px;
-                border-radius: 18px;
-                background: linear-gradient(135deg, rgba(18, 18, 18, 0.9), rgba(10, 10, 10, 0.9));
-                border: 1px solid rgba(160, 207, 236, 0.1);
-            }
-
-            .menu-item:active {
-                transform: scale(0.98);
-                background: linear-gradient(135deg, rgba(160, 207, 236, 0.1), rgba(18, 18, 18, 0.95));
-                border-color: rgba(160, 207, 236, 0.3);
-            }
-
-            .menu-item-content {
-                gap: 12px;
-                font-size: 13.5px;
-                font-weight: 700;
-            }
-
-            .menu-item-content i {
-                font-size: 17px;
-                filter: drop-shadow(0 0 6px var(--sky-blue-glow));
-            }
-
-            .service-card {
-                padding: 16px 14px;
-                border-radius: 20px;
-                font-size: 13px;
-                background: linear-gradient(135deg, rgba(18, 18, 18, 0.95), rgba(10, 10, 10, 0.95));
-                border: 1px solid rgba(160, 207, 236, 0.12);
-            }
-
-            .service-card:active {
-                transform: scale(0.96);
-                border-color: var(--sky-blue);
-                box-shadow: 0 0 25px var(--sky-blue-glow);
-            }
-
-            .service-card i {
-                font-size: 18px;
-            }
-
-            .wallet-modal-overlay {
-                align-items: flex-end;
-                padding: 0;
-            }
-
-            .wallet-modal {
-                max-width: 100%;
-                width: 100%;
-                max-height: 92vh;
-                max-height: 92dvh;
-                border-radius: 28px 28px 0 0;
-                padding: 8px 16px 20px;
-                padding-bottom: max(20px, env(safe-area-inset-bottom));
-                transform: translateY(100%);
-                opacity: 1;
-            }
-
-            .wallet-modal-overlay.show .wallet-modal {
-                transform: translateY(0);
-            }
-
-            .wallet-modal::before {
-                content: '';
-                display: block;
-                width: 44px;
-                height: 5px;
-                background: linear-gradient(90deg, transparent, var(--sky-blue), transparent);
-                border-radius: 10px;
-                margin: 0 auto 10px;
-                flex-shrink: 0;
-                box-shadow: 0 0 15px var(--sky-blue-glow);
-            }
-
-            /* اسلایدر موبایل */
-            .plans-track {
-                padding: 20px 15% 30px;
-                gap: 14px;
-            }
-
-            .plan-card-mobile {
-                flex: 0 0 70%;
-                max-width: none;
-            }
-        }
-
-        /* ===== 🍎 iPhone ===== */
-        @supports (-webkit-touch-callout: none) {
-            @media (max-width: 768px) {
-                .wallet-fullscreen-header {
-                    padding: 18px 20px;
-                    padding-top: max(18px, env(safe-area-inset-top));
-                }
-
-                .wallet-content {
-                    padding: 22px 0 44px;
-                    padding-bottom: max(44px, env(safe-area-inset-bottom));
-                    gap: 22px;
-                }
-
-                .balance-hero {
-                    padding: 44px 26px 32px;
-                    border-radius: 30px;
-                    margin: 0 22px;
-                }
-
-                .balance-hero-amount {
-                    font-size: 56px;
-                }
-
-                .balance-hero-amount .currency-label {
-                    font-size: 20px;
-                }
-
-                .wallet-actions {
-                    padding: 0 22px;
-                    gap: 14px;
-                }
-
-                .wallet-action-btn {
-                    padding: 20px 10px;
-                    border-radius: 24px;
-                }
-
-                .wallet-action-btn .action-icon {
-                    width: 52px;
-                    height: 52px;
-                    font-size: 22px;
-                    border-radius: 18px;
-                }
-
-                .plan-card-mobile {
-                    flex: 0 0 72%;
-                    padding: 26px 22px 22px;
-                    border-radius: 28px;
-                }
-
-                .plan-mobile-icon {
-                    width: 60px;
-                    height: 60px;
-                    font-size: 26px;
-                    border-radius: 20px;
-                }
-
-                .plan-mobile-name strong {
-                    font-size: 18px;
-                }
-
-                .plan-mobile-price-value {
-                    font-size: 26px;
-                }
-
-                .plan-mobile-buy-btn {
-                    padding: 17px;
-                    font-size: 15px;
-                    border-radius: 18px;
-                }
-
-                .plan-mobile-feature {
-                    font-size: 12px;
-                }
-            }
-        }
-
-        /* ===== 🤖 Android ===== */
-        @supports not (-webkit-touch-callout: none) {
-            @media (max-width: 768px) {
-                .wallet-fullscreen-header {
-                    padding: 14px 18px;
-                    padding-top: max(14px, env(safe-area-inset-top));
-                }
-
-                .wallet-content {
-                    padding: 18px 0 36px;
-                    padding-bottom: max(36px, env(safe-area-inset-bottom));
-                    gap: 18px;
-                }
-
-                .balance-hero {
-                    padding: 38px 22px 26px;
-                    border-radius: 26px;
-                    margin: 0 18px;
-                }
-
-                .balance-hero-amount {
-                    font-size: 48px;
-                }
-
-                .balance-hero-amount .currency-label {
-                    font-size: 17px;
-                }
-
-                .wallet-actions {
-                    padding: 0 18px;
-                    gap: 10px;
-                }
-
-                .wallet-action-btn {
-                    padding: 16px 8px;
-                    border-radius: 20px;
-                }
-
-                .wallet-action-btn .action-icon {
-                    width: 44px;
-                    height: 44px;
-                    font-size: 19px;
-                    border-radius: 15px;
-                }
-
-                .wallet-action-btn .action-label {
-                    font-size: 11px;
-                }
-
-                .plan-card-mobile {
-                    flex: 0 0 70%;
-                    padding: 22px 18px 18px;
-                    border-radius: 22px;
-                }
-
-                .plan-mobile-icon {
-                    width: 52px;
-                    height: 52px;
-                    font-size: 22px;
-                    border-radius: 17px;
-                }
-
-                .plan-mobile-name strong {
-                    font-size: 16px;
-                }
-
-                .plan-mobile-price-value {
-                    font-size: 22px;
-                }
-
-                .plan-mobile-buy-btn {
-                    padding: 14px;
-                    font-size: 13.5px;
-                    border-radius: 15px;
-                }
-
-                .plan-mobile-feature {
-                    font-size: 11px;
-                }
-            }
-        }
-
-        @media (max-width: 400px) {
-            .balance-hero-amount {
-                font-size: 42px;
-            }
-
-            .plan-mobile-price-value {
-                font-size: 20px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>راینو | دستیار هوشمند</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+:root{
+  --bg:#000000;
+  --panel:#0b0b0d;
+  --panel-2:#121215;
+  --panel-3:#1a1a1e;
+  --border:rgba(255,255,255,.07);
+  --border-2:rgba(255,255,255,.12);
+  --text:#f5f5f7;
+  --text-2:#b8b8c0;
+  --muted:#6e6e78;
+  --muted-2:#4a4a54;
+  --blue:#3b82f6;
+  --blue-2:#2563eb;
+  --violet:#8b5cf6;
+  --cyan:#22d3ee;
+  --emerald:#10b981;
+  --rose:#f43f5e;
+  --amber:#f59e0b;
+
+  --safe-top:env(safe-area-inset-top, 0px);
+  --safe-bottom:env(safe-area-inset-bottom, 0px);
+
+  --ease:cubic-bezier(.4,0,.2,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+
+  --tab-h:64px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*::selection{background:rgba(59,130,246,.35);color:#fff}
+
+html,body{width:100%;height:100%;overscroll-behavior:none}
+html{-webkit-text-size-adjust:100%}
+
+body{
+  overflow:hidden;
+  background:#000;
+  color:var(--text);
+  font-family:"Vazirmatn",Tahoma,Arial,sans-serif;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  position:fixed;
+  inset:0;
+}
+
+/* هیچ گرادیان محیطی — فقط مشکی خالص */
+
+/* ============ STARS (خیلی ظریف روی مشکی) ============ */
+#stars{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
+}
+.star{
+  position:absolute;
+  border-radius:50%;
+  background:#ffffff;
+  animation:twinkle var(--dur,4s) ease-in-out infinite;
+  animation-delay:var(--delay,0s);
+  will-change:transform,opacity;
+}
+@keyframes twinkle{
+  0%,100%{transform:scale(.6);opacity:.05}
+  50%{transform:scale(1.3);opacity:.55}
+}
+
+/* ============ APP ============ */
+.app{
+  position:relative;
+  width:100%;
+  height:100dvh;
+  height:100vh;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  background:#000;
+}
+
+/* ============ HEADER ============ */
+.m-header{
+  position:relative;
+  z-index:30;
+  padding:calc(var(--safe-top) + 10px) 16px 10px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s var(--ease);
+  flex:none;
+}
+.m-header.scrolled{border-bottom-color:var(--border)}
+
+.m-user{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:1;
+  min-width:0;
+  cursor:pointer;
+}
+.m-avatar{
+  width:38px;height:38px;
+  border-radius:50%;
+  background:conic-gradient(from 210deg,#22d3ee,#3b82f6,#8b5cf6,#22d3ee);
+  position:relative;
+  flex:none;
+  padding:2px;
+  box-shadow:0 4px 14px rgba(59,130,246,.3);
+}
+.m-avatar::after{
+  content:"";
+  position:absolute;
+  inset:2px;
+  border-radius:50%;
+  background:#000;
+}
+.m-avatar span{
+  position:absolute;
+  inset:4px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#1e293b,#000);
+  display:grid;
+  place-items:center;
+  font-size:13px;
+  font-weight:800;
+  color:#93c5fd;
+  z-index:2;
+}
+.m-user-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.m-hello{font-size:11px;color:var(--muted);font-weight:500}
+.m-name{font-size:14px;font-weight:700;color:var(--text)}
+
+.m-actions{display:flex;align-items:center;gap:6px;flex:none}
+.m-icon-btn{
+  width:38px;height:38px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.03);
+  color:var(--text-2);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  transition:.18s var(--ease);
+  position:relative;
+  flex:none;
+}
+.m-icon-btn:active{transform:scale(.92);background:rgba(255,255,255,.08)}
+.m-icon-btn svg{width:19px;height:19px}
+.m-icon-btn .dot{
+  position:absolute;
+  top:8px;right:8px;
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--emerald);
+  box-shadow:0 0 8px var(--emerald);
+  border:1.5px solid #000;
+}
+
+/* ============ SCROLL ============ */
+.m-scroll{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  position:relative;
+  z-index:5;
+  padding:8px 0 calc(var(--tab-h) + var(--safe-bottom) + 90px);
+  scrollbar-width:none;
+  background:#000;
+}
+.m-scroll::-webkit-scrollbar{display:none}
+
+/* ============ HERO ============ */
+.m-hero{
+  padding:22px 20px 0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  animation:heroIn .7s var(--ease-out) both;
+}
+@keyframes heroIn{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.m-eyebrow{
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-2);
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-bottom:6px;
+}
+.m-eyebrow .wave{
+  display:inline-block;
+  animation:wave 2.4s ease-in-out infinite;
+  transform-origin:70% 70%;
+}
+@keyframes wave{
+  0%,60%,100%{transform:rotate(0)}
+  10%{transform:rotate(14deg)}
+  20%{transform:rotate(-8deg)}
+  30%{transform:rotate(14deg)}
+  40%{transform:rotate(-4deg)}
+  50%{transform:rotate(10deg)}
+}
+
+.m-title{
+  font-size:26px;
+  font-weight:800;
+  line-height:1.35;
+  letter-spacing:-.6px;
+  margin-bottom:8px;
+  background:linear-gradient(180deg,#ffffff 0%,#a1a1aa 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.m-title .accent{
+  background:linear-gradient(135deg,#60a5fa,#8b5cf6);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.m-subtitle{
+  font-size:12.5px;
+  color:var(--muted);
+  max-width:300px;
+  margin-bottom:22px;
+}
+
+/* ============ QUICK CHIPS ============ */
+.m-quick-scroll{
+  display:flex;
+  gap:8px;
+  padding:4px 20px 18px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  animation:fadeUp .7s var(--ease-out) .15s both;
+  -webkit-overflow-scrolling:touch;
+}
+.m-quick-scroll::-webkit-scrollbar{display:none}
+.m-quick-scroll::after{content:"";flex:none;width:12px}
+
+.m-quick-chip{
+  flex:none;
+  height:38px;
+  padding:0 15px;
+  border-radius:19px;
+  border:1px solid var(--border-2);
+  background:#0d0d10;
+  color:var(--text-2);
+  font:500 12.5px "Vazirmatn",Tahoma,sans-serif;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  cursor:pointer;
+  transition:.2s var(--ease);
+  white-space:nowrap;
+}
+.m-quick-chip:active{
+  transform:scale(.94);
+  background:#18181c;
+  border-color:rgba(59,130,246,.4);
+  color:#fff;
+}
+.m-quick-chip svg{width:15px;height:15px;flex:none}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ============ SECTION ============ */
+.m-section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px 10px;
+}
+.m-section-title{
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.m-section-title::before{
+  content:"";
+  width:3px;height:14px;
+  border-radius:3px;
+  background:linear-gradient(180deg,#60a5fa,#3b82f6);
+  box-shadow:0 0 10px rgba(59,130,246,.6);
+}
+.m-section-link{
+  font-size:11px;
+  color:var(--blue);
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* ============ FEATURE CARDS ============ */
+.m-cards-scroll{
+  display:flex;
+  gap:10px;
+  padding:0 20px 20px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.m-cards-scroll::-webkit-scrollbar{display:none}
+.m-cards-scroll::after{content:"";flex:none;width:10px}
+
+.m-feature{
+  flex:none;
+  width:150px;
+  height:130px;
+  border-radius:20px;
+  padding:14px;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.08);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:.22s var(--ease);
+  box-shadow:0 10px 26px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.m-feature:active{transform:scale(.96)}
+.m-feature::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.08) 50%,transparent 70%);
+  transform:translateX(-100%);
+  transition:transform .7s var(--ease);
+}
+.m-feature:active::before{transform:translateX(100%)}
+
+.m-feature-icon{
+  width:38px;height:38px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25), 0 6px 16px rgba(0,0,0,.4);
+  position:relative;
+  z-index:1;
+}
+.m-feature-icon svg{width:20px;height:20px}
+.m-feature-text{position:relative;z-index:1;text-align:right}
+.m-feature-title{font-size:13px;font-weight:700;color:#fff;line-height:1.3}
+.m-feature-sub{font-size:10px;margin-top:4px;color:rgba(255,255,255,.6)}
+
+.f-blue{background:linear-gradient(150deg,#0a2740,#000)}
+.f-blue .m-feature-icon{background:linear-gradient(145deg,#38bdf8,#0284c7)}
+.f-purple{background:linear-gradient(150deg,#1f0d40,#000)}
+.f-purple .m-feature-icon{background:linear-gradient(145deg,#a855f7,#7c3aed)}
+.f-green{background:linear-gradient(150deg,#0a2a24,#000)}
+.f-green .m-feature-icon{background:linear-gradient(145deg,#2dd4bf,#0d9488)}
+.f-red{background:linear-gradient(150deg,#2d0a18,#000)}
+.f-red .m-feature-icon{background:linear-gradient(145deg,#fb7185,#e11d48)}
+.f-indigo{background:linear-gradient(150deg,#0e1735,#000)}
+.f-indigo .m-feature-icon{background:linear-gradient(145deg,#6366f1,#4f46e5)}
+
+/* ============ HISTORY ============ */
+.m-history{
+  padding:0 20px 20px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.m-history-item{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:12px 14px;
+  border-radius:14px;
+  background:#0a0a0c;
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:.18s var(--ease);
+  animation:fadeUp .4s var(--ease-out) both;
+}
+.m-history-item:active{transform:scale(.98);background:#141418}
+.m-history-icon{
+  width:32px;height:32px;
+  border-radius:10px;
+  background:rgba(59,130,246,.12);
+  border:1px solid rgba(59,130,246,.2);
+  display:grid;place-items:center;
+  flex:none;
+}
+.m-history-icon svg{width:15px;height:15px;color:#60a5fa}
+.m-history-body{flex:1;min-width:0}
+.m-history-text{
+  font-size:12.5px;
+  color:var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-weight:500;
+}
+.m-history-time{font-size:10px;color:var(--muted);margin-top:2px}
+.m-history-chev{color:var(--muted);flex:none}
+.m-history-chev svg{width:14px;height:14px}
+
+.m-empty{
+  padding:40px 20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  text-align:center;
+}
+.m-empty-icon{
+  width:60px;height:60px;
+  border-radius:50%;
+  background:#0a0a0c;
+  border:1px solid var(--border);
+  display:grid;place-items:center;
+}
+.m-empty-icon svg{width:26px;height:26px;color:var(--muted)}
+.m-empty-title{font-size:13px;font-weight:600;color:var(--text-2)}
+.m-empty-sub{font-size:11px;color:var(--muted)}
+
+/* ============ COMPOSER ============ */
+.m-composer{
+  position:fixed;
+  z-index:35;
+  left:0;
+  right:0;
+  bottom:calc(var(--tab-h) + var(--safe-bottom));
+  padding:10px 12px;
+  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.85) 40%,#000 100%);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.m-composer-inner{
+  border:1px solid var(--border-2);
+  border-radius:22px;
+  background:#0a0a0d;
+  box-shadow:0 12px 40px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.04);
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  padding:6px;
+  transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.m-composer-inner:focus-within{
+  border-color:rgba(59,130,246,.5);
+  box-shadow:0 12px 40px rgba(0,0,0,.8), 0 0 0 3px rgba(59,130,246,.12), 0 0 30px rgba(59,130,246,.15);
+}
+
+.m-add-btn{
+  width:38px;height:38px;
+  border-radius:50%;
+  border:0;
+  background:rgba(255,255,255,.05);
+  color:var(--text-2);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  flex:none;
+  transition:.18s var(--ease);
+}
+.m-add-btn:active{transform:scale(.9);background:rgba(255,255,255,.12)}
+.m-add-btn svg{width:20px;height:20px}
+
+.m-prompt{
+  flex:1;
+  min-height:38px;
+  max-height:120px;
+  padding:9px 6px;
+  border:0;
+  outline:0;
+  resize:none;
+  background:transparent;
+  color:var(--text);
+  font:400 14px/1.5 "Vazirmatn",Tahoma,sans-serif;
+  caret-color:var(--blue);
+}
+.m-prompt::placeholder{color:var(--muted)}
+
+.m-send-btn{
+  width:38px;height:38px;
+  border-radius:50%;
+  border:0;
+  background:linear-gradient(145deg,#4b8cff,#2563eb);
+  color:#fff;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  flex:none;
+  box-shadow:0 6px 18px rgba(37,99,235,.5), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:.22s var(--ease-spring);
+}
+.m-send-btn:active{transform:scale(.9)}
+.m-send-btn:disabled{
+  opacity:.35;
+  background:rgba(255,255,255,.06);
+  box-shadow:none;
+  cursor:not-allowed;
+}
+.m-send-btn svg{width:19px;height:19px;transform:rotate(180deg)}
+
+/* ============ TABBAR ============ */
+.m-tabbar{
+  position:fixed;
+  z-index:40;
+  left:0;
+  right:0;
+  bottom:0;
+  height:calc(var(--tab-h) + var(--safe-bottom));
+  padding-bottom:var(--safe-bottom);
+  background:rgba(0,0,0,.92);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  box-shadow:0 -10px 40px rgba(0,0,0,.9);
+}
+.m-tab{
+  flex:1;
+  height:var(--tab-h);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s var(--ease);
+  position:relative;
+  border:0;
+  background:transparent;
+  font-family:inherit;
+  padding:0;
+}
+.m-tab svg{
+  width:23px;height:23px;
+  transition:transform .25s var(--ease-spring);
+}
+.m-tab.active{color:var(--blue)}
+.m-tab.active svg{
+  transform:translateY(-2px) scale(1.08);
+  filter:drop-shadow(0 0 8px rgba(59,130,246,.7));
+}
+.m-tab.active::before{
+  content:"";
+  position:absolute;
+  top:0;
+  width:26px;
+  height:3px;
+  border-radius:0 0 3px 3px;
+  background:linear-gradient(90deg,#60a5fa,#3b82f6);
+  box-shadow:0 0 12px rgba(59,130,246,.7);
+  animation:tabIn .3s var(--ease-spring) both;
+}
+@keyframes tabIn{
+  from{transform:scaleX(0);opacity:0}
+  to{transform:scaleX(1);opacity:1}
+}
+.m-tab:active svg{transform:scale(.88)}
+.m-tab .badge{
+  position:absolute;
+  top:8px;
+  right:calc(50% - 16px);
+  min-width:16px;
+  height:16px;
+  padding:0 4px;
+  border-radius:8px;
+  background:var(--rose);
+  color:#fff;
+  font-size:9px;
+  font-weight:700;
+  display:grid;
+  place-items:center;
+  border:2px solid #000;
+  box-shadow:0 0 8px rgba(244,63,94,.5);
+}
+
+/* ============ DRAWER ============ */
+.m-drawer-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:60;
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .3s var(--ease);
+}
+.m-drawer-backdrop.show{opacity:1;pointer-events:auto}
+
+.m-drawer{
+  position:fixed;
+  z-index:61;
+  top:0;
+  bottom:0;
+  right:0;
+  width:min(320px,86vw);
+  background:#000;
+  border-left:1px solid var(--border);
+  transform:translateX(100%);
+  transition:transform .38s var(--ease-out);
+  display:flex;
+  flex-direction:column;
+  padding:calc(var(--safe-top) + 16px) 14px calc(var(--safe-bottom) + 16px);
+  box-shadow:-20px 0 60px rgba(0,0,0,.9);
+  will-change:transform;
+}
+.m-drawer.open{transform:translateX(0)}
+
+.m-drawer-head{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:6px 6px 18px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:14px;
+}
+.m-drawer-logo{
+  width:40px;height:40px;
+  border-radius:13px;
+  background:conic-gradient(from 210deg,#3b82f6,#8b5cf6,#22d3ee,#3b82f6);
+  display:grid;
+  place-items:center;
+  box-shadow:0 6px 18px rgba(59,130,246,.35), inset 0 1px 0 rgba(255,255,255,.25);
+  position:relative;
+  overflow:hidden;
+  flex:none;
+}
+.m-drawer-logo::after{
+  content:"";
+  position:absolute;
+  inset:3px;
+  border-radius:10px;
+  background:#000;
+}
+.m-drawer-logo svg{
+  position:relative;
+  z-index:2;
+  width:20px;height:20px;
+  color:#fff;
+}
+.m-drawer-title{font-size:15px;font-weight:800}
+.m-drawer-sub{font-size:11px;color:var(--muted);font-weight:500}
+
+.m-drawer-nav{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  flex:1;
+  overflow-y:auto;
+}
+.m-drawer-item{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:12px 14px;
+  border-radius:14px;
+  color:var(--text-2);
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:.18s var(--ease);
+  border:1px solid transparent;
+}
+.m-drawer-item:active{transform:scale(.98);background:rgba(255,255,255,.05)}
+.m-drawer-item.active{
+  background:linear-gradient(90deg,rgba(59,130,246,.16),rgba(59,130,246,.03));
+  color:#fff;
+  border-color:rgba(59,130,246,.22);
+}
+.m-drawer-item svg{width:20px;height:20px;flex:none;opacity:.9}
+.m-drawer-item .badge{
+  margin-right:auto;
+  font-size:10px;
+  font-weight:700;
+  padding:2px 7px;
+  border-radius:8px;
+  background:rgba(59,130,246,.18);
+  color:#93c5fd;
+  border:1px solid rgba(59,130,246,.25);
+}
+
+.m-drawer-footer{
+  padding-top:14px;
+  border-top:1px solid var(--border);
+  margin-top:14px;
+}
+.m-drawer-user{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:10px;
+  border-radius:14px;
+  background:#0a0a0c;
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:.18s var(--ease);
+}
+.m-drawer-user:active{transform:scale(.98);background:#141418}
+.m-drawer-user .m-avatar{width:36px;height:36px}
+.m-drawer-user-text{flex:1;min-width:0}
+.m-drawer-user-name{font-size:13px;font-weight:700}
+.m-drawer-user-plan{font-size:10px;color:var(--amber);font-weight:600;margin-top:1px}
+
+/* ============ TOAST ============ */
+.toast-wrap{
+  position:fixed;
+  z-index:100;
+  bottom:calc(var(--tab-h) + var(--safe-bottom) + 90px);
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  pointer-events:none;
+  width:max-content;
+  max-width:calc(100vw - 32px);
+}
+.toast{
+  pointer-events:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 16px;
+  border-radius:14px;
+  background:#0a0a0d;
+  border:1px solid var(--border-2);
+  color:var(--text);
+  font-size:12.5px;
+  font-weight:500;
+  box-shadow:0 16px 40px rgba(0,0,0,.9);
+  animation:toastIn .35s var(--ease-spring) both;
+}
+.toast.out{animation:toastOut .28s var(--ease) both}
+.toast-icon{
+  width:24px;height:24px;
+  border-radius:50%;
+  display:grid;place-items:center;
+  flex:none;
+}
+.toast-icon svg{width:13px;height:13px;color:#fff}
+.toast.success .toast-icon{background:linear-gradient(145deg,#34d399,#059669)}
+.toast.info .toast-icon{background:linear-gradient(145deg,#60a5fa,#2563eb)}
+.toast.error .toast-icon{background:linear-gradient(145deg,#fb7185,#e11d48)}
+@keyframes toastIn{
+  from{opacity:0;transform:translateY(20px) scale(.94)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes toastOut{
+  to{opacity:0;transform:translateY(12px) scale(.96)}
+}
+
+/* ============ RIPPLE ============ */
+.ripple{
+  position:absolute;
+  border-radius:50%;
+  background:rgba(255,255,255,.15);
+  transform:scale(0);
+  animation:rippleAnim .6s var(--ease-out);
+  pointer-events:none;
+}
+@keyframes rippleAnim{
+  to{transform:scale(3);opacity:0}
+}
+
+/* ============ RESPONSIVE ============ */
+@media(min-width:420px){
+  .m-title{font-size:28px}
+  .m-feature{width:160px;height:140px}
+}
+
+@media(min-width:768px){
+  .app{
+    max-width:480px;
+    margin:0 auto;
+    border-left:1px solid var(--border);
+    border-right:1px solid var(--border);
+    box-shadow:0 0 80px rgba(0,0,0,.9);
+  }
+  .m-composer,
+  .m-tabbar{
+    max-width:480px;
+    left:50%;
+    right:auto;
+    transform:translateX(-50%);
+    width:100%;
+  }
+  .m-drawer{width:min(320px,50vw)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+}
+
+:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:2px;
+  border-radius:8px;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="desktop-layout">
-        <div class="sidebar-container" id="sidebarContainer">
-            <aside class="sidebar-panel">
-                
-                <div class="profile-header-box sidebar-expanded-only">
-                    <div class="credit-badge-trigger" onclick="openWalletModal()">
-                        <i class="fa-solid fa-bolt"></i>
-                        <span id="credit-count">۳,۸۵۰</span>
-                    </div>
+<div id="stars" aria-hidden="true"></div>
 
-                    <div class="user-info-box">
-                        <div class="user-details">
-                            <span class="welcome-text">خوش آمدید</span>
-                            <span class="edit-profile-link" onclick="editProfile()">ویرایش حساب</span>
-                        </div>
-                        <div class="avatar-wrapper" onclick="document.getElementById('file-input').click()">
-                            <img id="avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=RemaxMono" alt="Avatar">
-                            <div class="overlay"><i class="fa-solid fa-camera"></i></div>
-                        </div>
-                        <input type="file" id="file-input" accept="image/*">
-                    </div>
-                </div>
+<div class="app">
 
-                <div class="account-icon-collapsed" onclick="editProfile()">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="9" r="3" stroke="currentColor" stroke-width="1.5"></circle>
-                        <path d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                        <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-                    </svg>
-                </div>
+  <header class="m-header" id="mHeader">
+    <div class="m-user" id="mUserBtn" role="button" tabindex="0">
+      <div class="m-avatar"><span>ر</span></div>
+      <div class="m-user-text">
+        <span class="m-hello" id="mHello">عصر بخیر</span>
+        <span class="m-name">کاربر راینو</span>
+      </div>
+    </div>
+    <div class="m-actions">
+      <button class="m-icon-btn" id="mThemeBtn" aria-label="تغییر تم">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M5 5l1.5 1.5M17.5 17.5 19 19M3 12h2M19 12h2M5 19l1.5-1.5M17.5 6.5 19 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/></svg>
+      </button>
+      <button class="m-icon-btn" id="mMenuBtn" aria-label="منو">
+        <span class="dot" aria-hidden="true"></span>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
 
-                <div class="menu-list sidebar-expanded-only">
-                    <div class="menu-item">
-                        <div class="menu-item-content">
-                            <i class="fa-solid fa-microchip"></i>
-                            <span>مدل ها</span>
-                        </div>
-                        <span class="sub-tag">ChatGPT 5.5</span>
-                    </div>
+  <main class="m-scroll" id="mScroll">
 
-                    <div class="menu-item">
-                        <div class="menu-item-content">
-                            <i class="fa-regular fa-clock"></i>
-                            <span>تاریخچه گفتگوها</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
-                    </div>
-                </div>
+    <section class="m-hero">
+      <div class="m-eyebrow">
+        <span id="mGreeting">عصر بخیر کاربر گرامی</span>
+        <span class="wave" aria-hidden="true">👋</span>
+      </div>
+      <h1 class="m-title">امروز چه می‌خوای <span class="accent">بدونی؟</span></h1>
+      <p class="m-subtitle">دستیار هوشمند راینو آماده‌ی کمک به توست</p>
+    </section>
 
-                <div class="section-title sidebar-expanded-only">سرویس های اصلی</div>
-                <div class="services-grid sidebar-expanded-only">
-                    <div class="service-card">
-                        <span>ویدیو</span>
-                        <i class="fa-solid fa-clapperboard"></i>
-                    </div>
-                    <div class="service-card">
-                        <span>تصویر</span>
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-                    <div class="service-card">
-                        <span>موزیک</span>
-                        <i class="fa-solid fa-music"></i>
-                    </div>
-                    <div class="service-card">
-                        <span>گالری</span>
-                        <i class="fa-solid fa-shapes"></i>
-                    </div>
-                </div>
-
-                <div class="section-title sidebar-expanded-only">امکانات و ابزارها</div>
-                <div class="menu-list sidebar-expanded-only">
-                    <div class="menu-item">
-                        <div class="menu-item-content">
-                            <i class="fa-solid fa-robot"></i>
-                            <span>دستیارهای تخصصی</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
-                    </div>
-
-                    <div class="menu-item">
-                        <div class="menu-item-content">
-                            <i class="fa-solid fa-toolbox"></i>
-                            <span>جعبه ابزار هوشمند</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
-                    </div>
-
-                    <div class="menu-item">
-                        <div class="menu-item-content">
-                            <i class="fa-solid fa-wave-square"></i>
-                            <span>صداگذاری و دوبله</span>
-                        </div>
-                        <span class="badge-new">جدید</span>
-                    </div>
-
-                    <div class="menu-item">
-                        <div class="menu-item-content">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            <span>کانال اختصاصی پرامپت</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-left" style="font-size: 10px; color: var(--muted-gray);"></i>
-                    </div>
-                </div>
-
-                <div class="menu-list sidebar-expanded-only" style="margin-top: auto;">
-                    <div class="menu-item">
-                        <div class="menu-item-content">
-                            <i class="fa-solid fa-headset"></i>
-                            <span>پشتیبانی آنلاین</span>
-                        </div>
-                    </div>
-
-                    <div class="menu-item" onclick="openSettings()">
-                        <div class="menu-item-content">
-                            <i class="fa-solid fa-gear"></i>
-                            <span>تنظیمات عمومی</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="collapsed-icons">
-                    <div class="collapsed-icon-item special" data-label="کیف پول MAX" onclick="openWalletModal()">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-
-                    <div class="collapsed-icon-item" data-label="مدل ها" onclick="alert('مدل ها')">
-                        <i class="fa-solid fa-microchip"></i>
-                    </div>
-
-                    <div class="collapsed-icon-item" data-label="تاریخچه گفتگوها" onclick="alert('تاریخچه')">
-                        <i class="fa-regular fa-clock"></i>
-                    </div>
-
-                    <div class="collapsed-divider"></div>
-
-                    <div class="collapsed-icon-item" data-label="تصویر" onclick="alert('تصویر')">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-
-                    <div class="collapsed-icon-item" data-label="ویدیو" onclick="alert('ویدیو')">
-                        <i class="fa-solid fa-clapperboard"></i>
-                    </div>
-
-                    <div class="collapsed-icon-item" data-label="موزیک" onclick="alert('موزیک')">
-                        <i class="fa-solid fa-music"></i>
-                    </div>
-
-                    <div class="collapsed-divider"></div>
-
-                    <div class="collapsed-icon-item" data-label="دستیارهای تخصصی" onclick="alert('دستیارها')">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-
-                    <div class="collapsed-icon-item" data-label="تنظیمات عمومی" onclick="openSettings()">
-                        <i class="fa-solid fa-gear"></i>
-                    </div>
-
-                    <div class="collapsed-spacer"></div>
-
-                    <div class="sidebar-toggle" onclick="toggleSidebar()">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </div>
-                </div>
-
-                <div class="sidebar-toggle sidebar-expanded-only" onclick="toggleSidebar()">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </div>
-
-            </aside>
-        </div>
+    <div class="m-quick-scroll">
+      <button class="m-quick-chip" data-fill="یک برنامه حرفه‌ای برای پروژه‌ام بنویس">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M8 5h8M8 9h8M8 13h5M5 3h14v18H5z" stroke="currentColor" stroke-width="1.5"/></svg>
+        برنامه‌نویسی
+      </button>
+      <button class="m-quick-chip" data-fill="این متن را حرفه‌ای و خوانا ویرایش کن">
+        <svg viewBox="0 0 24 24" fill="none"><path d="m4 17 10-10 3 3L7 20H4v-3ZM14 7l2-2 3 3-2 2" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        ویرایش متن
+      </button>
+      <button class="m-quick-chip" data-fill="این متن را به انگلیسی ترجمه کن">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 5h8M9 5c0 5-2 8-5 10M7 10c1.5 2 3 3.5 5 5M14 18h6M17 6l4 12M14.8 14h4.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        ترجمه      </button>
+      <button class="m-quick-chip" data-fill="چند ایده خلاقانه برای این موضوع بده">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 21h4M8.2 14.5A6 6 0 1 1 16 14.5c-.8.7-1 1.3-1 2.5H9.2c0-1.2-.2-1.8-1-2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        ایده‌پردازی
+      </button>
+      <button class="m-quick-chip" data-fill="این موضوع را برای من آموزش بده">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5 12 3l8 2.5-8 2.5L4 5.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M7 8v5c2.7 2 7.3 2 10 0V8M20 6v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        یادگیری
+      </button>
     </div>
 
-    <!-- ================================================== -->
-    <!-- 💰 کیف پول تمام‌صفحه                                -->
-    <!-- ================================================== -->
-    <div class="wallet-fullscreen" id="walletFullscreen">
-        
-        <div class="wallet-fullscreen-header">
-            <button class="wallet-back-btn" onclick="closeWalletModal()">
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
-            
-            <div class="wallet-fullscreen-title">
-                <i class="fa-solid fa-wallet"></i>
-                <span>کیف پول MAX</span>
-            </div>
-            
-            <div class="wallet-header-spacer"></div>
+    <div class="m-section-head">
+      <div class="m-section-title">امکانات ویژه</div>
+      <div class="m-section-link">همه</div>
+    </div>
+    <div class="m-cards-scroll">
+      <div class="m-feature f-blue" data-action="channel">
+        <div class="m-feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="m5 12 14-6-3 13-4-5-4 2 1-5-4 1Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </div>
-
-        <div class="wallet-content">
-            
-            <!-- کارت موجودی -->
-            <div class="balance-hero">
-                <div class="balance-hero-glow"></div>
-                <div class="balance-hero-label">موجودی فعلی شما</div>
-                <div class="balance-hero-amount" id="maxBalanceDisplay">
-                    <span id="maxBalanceValue">۳,۸۵۰</span>
-                    <span class="currency-label">MAX</span>
-                </div>
-            </div>
-
-            <!-- دکمه‌های عملیات -->
-            <div class="wallet-actions">
-                <button class="wallet-action-btn" onclick="increaseMax()">
-                    <div class="action-icon">
-                        <i class="fa-solid fa-arrow-down-left"></i>
-                    </div>
-                    <span class="action-label">افزایش<br>موجودی</span>
-                </button>
-                <button class="wallet-action-btn" onclick="transferMax()">
-                    <div class="action-icon">
-                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                    </div>
-                    <span class="action-label">انتقال<br>MAX</span>
-                </button>
-                <button class="wallet-action-btn" onclick="claimDailyBonus()">
-                    <div class="action-icon">
-                        <i class="fa-solid fa-gift"></i>
-                    </div>
-                    <span class="action-label">جایزه<br>روزانه</span>
-                </button>
-            </div>
-
-            <!-- پکیج‌ها -->
-            <div class="plans-section">
-                <div class="plans-section-header">
-                    <div class="plans-section-title">
-                        <i class="fa-solid fa-crown"></i>
-                        <span>خرید اشتراک</span>
-                    </div>
-                    <div class="plans-section-subtitle">
-                        <span>بکشید</span>
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </div>
-                </div>
-
-                <!-- اسلایدر کاروسل -->
-                <div class="plans-carousel">
-                    <div class="plans-track" id="plansTrack">
-
-                        <!-- رایگان -->
-                        <div class="plan-card-mobile" data-index="0">
-                            <div class="plan-mobile-header">
-                                <div class="plan-mobile-info">
-                                    <div class="plan-mobile-icon">
-                                        <i class="fa-solid fa-seedling"></i>
-                                    </div>
-                                    <div class="plan-mobile-name">
-                                        <strong>رایگان</strong>
-                                        <span>بدون محدودیت</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="plan-mobile-price">
-                                <div class="plan-mobile-price-value">۰</div>
-                                <div class="plan-mobile-price-period">تومان / ماه</div>
-                            </div>
-
-                            <div class="plan-mobile-features">
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۱۰ پیام در روز</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۱ تصویر در هفته</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۲ درخواست TTS</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>مدل‌های پایه</span></div>
-                            </div>
-
-                            <button class="plan-mobile-buy-btn" disabled>
-                                <i class="fa-solid fa-check"></i>
-                                فعال است
-                            </button>
-                        </div>
-
-                        <!-- پایه -->
-                        <div class="plan-card-mobile" data-index="1">
-                            <div class="plan-mobile-header">
-                                <div class="plan-mobile-info">
-                                    <div class="plan-mobile-icon">
-                                        <i class="fa-solid fa-bolt"></i>
-                                    </div>
-                                    <div class="plan-mobile-name">
-                                        <strong>پایه</strong>
-                                        <span>اعتبار ۳۰ روزه</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="plan-mobile-price">
-                                <div class="plan-mobile-price-value">۱۹۹,۰۰۰</div>
-                                <div class="plan-mobile-price-period">تومان / ماه</div>
-                            </div>
-
-                            <div class="plan-mobile-features">
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۱۰ پیام / ۳ ساعت</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>تولید تصویر</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۴۰ واحد صدا</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۱ واحد ویدیو</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۱ اپلیکیشن</span></div>
-                            </div>
-
-                            <button class="plan-mobile-buy-btn" onclick="buyPlan('پایه', 199000)">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                خرید
-                            </button>
-                        </div>
-
-                        <!-- پلاس (Featured) -->
-                        <div class="plan-card-mobile featured" data-index="2">
-                            <div class="plan-mobile-header">
-                                <div class="plan-mobile-info">
-                                    <div class="plan-mobile-icon">
-                                        <i class="fa-solid fa-star"></i>
-                                    </div>
-                                    <div class="plan-mobile-name">
-                                        <strong>پلاس</strong>
-                                        <span>اعتبار ۳۰ روزه</span>
-                                    </div>
-                                </div>
-                                <div class="plan-mobile-badge popular">محبوب</div>
-                            </div>
-                            
-                            <div class="plan-mobile-price">
-                                <div class="plan-mobile-price-value">۵۳۹,۰۰۰</div>
-                                <div class="plan-mobile-price-period">تومان / ماه</div>
-                            </div>
-
-                            <div class="plan-mobile-features">
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۲۰ پیام / ۳ ساعت</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>تولید تصویر</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۸۰ واحد صدا</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۳ واحد ویدیو</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۳ اپلیکیشن</span></div>
-                                <div class="plan-mobile-feature highlight"><i class="fa-solid fa-check"></i><span>دسترسی به مدل‌های پیشرفته</span></div>
-                            </div>
-
-                            <button class="plan-mobile-buy-btn" onclick="buyPlan('پلاس', 539000)">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                خرید
-                            </button>
-                        </div>
-
-                        <!-- پرو -->
-                        <div class="plan-card-mobile" data-index="3">
-                            <div class="plan-mobile-header">
-                                <div class="plan-mobile-info">
-                                    <div class="plan-mobile-icon">
-                                        <i class="fa-solid fa-gem"></i>
-                                    </div>
-                                    <div class="plan-mobile-name">
-                                        <strong>پرو</strong>
-                                        <span>اعتبار ۳۰ روزه</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="plan-mobile-price">
-                                <div class="plan-mobile-price-value">۱,۲۳۹,۰۰۰</div>
-                                <div class="plan-mobile-price-period">تومان / ماه</div>
-                            </div>
-
-                            <div class="plan-mobile-features">
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۳۰ پیام / ۳ ساعت</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>تولید تصویر</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۱۵۰ واحد صدا</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۱۰ واحد ویدیو</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۳ اپلیکیشن</span></div>
-                                <div class="plan-mobile-feature highlight"><i class="fa-solid fa-check"></i><span>دسترسی به مدل‌های حرفه‌ای</span></div>
-                            </div>
-
-                            <button class="plan-mobile-buy-btn" onclick="buyPlan('پرو', 1239000)">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                خرید
-                            </button>
-                        </div>
-
-                        <!-- پرو مکس (Best) -->
-                        <div class="plan-card-mobile featured" data-index="4">
-                            <div class="plan-mobile-header">
-                                <div class="plan-mobile-info">
-                                    <div class="plan-mobile-icon">
-                                        <i class="fa-solid fa-crown"></i>
-                                    </div>
-                                    <div class="plan-mobile-name">
-                                        <strong>پرو مکس</strong>
-                                        <span>اعتبار ۳۰ روزه</span>
-                                    </div>
-                                </div>
-                                <div class="plan-mobile-badge best">بهترین</div>
-                            </div>
-                            
-                            <div class="plan-mobile-price">
-                                <div class="plan-mobile-price-value">۵,۵۹۹,۰۰۰</div>
-                                <div class="plan-mobile-price-period">تومان / ماه</div>
-                            </div>
-
-                            <div class="plan-mobile-features">
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۱۱۰ پیام / ۳ ساعت</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>تولید تصویر</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۴۰۰ واحد صدا</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۳۰ واحد ویدیو</span></div>
-                                <div class="plan-mobile-feature"><i class="fa-solid fa-check"></i><span>۱۵ اپلیکیشن</span></div>
-                                <div class="plan-mobile-feature highlight"><i class="fa-solid fa-check"></i><span>دسترسی به کامل‌ترین مدل‌ها</span></div>
-                            </div>
-
-                            <button class="plan-mobile-buy-btn" onclick="buyPlan('پرو مکس', 5599000)">
-                                <i class="fa-solid fa-crown"></i>
-                                خرید
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- نقطه‌های اسلایدر -->
-                <div class="plans-dots" id="plansDots">
-                    <div class="plan-dot active" data-index="0"></div>
-                    <div class="plan-dot" data-index="1"></div>
-                    <div class="plan-dot" data-index="2"></div>
-                    <div class="plan-dot" data-index="3"></div>
-                    <div class="plan-dot" data-index="4"></div>
-                </div>
-            </div>
-
+        <div class="m-feature-text">
+          <div class="m-feature-title">کانال راینو</div>
+          <div class="m-feature-sub">آموزش در تلگرام</div>
         </div>
+      </div>
+      <div class="m-feature f-purple" data-action="apk">
+        <div class="m-feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 4v11M8 11l4 4 4-4M5 19h14" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="m-feature-text">
+          <div class="m-feature-title">دانلود اپلیکیشن</div>
+          <div class="m-feature-sub">نسخه APK</div>
+        </div>
+      </div>
+      <div class="m-feature f-green" data-action="write">
+        <div class="m-feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M7 8h10v9H7zM9 8V5h6v3M5 11h2M17 11h2M9 17v2M15 17v2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="m-feature-text">
+          <div class="m-feature-title">رایت راینو</div>
+          <div class="m-feature-sub">برای موبایل</div>
+        </div>
+      </div>
+      <div class="m-feature f-red" data-action="support">
+        <div class="m-feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 10h8M8 13h5" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="m-feature-text">
+          <div class="m-feature-title">پشتیبانی</div>
+          <div class="m-feature-sub">۲۴ ساعته</div>
+        </div>
+      </div>
+      <div class="m-feature f-indigo" data-action="pro">
+        <div class="m-feature-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 9.5 12 5l6 4.5v8.5H6V9.5Z" stroke="white" stroke-width="1.5"/><path d="M9 18v-5h6v5" stroke="white" stroke-width="1.5"/></svg>
+        </div>
+        <div class="m-feature-text">
+          <div class="m-feature-title">راینو پرو</div>
+          <div class="m-feature-sub">نسخه حرفه‌ای</div>
+        </div>
+      </div>
     </div>
 
-    <!-- ================================================== -->
-    <!-- مودال تنظیمات                                       -->
-    <!-- ================================================== -->
-    <div class="wallet-modal-overlay" id="settingsModalOverlay">
-        <div class="wallet-modal">
-            
-            <div class="wallet-modal-header">
-                <div class="wallet-modal-title">
-                    <div class="icon-wrap">
-                        <i class="fa-solid fa-gear"></i>
-                    </div>
-                    <span>تنظیمات عمومی</span>
-                </div>
-                <div class="wallet-modal-close" onclick="closeSettings()">
-                    <i class="fa-solid fa-xmark"></i>
-                </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                
-                <div style="background: var(--card-surface); border: 1px solid rgba(160, 207, 236, 0.1); border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(160, 207, 236, 0.08); border: 1px solid rgba(160, 207, 236, 0.2); display: flex; align-items: center; justify-content: center; color: var(--sky-blue); font-size: 15px; flex-shrink: 0;">
-                            <i class="fa-solid fa-bars"></i>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 2px;">
-                            <span style="font-size: 12.5px; font-weight: 800;">نمایش سایدبار</span>
-                            <span style="font-size: 10px; color: var(--muted-gray);">باز یا بسته بودن سایدبار</span>
-                        </div>
-                    </div>
-                    
-                    <div class="toggle-switch active" id="sidebarToggleSwitch" onclick="toggleSidebarFromSettings()">
-                        <div class="toggle-knob"></div>
-                    </div>
-                </div>
-
-                <div style="background: var(--card-surface); border: 1px solid rgba(160, 207, 236, 0.1); border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(160, 207, 236, 0.08); border: 1px solid rgba(160, 207, 236, 0.2); display: flex; align-items: center; justify-content: center; color: var(--sky-blue); font-size: 15px; flex-shrink: 0;">
-                            <i class="fa-solid fa-moon"></i>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 2px;">
-                            <span style="font-size: 12.5px; font-weight: 800;">حالت تاریک</span>
-                            <span style="font-size: 10px; color: var(--muted-gray);">فعال در همه صفحات</span>
-                        </div>
-                    </div>
-                    
-                    <div class="toggle-switch active">
-                        <div class="toggle-knob"></div>
-                    </div>
-                </div>
-
-                <div style="background: var(--card-surface); border: 1px solid rgba(160, 207, 236, 0.1); border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 38px; height: 38px; border-radius: 12px; background: rgba(160, 207, 236, 0.08); border: 1px solid rgba(160, 207, 236, 0.2); display: flex; align-items: center; justify-content: center; color: var(--sky-blue); font-size: 15px; flex-shrink: 0;">
-                            <i class="fa-solid fa-bell"></i>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 2px;">
-                            <span style="font-size: 12.5px; font-weight: 800;">اعلان‌ها</span>
-                            <span style="font-size: 10px; color: var(--muted-gray);">دریافت اعلان‌های جدید</span>
-                        </div>
-                    </div>
-                    
-                    <div class="toggle-switch active">
-                        <div class="toggle-knob"></div>
-                    </div>
-                </div>
-
-            </div>
+    <div class="m-section-head">
+      <div class="m-section-title">گفتگوهای اخیر</div>
+      <div class="m-section-link" id="mClearHistory">پاک کردن</div>
+    </div>
+    <div class="m-history" id="mHistory">
+      <div class="m-empty">
+        <div class="m-empty-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7" stroke="currentColor" stroke-width="1.8"/><path d="M4 4v4.7h4.7M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </div>
+        <div class="m-empty-title">تاریخچه‌ای وجود ندارد</div>
+        <div class="m-empty-sub">اولین پیام خود را بفرستید</div>
+      </div>
     </div>
 
-    <script>
-        let maxBalance = 3850;
-        let dailyBonusClaimed = false;
+    <div style="height:20px"></div>
+  </main>
 
-        function toPersianNum(num) {
-            return num.toLocaleString('fa-IR');
-        }
+  <div class="m-composer" id="mComposer">
+    <div class="m-composer-inner">
+      <button class="m-add-btn" id="mAddBtn" aria-label="افزودن">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <textarea id="mPrompt" class="m-prompt" placeholder="پیام خود را بنویسید..." rows="1" aria-label="متن پیام"></textarea>
+      <button class="m-send-btn" id="mSend" aria-label="ارسال" disabled>
+        <svg viewBox="0 0 24 24" fill="none"><path d="m4 4 17 8-17 8 3.5-8L4 4Z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
 
-        function updateUI() {
-            document.getElementById('maxBalanceValue').innerText = toPersianNum(maxBalance);
-            document.getElementById('credit-count').innerText = toPersianNum(maxBalance);
-        }
+  <nav class="m-tabbar" id="mTabbar" aria-label="نوار پایین">
+    <button class="m-tab active" data-tab="home">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9 20v-5h6v5" stroke="currentColor" stroke-width="1.9"/></svg>
+      <span>خانه</span>
+    </button>
+    <button class="m-tab" data-tab="chat">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9 10h6M9 13h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>گفتگو</span>
+      <span class="badge">۳</span>
+    </button>
+    <button class="m-tab" data-tab="create">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.9"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      <span>ساخت</span>
+    </button>
+    <button class="m-tab" data-tab="explore">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.9"/><path d="m14.5 9.5-1.5 4-4 1.5 1.5-4 4-1.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      <span>کاوش</span>
+    </button>
+    <button class="m-tab" data-tab="profile">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.9"/><path d="M5 20c.7-3.2 3-5 7-5s6.3 1.8 7 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      <span>پروفایل</span>
+    </button>
+  </nav>
 
-        function toggleSidebar() {
-            const container = document.getElementById('sidebarContainer');
-            container.classList.toggle('collapsed');
-            
-            const switchEl = document.getElementById('sidebarToggleSwitch');
-            if (container.classList.contains('collapsed')) {
-                switchEl.classList.remove('active');
-            } else {
-                switchEl.classList.add('active');
-            }
-        }
+  <div class="m-drawer-backdrop" id="mDrawerBackdrop"></div>
+  <aside class="m-drawer" id="mDrawer" aria-label="منوی کناری">
+    <div class="m-drawer-head">
+      <div class="m-drawer-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3 14.2 8l5.3.5-4 3.5 1.2 5.2L12 14.5 7.3 17.2 8.5 12l-4-3.5L9.8 8 12 3Z" fill="currentColor"/></svg>
+      </div>
+      <div>
+        <div class="m-drawer-title">راینو</div>
+        <div class="m-drawer-sub">دستیار هوشمند</div>
+      </div>
+    </div>
 
-        function toggleSidebarFromSettings() {
-            const switchEl = document.getElementById('sidebarToggleSwitch');
-            switchEl.classList.toggle('active');
-            
-            const container = document.getElementById('sidebarContainer');
-            if (switchEl.classList.contains('active')) {
-                container.classList.remove('collapsed');
-            } else {
-                container.classList.add('collapsed');
-            }
-        }
+    <nav class="m-drawer-nav">
+      <div class="m-drawer-item active" data-action="home">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.9"/><path d="M9 20v-5h6v5" stroke="currentColor" stroke-width="1.9"/></svg>
+        خانه
+      </div>
+      <div class="m-drawer-item" data-action="chat">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
+        گفتگوها
+        <span class="badge">۳</span>
+      </div>
+      <div class="m-drawer-item" data-action="shop">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 9h16l-1 11H5L4 9Z" stroke="currentColor" stroke-width="1.7"/><path d="M7 9V6a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.7"/></svg>
+        فروشگاه
+      </div>
+      <div class="m-drawer-item" data-action="image">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><path d="m6 17 4-4 3 3 2-2 3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        تصویرساز
+      </div>
+      <div class="m-drawer-item" data-action="voice">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="12" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        دستیار صوتی
+      </div>
+      <div class="m-drawer-item" data-action="history">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7" stroke="currentColor" stroke-width="1.8"/><path d="M4 4v4.7h4.7M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        تاریخچه
+      </div>
+      <div class="m-drawer-item" data-action="settings">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v2M12 19v2M5 5l1.5 1.5M17.5 17.5 19 19M3 12h2M19 12h2M5 19l1.5-1.5M17.5 6.5 19 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        تنظیمات
+      </div>
+      <div class="m-drawer-item" data-action="support">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 10h8M8 13h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        پشتیبانی
+      </div>
+    </nav>
 
-        function openSettings() {
-            document.getElementById('settingsModalOverlay').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
+    <div class="m-drawer-footer">
+      <div class="m-drawer-user" id="mDrawerUser">
+        <div class="m-avatar"><span>ر</span></div>
+        <div class="m-drawer-user-text">
+          <div class="m-drawer-user-name">کاربر راینو</div>
+          <div class="m-drawer-user-plan">✦ نسخه رایگان</div>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" style="width:16px;height:16px;color:var(--muted)"><path d="m14 6-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </aside>
 
-        function closeSettings() {
-            document.getElementById('settingsModalOverlay').classList.remove('show');
-            document.body.style.overflow = '';
-        }
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
 
-        document.getElementById('settingsModalOverlay').addEventListener('click', (e) => {
-            if (e.target.id === 'settingsModalOverlay') {
-                closeSettings();
-            }
-        });
+</div>
 
-        function openWalletModal() {
-            document.getElementById('walletFullscreen').classList.add('show');
-            document.body.style.overflow = 'hidden';
-            // راه‌اندازی اسلایدر
-            setTimeout(() => {
-                updateActiveCard();
-            }, 100);
-        }
+<script>
+(() => {
+  "use strict";
 
-        function closeWalletModal() {
-            document.getElementById('walletFullscreen').classList.remove('show');
-            document.body.style.overflow = '';
-        }
+  const $  = (s, ctx=document) => ctx.querySelector(s);
+  const $$ = (s, ctx=document) => [...ctx.querySelectorAll(s)];
 
-        function buyPlan(name, price) {
-            if (confirm('خرید اشتراک ' + name + ' به مبلغ ' + toPersianNum(price) + ' تومان؟')) {
-                alert('✅ اشتراک ' + name + ' با موفقیت خریداری شد!');
-            }
-        }
+  /* ============ STARS ============ */
+  (function createStars(){
+    const layer = $("#stars");
+    if(!layer) return;
+    const frag = document.createDocumentFragment();
+    const count = 45;
+    for(let i=0;i<count;i++){
+      const s = document.createElement("span");
+      s.className = "star";
+      const size = Math.random() < .8 ? 1 : 2;
+      s.style.width = size + "px";
+      s.style.height = size + "px";
+      s.style.left = (Math.random()*100).toFixed(2) + "%";
+      s.style.top  = (Math.random()*100).toFixed(2) + "%";
+      s.style.setProperty("--dur", (3 + Math.random()*4).toFixed(2) + "s");
+      s.style.setProperty("--delay", (-Math.random()*4).toFixed(2) + "s");
+      frag.appendChild(s);
+    }
+    layer.appendChild(frag);
+  })();
 
-        function increaseMax() {
-            const amount = prompt("چند MAX افزایش یابد؟", "100");
-            if (amount !== null && amount.trim() !== "") {
-                const val = parseInt(amount.replace(/,/g, ''), 10);
-                if (!isNaN(val) && val > 0) {
-                    maxBalance += val;
-                    updateUI();
-                    alert('✅ ' + toPersianNum(val) + ' MAX اضافه شد.');
-                }
-            }
-        }
+  /* ============ GREETING ============ */
+  (function setGreeting(){
+    const h = new Date().getHours();
+    let short, long;
+    if(h < 5)       { short = "شب بخیر";   long = "شب بخیر کاربر گرامی"; }
+    else if(h < 12) { short = "صبح بخیر";  long = "صبح بخیر کاربر گرامی"; }
+    else if(h < 17) { short = "ظهر بخیر";  long = "ظهر بخیر کاربر گرامی"; }
+    else if(h < 20) { short = "عصر بخیر";  long = "عصر بخیر کاربر گرامی"; }
+    else            { short = "شب بخیر";   long = "شب بخیر کاربر گرامی"; }
+    const el1 = $("#mGreeting"); if(el1) el1.textContent = long;
+    const el2 = $("#mHello");    if(el2) el2.textContent = short;
+  })();
 
-        function transferMax() {
-            const amount = prompt("چند MAX انتقال می‌دهید؟", "50");
-            if (amount !== null && amount.trim() !== "") {
-                const val = parseInt(amount.replace(/,/g, ''), 10);
-                if (!isNaN(val) && val > 0) {
-                    if (val > maxBalance) {
-                        alert('موجودی کافی نیست!');
-                        return;
-                    }
-                    maxBalance -= val;
-                    const bonus = Math.floor(val * 0.05);
-                    maxBalance += bonus;
-                    updateUI();
-                    alert('✅ ' + toPersianNum(val) + ' MAX انتقال یافت.\n' + toPersianNum(bonus) + ' MAX پاداش!');
-                }
-            }
-        }
+  /* ============ TOAST ============ */
+  function toast(message, type = "info"){
+    const wrap = $("#toastWrap");
+    if(!wrap) return;
+    const icons = {
+      success: '<svg viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      info:    '<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16h.01" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg>',
+      error:   '<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16h.01" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg>'
+    };
+    const el = document.createElement("div");
+    el.className = "toast " + type;
+    el.innerHTML = '<span class="toast-icon">' + (icons[type]||icons.info) + '</span><span>' + message + '</span>';
+    wrap.appendChild(el);
+    setTimeout(() => {
+      el.classList.add("out");
+      setTimeout(() => el.remove(), 300);
+    }, 2400);
+  }
 
-        function claimDailyBonus() {
-            if (dailyBonusClaimed) {
-                alert('⏳ جایزه امروز را قبلاً دریافت کرده‌اید.');
-                return;
-            }
-            maxBalance += 50;
-            dailyBonusClaimed = true;
-            updateUI();
-            alert('🎁 ۵۰ MAX جایزه روزانه دریافت کردید!');
-        }
+  /* ============ RIPPLE ============ */
+  function attachRipple(el){
+    if(!el) return;
+    el.style.position = el.style.position || "relative";
+    el.style.overflow = "hidden";
+    el.addEventListener("pointerdown", e => {
+      const rect = el.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const r = document.createElement("span");
+      r.className = "ripple";
+      r.style.width = r.style.height = size + "px";
+      r.style.left = (e.clientX - rect.left - size/2) + "px";
+      r.style.top  = (e.clientY - rect.top  - size/2) + "px";
+      el.appendChild(r);
+      setTimeout(() => r.remove(), 620);
+    });
+  }
+  $$(".m-tab, .m-icon-btn, .m-add-btn, .m-send-btn").forEach(attachRipple);
 
-        function editProfile() {
-            const newName = prompt("نام کاربری جدید:", "کاربر MAX");
-            if (newName !== null && newName.trim() !== "") {
-                alert('نام کاربری به ' + newName + ' تغییر یافت.');
-            }
-        }
+  /* ============ COMPOSER ============ */
+  const prompt = $("#mPrompt");
+  const send = $("#mSend");
 
-        const fileInput = document.getElementById('file-input');
-        const avatarImg = document.getElementById('avatar-img');
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => { avatarImg.src = event.target.result; };
-                reader.readAsDataURL(file);
-            }
-        });
+  function autoGrow(){
+    if(!prompt) return;
+    prompt.style.height = "auto";
+    prompt.style.height = Math.min(prompt.scrollHeight, 120) + "px";
+  }
+  function updateSend(){
+    if(send) send.disabled = !prompt.value.trim();
+  }
+  prompt?.addEventListener("input", () => { autoGrow(); updateSend(); });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeWalletModal();
-                closeSettings();
-            }
-        });
+  /* ============ QUICK CHIPS ============ */
+  $$(".m-quick-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      prompt.value = chip.dataset.fill || "";
+      prompt.focus();
+      autoGrow();
+      updateSend();
+      prompt.setSelectionRange(prompt.value.length, prompt.value.length);
+    });
+  });
 
-        // ============================================
-        // ===== 🎠 اسلایدر پکیج‌ها با انیمیشن =====
-        // ============================================
+  /* ============ HISTORY ============ */
+  const historyList = $("#mHistory");
+  const history = [];
 
-        const plansTrack = document.getElementById('plansTrack');
-        const plansDots = document.querySelectorAll('.plan-dot');
-        const planCards = document.querySelectorAll('.plan-card-mobile');
+  function timeAgo(ts){
+    const s = Math.floor((Date.now() - ts)/1000);
+    if(s < 60) return "همین حالا";
+    const m = Math.floor(s/60);
+    if(m < 60) return m + " دقیقه پیش";
+    const h = Math.floor(m/60);
+    if(h < 24) return h + " ساعت پیش";
+    return Math.floor(h/24) + " روز پیش";
+  }
 
-        function updateActiveCard() {
-            if (!plansTrack) return;
-            
-            const trackRect = plansTrack.getBoundingClientRect();
-            const trackCenter = trackRect.left + trackRect.width / 2;
-            
-            let closestIndex = 0;
-            let closestDistance = Infinity;
-            
-            planCards.forEach((card, index) => {
-                const cardRect = card.getBoundingClientRect();
-                const cardCenter = cardRect.left + cardRect.width / 2;
-                const distance = Math.abs(trackCenter - cardCenter);
-                
-                if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestIndex = index;
-                }
-            });
-            
-            // آپدیت کارت‌ها
-            planCards.forEach((card, index) => {
-                if (index === closestIndex) {
-                    card.classList.add('active');
-                } else {
-                    card.classList.remove('active');
-                }
-            });
-            
-            // آپدیت نقطه‌ها
-            plansDots.forEach((dot, index) => {
-                if (index === closestIndex) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-        }
+  function renderHistory(){
+    if(!historyList) return;
+    if(history.length === 0){
+      historyList.innerHTML = `
+        <div class="m-empty">
+          <div class="m-empty-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7" stroke="currentColor" stroke-width="1.8"/><path d="M4 4v4.7h4.7M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div class="m-empty-title">تاریخچه‌ای وجود ندارد</div>
+          <div class="m-empty-sub">اولین پیام خود را بفرستید</div>
+        </div>`;
+      return;
+    }
+    historyList.innerHTML = history.map((item, i) => {
+      const safe = item.text.replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+      return `<div class="m-history-item" data-idx="${i}" style="animation-delay:${i*.04}s">
+        <div class="m-history-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="m-history-body">
+          <div class="m-history-text">${safe}</div>
+          <div class="m-history-time">${timeAgo(item.time)}</div>
+        </div>
+        <div class="m-history-chev">
+          <svg viewBox="0 0 24 24" fill="none"><path d="m14 6-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>`;
+    }).join("");
 
-        // اسکرول → آپدیت کارت فعال
-        if (plansTrack) {
-            let scrollTimeout;
-            plansTrack.addEventListener('scroll', () => {
-                // آپدیت فوری برای انیمیشن نرم
-                updateActiveCard();
-                
-                // بعد از توقف اسکرول، اسنپ به کارت نزدیک
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    snapToClosestCard();
-                }, 100);
-            });
-        }
+    $$(".m-history-item", historyList).forEach(el => {
+      el.addEventListener("click", () => {
+        const i = +el.dataset.idx;
+        prompt.value = history[i].text;
+        prompt.focus();
+        autoGrow();
+        updateSend();
+        $("#mScroll")?.scrollTo({top:0,behavior:"smooth"});
+      });
+    });
+  }
 
-        // اسنپ نرم به کارت نزدیک
-        function snapToClosestCard() {
-            if (!plansTrack) return;
-            
-            const trackRect = plansTrack.getBoundingClientRect();
-            const trackCenter = trackRect.left + trackRect.width / 2;
-            
-            let closestIndex = 0;
-            let closestDistance = Infinity;
-            
-            planCards.forEach((card, index) => {
-                const cardRect = card.getBoundingClientRect();
-                const cardCenter = cardRect.left + cardRect.width / 2;
-                const distance = Math.abs(trackCenter - cardCenter);
-                
-                if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestIndex = index;
-                }
-            });
-            
-            // اسکرول نرم به کارت
-            const targetCard = planCards[closestIndex];
-            const targetLeft = targetCard.offsetLeft - (plansTrack.clientWidth - targetCard.clientWidth) / 2;
-            
-            plansTrack.scrollTo({
-                left: targetLeft,
-                behavior: 'smooth'
-            });
-        }
+  function addHistory(text){
+    history.unshift({ text, time: Date.now() });
+    if(history.length > 10) history.pop();
+    renderHistory();
+  }
+  renderHistory();
 
-        // کلیک روی نقطه‌ها
-        plansDots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                const targetCard = planCards[index];
-                const targetLeft = targetCard.offsetLeft - (plansTrack.clientWidth - targetCard.clientWidth) / 2;
-                
-                plansTrack.scrollTo({
-                    left: targetLeft,
-                    behavior: 'smooth'
-                });
-            });
-        });
+  $("#mClearHistory")?.addEventListener("click", () => {
+    if(history.length === 0){ toast("تاریخچه خالی است", "info"); return; }
+    history.length = 0;
+    renderHistory();
+    toast("تاریخچه پاک شد", "success");
+  });
 
-        // آپدیت اولیه بعد از لود
-        window.addEventListener('load', () => {
-            setTimeout(updateActiveCard, 200);
-        });
+  /* ============ SEND ============ */
+  function handleSend(){
+    const v = prompt.value.trim();
+    if(!v) return;
+    toast("پیام شما ارسال شد", "success");
+    addHistory(v);
+    prompt.value = "";
+    autoGrow();
+    updateSend();
+    prompt.focus();
+    if(navigator.vibrate) navigator.vibrate(10);
+  }
+  send?.addEventListener("click", handleSend);
+  prompt?.addEventListener("keydown", e => {
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      handleSend();
+    }
+  });
 
-        // آپدیت روی resize
-        window.addEventListener('resize', () => {
-            clearTimeout(window._resizeTimeout);
-            window._resizeTimeout = setTimeout(updateActiveCard, 150);
-        });
+  /* ============ HEADER SCROLL ============ */
+  const scroller = $("#mScroll");
+  const header = $("#mHeader");
+  scroller?.addEventListener("scroll", () => {
+    header?.classList.toggle("scrolled", scroller.scrollTop > 4);
+  }, {passive:true});
 
-        updateUI();
-    </script>
+  /* ============ TABS ============ */
+  $$(".m-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      $$(".m-tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      if(navigator.vibrate) navigator.vibrate(8);
+      const name = tab.querySelector("span")?.textContent || "";
+      if(tab.dataset.tab !== "home") toast(name, "info");
+      else scroller?.scrollTo({top:0, behavior:"smooth"});
+    });
+  });
+
+  /* ============ DRAWER ============ */
+  const drawer = $("#mDrawer");
+  const backdrop = $("#mDrawerBackdrop");
+  const menuBtn = $("#mMenuBtn");
+
+  function openDrawer(){
+    drawer?.classList.add("open");
+    backdrop?.classList.add("show");
+  }
+  function closeDrawer(){
+    drawer?.classList.remove("open");
+    backdrop?.classList.remove("show");
+  }
+  menuBtn?.addEventListener("click", openDrawer);
+  backdrop?.addEventListener("click", closeDrawer);
+
+  let touchStartX = 0, touchCurrentX = 0, dragging = false;
+  drawer?.addEventListener("touchstart", e => {
+    touchStartX = e.touches[0].clientX;
+    touchCurrentX = touchStartX;
+    dragging = true;
+    drawer.style.transition = "none";
+  }, {passive:true});
+  drawer?.addEventListener("touchmove", e => {
+    if(!dragging) return;
+    touchCurrentX = e.touches[0].clientX;
+    const dx = touchCurrentX - touchStartX;
+    if(dx > 0) drawer.style.transform = `translateX(${dx}px)`;
+  }, {passive:true});
+  drawer?.addEventListener("touchend", () => {
+    dragging = false;
+    drawer.style.transition = "";
+    drawer.style.transform = "";
+    if(touchCurrentX - touchStartX > 80) closeDrawer();
+  });
+
+  $$(".m-drawer-item").forEach(item => {
+    item.addEventListener("click", () => {
+      $$(".m-drawer-item").forEach(i => i.classList.remove("active"));
+      item.classList.add("active");
+      const name = item.textContent.trim();
+      if(item.dataset.action !== "home") toast(name, "info");
+      closeDrawer();
+    });
+  });
+
+  $("#mDrawerUser")?.addEventListener("click", () => {
+    toast("پروفایل کاربری", "info");
+    closeDrawer();
+  });
+
+  /* ============ FEATURE CARDS ============ */
+  const featureNames = {
+    channel: "عضویت در کانال راینو",
+    apk: "دانلود اپلیکیشن",
+    write: "رایت راینو",
+    support: "ارتباط با پشتیبانی",
+    pro: "راینو پرو"
+  };
+  $$(".m-feature").forEach(card => {
+    card.addEventListener("click", () => {
+      toast(featureNames[card.dataset.action] || "ویژگی", "info");
+      if(navigator.vibrate) navigator.vibrate(8);
+    });
+  });
+
+  /* ============ MISC ============ */
+  $("#mThemeBtn")?.addEventListener("click", () => {
+    toast("حالت تاریک فعال است", "info");
+  });
+
+  $("#mUserBtn")?.addEventListener("click", () => {
+    toast("خوش آمدید 👋", "info");
+  });
+
+  $("#mAddBtn")?.addEventListener("click", () => {
+    toast("افزودن فایل", "info");
+  });
+
+  // initial
+  autoGrow();
+  updateSend();
+  setTimeout(() => toast("به راینو خوش آمدید ✨", "success"), 700);
+
+})();
+</script>
 </body>
 </html>
