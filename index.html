@@ -2,1367 +2,3189 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               viewport-fit=cover">
+
 <meta name="theme-color" content="#000000">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>راینو | دستیار هوشمند</title>
+
+<title>Bilibili Login</title>
 
 <style>
+
+/* =========================================================
+   BILIBILI PREMIUM LOGIN
+   BLACK + BILIBILI BLUE
+========================================================= */
+
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
 
 :root{
-  --bg:#000000;
-  --panel:#0b0b0d;
-  --panel-2:#121215;
-  --panel-3:#1a1a1e;
-  --border:rgba(255,255,255,.07);
-  --border-2:rgba(255,255,255,.12);
-  --text:#f5f5f7;
-  --text-2:#b8b8c0;
-  --muted:#6e6e78;
-  --muted-2:#4a4a54;
-  --blue:#3b82f6;
-  --blue-2:#2563eb;
-  --violet:#8b5cf6;
-  --cyan:#22d3ee;
-  --emerald:#10b981;
-  --rose:#f43f5e;
-  --amber:#f59e0b;
 
-  --safe-top:env(safe-area-inset-top, 0px);
-  --safe-bottom:env(safe-area-inset-bottom, 0px);
+    /* Main Theme */
+    --black:#000000;
+    --black-1:#030303;
+    --black-2:#080808;
+    --black-3:#0d0d0d;
+    --black-4:#111111;
 
-  --ease:cubic-bezier(.4,0,.2,1);
-  --ease-out:cubic-bezier(.16,1,.3,1);
-  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+    /* Bilibili */
+    --primary:#00A1D6;
+    --primary-light:#28c8ff;
+    --primary-dark:#007fae;
 
-  --tab-h:64px;
+    --white:#ffffff;
+    --text:#f5f5f5;
+    --muted:#777777;
+    --muted2:#4b4b4b;
+
+    --border:rgba(255,255,255,.09);
+    --border-blue:rgba(0,161,214,.25);
+
+    --shadow:0 30px 100px rgba(0,0,0,.85);
+
+    --radius:28px;
+
+    --font:'Vazirmatn',Tahoma,sans-serif;
 }
 
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-*::selection{background:rgba(59,130,246,.35);color:#fff}
 
-html,body{width:100%;height:100%;overscroll-behavior:none}
-html{-webkit-text-size-adjust:100%}
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html{
+    width:100%;
+    min-height:100%;
+    background:#000;
+}
 
 body{
-  overflow:hidden;
-  background:#000;
-  color:var(--text);
-  font-family:"Vazirmatn",Tahoma,Arial,sans-serif;
-  line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  text-rendering:optimizeLegibility;
-  position:fixed;
-  inset:0;
-}
 
-/* هیچ گرادیان محیطی — فقط مشکی خالص */
-
-/* ============ STARS (خیلی ظریف روی مشکی) ============ */
-#stars{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  overflow:hidden;
-  z-index:0;
-}
-.star{
-  position:absolute;
-  border-radius:50%;
-  background:#ffffff;
-  animation:twinkle var(--dur,4s) ease-in-out infinite;
-  animation-delay:var(--delay,0s);
-  will-change:transform,opacity;
-}
-@keyframes twinkle{
-  0%,100%{transform:scale(.6);opacity:.05}
-  50%{transform:scale(1.3);opacity:.55}
-}
-
-/* ============ APP ============ */
-.app{
-  position:relative;
-  width:100%;
-  height:100dvh;
-  height:100vh;
-  z-index:2;
-  display:flex;
-  flex-direction:column;
-  background:#000;
-}
-
-/* ============ HEADER ============ */
-.m-header{
-  position:relative;
-  z-index:30;
-  padding:calc(var(--safe-top) + 10px) 16px 10px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  background:rgba(0,0,0,.75);
-  backdrop-filter:blur(20px) saturate(160%);
-  -webkit-backdrop-filter:blur(20px) saturate(160%);
-  border-bottom:1px solid transparent;
-  transition:border-color .3s var(--ease);
-  flex:none;
-}
-.m-header.scrolled{border-bottom-color:var(--border)}
-
-.m-user{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex:1;
-  min-width:0;
-  cursor:pointer;
-}
-.m-avatar{
-  width:38px;height:38px;
-  border-radius:50%;
-  background:conic-gradient(from 210deg,#22d3ee,#3b82f6,#8b5cf6,#22d3ee);
-  position:relative;
-  flex:none;
-  padding:2px;
-  box-shadow:0 4px 14px rgba(59,130,246,.3);
-}
-.m-avatar::after{
-  content:"";
-  position:absolute;
-  inset:2px;
-  border-radius:50%;
-  background:#000;
-}
-.m-avatar span{
-  position:absolute;
-  inset:4px;
-  border-radius:50%;
-  background:linear-gradient(145deg,#1e293b,#000);
-  display:grid;
-  place-items:center;
-  font-size:13px;
-  font-weight:800;
-  color:#93c5fd;
-  z-index:2;
-}
-.m-user-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
-.m-hello{font-size:11px;color:var(--muted);font-weight:500}
-.m-name{font-size:14px;font-weight:700;color:var(--text)}
-
-.m-actions{display:flex;align-items:center;gap:6px;flex:none}
-.m-icon-btn{
-  width:38px;height:38px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,.03);
-  color:var(--text-2);
-  display:grid;
-  place-items:center;
-  cursor:pointer;
-  transition:.18s var(--ease);
-  position:relative;
-  flex:none;
-}
-.m-icon-btn:active{transform:scale(.92);background:rgba(255,255,255,.08)}
-.m-icon-btn svg{width:19px;height:19px}
-.m-icon-btn .dot{
-  position:absolute;
-  top:8px;right:8px;
-  width:7px;height:7px;
-  border-radius:50%;
-  background:var(--emerald);
-  box-shadow:0 0 8px var(--emerald);
-  border:1.5px solid #000;
-}
-
-/* ============ SCROLL ============ */
-.m-scroll{
-  flex:1;
-  overflow-y:auto;
-  overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  position:relative;
-  z-index:5;
-  padding:8px 0 calc(var(--tab-h) + var(--safe-bottom) + 90px);
-  scrollbar-width:none;
-  background:#000;
-}
-.m-scroll::-webkit-scrollbar{display:none}
-
-/* ============ HERO ============ */
-.m-hero{
-  padding:22px 20px 0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-  animation:heroIn .7s var(--ease-out) both;
-}
-@keyframes heroIn{
-  from{opacity:0;transform:translateY(16px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-.m-eyebrow{
-  font-size:13px;
-  font-weight:500;
-  color:var(--text-2);
-  display:flex;
-  align-items:center;
-  gap:7px;
-  margin-bottom:6px;
-}
-.m-eyebrow .wave{
-  display:inline-block;
-  animation:wave 2.4s ease-in-out infinite;
-  transform-origin:70% 70%;
-}
-@keyframes wave{
-  0%,60%,100%{transform:rotate(0)}
-  10%{transform:rotate(14deg)}
-  20%{transform:rotate(-8deg)}
-  30%{transform:rotate(14deg)}
-  40%{transform:rotate(-4deg)}
-  50%{transform:rotate(10deg)}
-}
-
-.m-title{
-  font-size:26px;
-  font-weight:800;
-  line-height:1.35;
-  letter-spacing:-.6px;
-  margin-bottom:8px;
-  background:linear-gradient(180deg,#ffffff 0%,#a1a1aa 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.m-title .accent{
-  background:linear-gradient(135deg,#60a5fa,#8b5cf6);
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-.m-subtitle{
-  font-size:12.5px;
-  color:var(--muted);
-  max-width:300px;
-  margin-bottom:22px;
-}
-
-/* ============ QUICK CHIPS ============ */
-.m-quick-scroll{
-  display:flex;
-  gap:8px;
-  padding:4px 20px 18px;
-  overflow-x:auto;
-  scrollbar-width:none;
-  animation:fadeUp .7s var(--ease-out) .15s both;
-  -webkit-overflow-scrolling:touch;
-}
-.m-quick-scroll::-webkit-scrollbar{display:none}
-.m-quick-scroll::after{content:"";flex:none;width:12px}
-
-.m-quick-chip{
-  flex:none;
-  height:38px;
-  padding:0 15px;
-  border-radius:19px;
-  border:1px solid var(--border-2);
-  background:#0d0d10;
-  color:var(--text-2);
-  font:500 12.5px "Vazirmatn",Tahoma,sans-serif;
-  display:flex;
-  align-items:center;
-  gap:7px;
-  cursor:pointer;
-  transition:.2s var(--ease);
-  white-space:nowrap;
-}
-.m-quick-chip:active{
-  transform:scale(.94);
-  background:#18181c;
-  border-color:rgba(59,130,246,.4);
-  color:#fff;
-}
-.m-quick-chip svg{width:15px;height:15px;flex:none}
-
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(12px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-/* ============ SECTION ============ */
-.m-section-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 20px 10px;
-}
-.m-section-title{
-  font-size:13px;
-  font-weight:700;
-  color:var(--text);
-  display:flex;
-  align-items:center;
-  gap:7px;
-}
-.m-section-title::before{
-  content:"";
-  width:3px;height:14px;
-  border-radius:3px;
-  background:linear-gradient(180deg,#60a5fa,#3b82f6);
-  box-shadow:0 0 10px rgba(59,130,246,.6);
-}
-.m-section-link{
-  font-size:11px;
-  color:var(--blue);
-  font-weight:600;
-  cursor:pointer;
-}
-
-/* ============ FEATURE CARDS ============ */
-.m-cards-scroll{
-  display:flex;
-  gap:10px;
-  padding:0 20px 20px;
-  overflow-x:auto;
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
-}
-.m-cards-scroll::-webkit-scrollbar{display:none}
-.m-cards-scroll::after{content:"";flex:none;width:10px}
-
-.m-feature{
-  flex:none;
-  width:150px;
-  height:130px;
-  border-radius:20px;
-  padding:14px;
-  position:relative;
-  overflow:hidden;
-  cursor:pointer;
-  border:1px solid rgba(255,255,255,.08);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  transition:.22s var(--ease);
-  box-shadow:0 10px 26px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05);
-}
-.m-feature:active{transform:scale(.96)}
-.m-feature::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.08) 50%,transparent 70%);
-  transform:translateX(-100%);
-  transition:transform .7s var(--ease);
-}
-.m-feature:active::before{transform:translateX(100%)}
-
-.m-feature-icon{
-  width:38px;height:38px;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.25), 0 6px 16px rgba(0,0,0,.4);
-  position:relative;
-  z-index:1;
-}
-.m-feature-icon svg{width:20px;height:20px}
-.m-feature-text{position:relative;z-index:1;text-align:right}
-.m-feature-title{font-size:13px;font-weight:700;color:#fff;line-height:1.3}
-.m-feature-sub{font-size:10px;margin-top:4px;color:rgba(255,255,255,.6)}
-
-.f-blue{background:linear-gradient(150deg,#0a2740,#000)}
-.f-blue .m-feature-icon{background:linear-gradient(145deg,#38bdf8,#0284c7)}
-.f-purple{background:linear-gradient(150deg,#1f0d40,#000)}
-.f-purple .m-feature-icon{background:linear-gradient(145deg,#a855f7,#7c3aed)}
-.f-green{background:linear-gradient(150deg,#0a2a24,#000)}
-.f-green .m-feature-icon{background:linear-gradient(145deg,#2dd4bf,#0d9488)}
-.f-red{background:linear-gradient(150deg,#2d0a18,#000)}
-.f-red .m-feature-icon{background:linear-gradient(145deg,#fb7185,#e11d48)}
-.f-indigo{background:linear-gradient(150deg,#0e1735,#000)}
-.f-indigo .m-feature-icon{background:linear-gradient(145deg,#6366f1,#4f46e5)}
-
-/* ============ HISTORY ============ */
-.m-history{
-  padding:0 20px 20px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.m-history-item{
-  display:flex;
-  align-items:center;
-  gap:11px;
-  padding:12px 14px;
-  border-radius:14px;
-  background:#0a0a0c;
-  border:1px solid var(--border);
-  cursor:pointer;
-  transition:.18s var(--ease);
-  animation:fadeUp .4s var(--ease-out) both;
-}
-.m-history-item:active{transform:scale(.98);background:#141418}
-.m-history-icon{
-  width:32px;height:32px;
-  border-radius:10px;
-  background:rgba(59,130,246,.12);
-  border:1px solid rgba(59,130,246,.2);
-  display:grid;place-items:center;
-  flex:none;
-}
-.m-history-icon svg{width:15px;height:15px;color:#60a5fa}
-.m-history-body{flex:1;min-width:0}
-.m-history-text{
-  font-size:12.5px;
-  color:var(--text);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  font-weight:500;
-}
-.m-history-time{font-size:10px;color:var(--muted);margin-top:2px}
-.m-history-chev{color:var(--muted);flex:none}
-.m-history-chev svg{width:14px;height:14px}
-
-.m-empty{
-  padding:40px 20px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:10px;
-  text-align:center;
-}
-.m-empty-icon{
-  width:60px;height:60px;
-  border-radius:50%;
-  background:#0a0a0c;
-  border:1px solid var(--border);
-  display:grid;place-items:center;
-}
-.m-empty-icon svg{width:26px;height:26px;color:var(--muted)}
-.m-empty-title{font-size:13px;font-weight:600;color:var(--text-2)}
-.m-empty-sub{font-size:11px;color:var(--muted)}
-
-/* ============ COMPOSER ============ */
-.m-composer{
-  position:fixed;
-  z-index:35;
-  left:0;
-  right:0;
-  bottom:calc(var(--tab-h) + var(--safe-bottom));
-  padding:10px 12px;
-  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.85) 40%,#000 100%);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-}
-.m-composer-inner{
-  border:1px solid var(--border-2);
-  border-radius:22px;
-  background:#0a0a0d;
-  box-shadow:0 12px 40px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.04);
-  display:flex;
-  align-items:flex-end;
-  gap:6px;
-  padding:6px;
-  transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
-}
-.m-composer-inner:focus-within{
-  border-color:rgba(59,130,246,.5);
-  box-shadow:0 12px 40px rgba(0,0,0,.8), 0 0 0 3px rgba(59,130,246,.12), 0 0 30px rgba(59,130,246,.15);
-}
-
-.m-add-btn{
-  width:38px;height:38px;
-  border-radius:50%;
-  border:0;
-  background:rgba(255,255,255,.05);
-  color:var(--text-2);
-  display:grid;
-  place-items:center;
-  cursor:pointer;
-  flex:none;
-  transition:.18s var(--ease);
-}
-.m-add-btn:active{transform:scale(.9);background:rgba(255,255,255,.12)}
-.m-add-btn svg{width:20px;height:20px}
-
-.m-prompt{
-  flex:1;
-  min-height:38px;
-  max-height:120px;
-  padding:9px 6px;
-  border:0;
-  outline:0;
-  resize:none;
-  background:transparent;
-  color:var(--text);
-  font:400 14px/1.5 "Vazirmatn",Tahoma,sans-serif;
-  caret-color:var(--blue);
-}
-.m-prompt::placeholder{color:var(--muted)}
-
-.m-send-btn{
-  width:38px;height:38px;
-  border-radius:50%;
-  border:0;
-  background:linear-gradient(145deg,#4b8cff,#2563eb);
-  color:#fff;
-  display:grid;
-  place-items:center;
-  cursor:pointer;
-  flex:none;
-  box-shadow:0 6px 18px rgba(37,99,235,.5), inset 0 1px 0 rgba(255,255,255,.25);
-  transition:.22s var(--ease-spring);
-}
-.m-send-btn:active{transform:scale(.9)}
-.m-send-btn:disabled{
-  opacity:.35;
-  background:rgba(255,255,255,.06);
-  box-shadow:none;
-  cursor:not-allowed;
-}
-.m-send-btn svg{width:19px;height:19px;transform:rotate(180deg)}
-
-/* ============ TABBAR ============ */
-.m-tabbar{
-  position:fixed;
-  z-index:40;
-  left:0;
-  right:0;
-  bottom:0;
-  height:calc(var(--tab-h) + var(--safe-bottom));
-  padding-bottom:var(--safe-bottom);
-  background:rgba(0,0,0,.92);
-  backdrop-filter:blur(28px) saturate(180%);
-  -webkit-backdrop-filter:blur(28px) saturate(180%);
-  border-top:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:space-around;
-  box-shadow:0 -10px 40px rgba(0,0,0,.9);
-}
-.m-tab{
-  flex:1;
-  height:var(--tab-h);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  color:var(--muted);
-  font-size:10px;
-  font-weight:600;
-  cursor:pointer;
-  transition:.2s var(--ease);
-  position:relative;
-  border:0;
-  background:transparent;
-  font-family:inherit;
-  padding:0;
-}
-.m-tab svg{
-  width:23px;height:23px;
-  transition:transform .25s var(--ease-spring);
-}
-.m-tab.active{color:var(--blue)}
-.m-tab.active svg{
-  transform:translateY(-2px) scale(1.08);
-  filter:drop-shadow(0 0 8px rgba(59,130,246,.7));
-}
-.m-tab.active::before{
-  content:"";
-  position:absolute;
-  top:0;
-  width:26px;
-  height:3px;
-  border-radius:0 0 3px 3px;
-  background:linear-gradient(90deg,#60a5fa,#3b82f6);
-  box-shadow:0 0 12px rgba(59,130,246,.7);
-  animation:tabIn .3s var(--ease-spring) both;
-}
-@keyframes tabIn{
-  from{transform:scaleX(0);opacity:0}
-  to{transform:scaleX(1);opacity:1}
-}
-.m-tab:active svg{transform:scale(.88)}
-.m-tab .badge{
-  position:absolute;
-  top:8px;
-  right:calc(50% - 16px);
-  min-width:16px;
-  height:16px;
-  padding:0 4px;
-  border-radius:8px;
-  background:var(--rose);
-  color:#fff;
-  font-size:9px;
-  font-weight:700;
-  display:grid;
-  place-items:center;
-  border:2px solid #000;
-  box-shadow:0 0 8px rgba(244,63,94,.5);
-}
-
-/* ============ DRAWER ============ */
-.m-drawer-backdrop{
-  position:fixed;
-  inset:0;
-  z-index:60;
-  background:rgba(0,0,0,.7);
-  backdrop-filter:blur(4px);
-  -webkit-backdrop-filter:blur(4px);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .3s var(--ease);
-}
-.m-drawer-backdrop.show{opacity:1;pointer-events:auto}
-
-.m-drawer{
-  position:fixed;
-  z-index:61;
-  top:0;
-  bottom:0;
-  right:0;
-  width:min(320px,86vw);
-  background:#000;
-  border-left:1px solid var(--border);
-  transform:translateX(100%);
-  transition:transform .38s var(--ease-out);
-  display:flex;
-  flex-direction:column;
-  padding:calc(var(--safe-top) + 16px) 14px calc(var(--safe-bottom) + 16px);
-  box-shadow:-20px 0 60px rgba(0,0,0,.9);
-  will-change:transform;
-}
-.m-drawer.open{transform:translateX(0)}
-
-.m-drawer-head{
-  display:flex;
-  align-items:center;
-  gap:11px;
-  padding:6px 6px 18px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:14px;
-}
-.m-drawer-logo{
-  width:40px;height:40px;
-  border-radius:13px;
-  background:conic-gradient(from 210deg,#3b82f6,#8b5cf6,#22d3ee,#3b82f6);
-  display:grid;
-  place-items:center;
-  box-shadow:0 6px 18px rgba(59,130,246,.35), inset 0 1px 0 rgba(255,255,255,.25);
-  position:relative;
-  overflow:hidden;
-  flex:none;
-}
-.m-drawer-logo::after{
-  content:"";
-  position:absolute;
-  inset:3px;
-  border-radius:10px;
-  background:#000;
-}
-.m-drawer-logo svg{
-  position:relative;
-  z-index:2;
-  width:20px;height:20px;
-  color:#fff;
-}
-.m-drawer-title{font-size:15px;font-weight:800}
-.m-drawer-sub{font-size:11px;color:var(--muted);font-weight:500}
-
-.m-drawer-nav{
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-  flex:1;
-  overflow-y:auto;
-}
-.m-drawer-item{
-  display:flex;
-  align-items:center;
-  gap:13px;
-  padding:12px 14px;
-  border-radius:14px;
-  color:var(--text-2);
-  font-size:14px;
-  font-weight:500;
-  cursor:pointer;
-  transition:.18s var(--ease);
-  border:1px solid transparent;
-}
-.m-drawer-item:active{transform:scale(.98);background:rgba(255,255,255,.05)}
-.m-drawer-item.active{
-  background:linear-gradient(90deg,rgba(59,130,246,.16),rgba(59,130,246,.03));
-  color:#fff;
-  border-color:rgba(59,130,246,.22);
-}
-.m-drawer-item svg{width:20px;height:20px;flex:none;opacity:.9}
-.m-drawer-item .badge{
-  margin-right:auto;
-  font-size:10px;
-  font-weight:700;
-  padding:2px 7px;
-  border-radius:8px;
-  background:rgba(59,130,246,.18);
-  color:#93c5fd;
-  border:1px solid rgba(59,130,246,.25);
-}
-
-.m-drawer-footer{
-  padding-top:14px;
-  border-top:1px solid var(--border);
-  margin-top:14px;
-}
-.m-drawer-user{
-  display:flex;
-  align-items:center;
-  gap:11px;
-  padding:10px;
-  border-radius:14px;
-  background:#0a0a0c;
-  border:1px solid var(--border);
-  cursor:pointer;
-  transition:.18s var(--ease);
-}
-.m-drawer-user:active{transform:scale(.98);background:#141418}
-.m-drawer-user .m-avatar{width:36px;height:36px}
-.m-drawer-user-text{flex:1;min-width:0}
-.m-drawer-user-name{font-size:13px;font-weight:700}
-.m-drawer-user-plan{font-size:10px;color:var(--amber);font-weight:600;margin-top:1px}
-
-/* ============ TOAST ============ */
-.toast-wrap{
-  position:fixed;
-  z-index:100;
-  bottom:calc(var(--tab-h) + var(--safe-bottom) + 90px);
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  pointer-events:none;
-  width:max-content;
-  max-width:calc(100vw - 32px);
-}
-.toast{
-  pointer-events:auto;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:11px 16px;
-  border-radius:14px;
-  background:#0a0a0d;
-  border:1px solid var(--border-2);
-  color:var(--text);
-  font-size:12.5px;
-  font-weight:500;
-  box-shadow:0 16px 40px rgba(0,0,0,.9);
-  animation:toastIn .35s var(--ease-spring) both;
-}
-.toast.out{animation:toastOut .28s var(--ease) both}
-.toast-icon{
-  width:24px;height:24px;
-  border-radius:50%;
-  display:grid;place-items:center;
-  flex:none;
-}
-.toast-icon svg{width:13px;height:13px;color:#fff}
-.toast.success .toast-icon{background:linear-gradient(145deg,#34d399,#059669)}
-.toast.info .toast-icon{background:linear-gradient(145deg,#60a5fa,#2563eb)}
-.toast.error .toast-icon{background:linear-gradient(145deg,#fb7185,#e11d48)}
-@keyframes toastIn{
-  from{opacity:0;transform:translateY(20px) scale(.94)}
-  to{opacity:1;transform:translateY(0) scale(1)}
-}
-@keyframes toastOut{
-  to{opacity:0;transform:translateY(12px) scale(.96)}
-}
-
-/* ============ RIPPLE ============ */
-.ripple{
-  position:absolute;
-  border-radius:50%;
-  background:rgba(255,255,255,.15);
-  transform:scale(0);
-  animation:rippleAnim .6s var(--ease-out);
-  pointer-events:none;
-}
-@keyframes rippleAnim{
-  to{transform:scale(3);opacity:0}
-}
-
-/* ============ RESPONSIVE ============ */
-@media(min-width:420px){
-  .m-title{font-size:28px}
-  .m-feature{width:160px;height:140px}
-}
-
-@media(min-width:768px){
-  .app{
-    max-width:480px;
-    margin:0 auto;
-    border-left:1px solid var(--border);
-    border-right:1px solid var(--border);
-    box-shadow:0 0 80px rgba(0,0,0,.9);
-  }
-  .m-composer,
-  .m-tabbar{
-    max-width:480px;
-    left:50%;
-    right:auto;
-    transform:translateX(-50%);
     width:100%;
-  }
-  .m-drawer{width:min(320px,50vw)}
+    min-height:100vh;
+
+    background:#000;
+
+    color:white;
+
+    font-family:var(--font);
+
+    overflow-x:hidden;
 }
 
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    animation-duration:.01ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.01ms !important;
-  }
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    width:700px;
+    height:700px;
+
+    top:-350px;
+    right:-300px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,161,214,.13),
+            rgba(0,161,214,.04) 30%,
+            transparent 70%
+        );
+
+    pointer-events:none;
 }
 
-:focus-visible{
-  outline:2px solid var(--blue);
-  outline-offset:2px;
-  border-radius:8px;
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    width:600px;
+    height:600px;
+
+    bottom:-350px;
+    left:-250px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,161,214,.08),
+            transparent 68%
+        );
+
+    pointer-events:none;
 }
+
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app{
+
+    width:100%;
+    min-height:100vh;
+
+    display:flex;
+
+    position:relative;
+
+    isolation:isolate;
+}
+
+
+/* =========================================================
+   DESKTOP / WINDOWS HERO
+========================================================= */
+
+.hero{
+
+    width:52%;
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:
+
+        radial-gradient(
+            circle at 50% 45%,
+            rgba(0,161,214,.13),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            145deg,
+            #010101,
+            #080808 50%,
+            #000
+        );
+}
+
+
+.hero-grid{
+
+    position:absolute;
+
+    inset:0;
+
+    opacity:.18;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.025) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.025) 1px,
+            transparent 1px
+        );
+
+    background-size:55px 55px;
+
+    mask-image:
+        radial-gradient(
+            circle at center,
+            black,
+            transparent 75%
+        );
+}
+
+
+.hero-content{
+
+    position:relative;
+
+    width:75%;
+
+    max-width:680px;
+
+    text-align:center;
+
+    z-index:2;
+}
+
+
+/* Giant Bilibili logo */
+
+.hero-logo{
+
+    width:260px;
+    height:260px;
+
+    margin:0 auto 40px;
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:80px;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(0,161,214,.20),
+            rgba(0,161,214,.03) 55%,
+            transparent 70%
+        );
+
+    border:1px solid rgba(0,161,214,.16);
+
+    box-shadow:
+
+        0 0 100px rgba(0,161,214,.12),
+
+        inset 0 0 80px rgba(0,161,214,.04);
+
+    animation:
+        logoFloat 5s ease-in-out infinite;
+}
+
+
+.hero-logo::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:190px;
+    height:190px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(0,161,214,.17);
+
+    box-shadow:
+        0 0 60px rgba(0,161,214,.08);
+}
+
+
+.hero-logo::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:290px;
+    height:290px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(255,255,255,.025);
+
+}
+
+
+.bili-svg{
+
+    width:150px;
+    height:150px;
+
+    color:var(--primary);
+
+    filter:
+
+        drop-shadow(
+            0 0 12px rgba(0,161,214,.75)
+        )
+
+        drop-shadow(
+            0 0 45px rgba(0,161,214,.25)
+        );
+
+    position:relative;
+
+    z-index:3;
+}
+
+
+@keyframes logoFloat{
+
+    0%,100%{
+        transform:translateY(0) scale(1);
+    }
+
+    50%{
+        transform:translateY(-10px) scale(1.025);
+    }
+}
+
+
+.hero-title{
+
+    font-size:48px;
+
+    font-weight:900;
+
+    letter-spacing:-2px;
+
+    margin-bottom:15px;
+}
+
+
+.hero-title span{
+
+    color:var(--primary);
+
+    text-shadow:
+        0 0 35px rgba(0,161,214,.3);
+}
+
+
+.hero-description{
+
+    color:#777;
+
+    font-size:15px;
+
+    line-height:2;
+
+    max-width:540px;
+
+    margin:auto;
+}
+
+
+/* floating decorative elements */
+
+.orb{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    border:1px solid rgba(0,161,214,.13);
+
+    animation:orbMove 8s ease-in-out infinite;
+}
+
+.orb.one{
+
+    width:170px;
+    height:170px;
+
+    top:12%;
+    left:9%;
+}
+
+.orb.two{
+
+    width:90px;
+    height:90px;
+
+    bottom:20%;
+    right:12%;
+
+    animation-delay:2s;
+}
+
+.orb.three{
+
+    width:35px;
+    height:35px;
+
+    top:22%;
+    right:22%;
+
+    background:rgba(0,161,214,.07);
+
+    box-shadow:0 0 30px rgba(0,161,214,.15);
+
+    animation-delay:4s;
+}
+
+@keyframes orbMove{
+
+    0%,100%{
+        transform:translate(0,0);
+    }
+
+    50%{
+        transform:translate(12px,-18px);
+    }
+}
+
+
+/* =========================================================
+   AUTH SIDE
+========================================================= */
+
+.auth{
+
+    width:48%;
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    padding:50px;
+
+    background:#020202;
+
+    position:relative;
+
+    z-index:5;
+}
+
+
+.auth-wrap{
+
+    width:100%;
+
+    max-width:520px;
+}
+
+
+/* top branding */
+
+.mobile-brand{
+
+    display:none;
+}
+
+
+/* =========================================================
+   AUTH CARD
+========================================================= */
+
+.auth-card{
+
+    width:100%;
+
+    padding:42px;
+
+    border-radius:34px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.012)
+        );
+
+    border:1px solid rgba(255,255,255,.08);
+
+    box-shadow:
+
+        0 35px 100px rgba(0,0,0,.8),
+
+        inset 0 1px 0 rgba(255,255,255,.045);
+
+    backdrop-filter:blur(25px);
+    -webkit-backdrop-filter:blur(25px);
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+
+.auth-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    right:10%;
+
+    width:80%;
+    height:1px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(0,161,214,.7),
+            transparent
+        );
+
+    box-shadow:
+        0 0 15px rgba(0,161,214,.3);
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    margin-bottom:35px;
+}
+
+
+.progress-item{
+
+    height:4px;
+
+    flex:1;
+
+    border-radius:10px;
+
+    background:#202020;
+
+    transition:.4s ease;
+}
+
+
+.progress-item.active{
+
+    background:var(--primary);
+
+    box-shadow:
+        0 0 12px rgba(0,161,214,.45);
+}
+
+
+/* =========================================================
+   SCREEN
+========================================================= */
+
+.screen{
+
+    display:none;
+
+    animation:
+        screenEnter .45s cubic-bezier(.2,.8,.2,1);
+}
+
+.screen.active{
+
+    display:block;
+}
+
+
+@keyframes screenEnter{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(15px)
+            scale(.985);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.title{
+
+    margin-bottom:28px;
+}
+
+
+.title h1{
+
+    font-size:30px;
+
+    font-weight:800;
+
+    letter-spacing:-1px;
+
+    margin-bottom:8px;
+}
+
+
+.title p{
+
+    color:#777;
+
+    font-size:13px;
+
+    line-height:2;
+}
+
+
+/* =========================================================
+   METHOD BUTTONS
+========================================================= */
+
+.methods{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+}
+
+
+.method{
+
+    width:100%;
+
+    min-height:74px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:10px;
+
+    border-radius:20px;
+
+    background:#0a0a0a;
+
+    border:1px solid rgba(255,255,255,.07);
+
+    color:white;
+
+    cursor:pointer;
+
+    font-family:var(--font);
+
+    text-align:right;
+
+    transition:
+        transform .25s,
+        border .25s,
+        background .25s,
+        box-shadow .25s;
+}
+
+
+.method:hover{
+
+    transform:translateY(-3px);
+
+    border-color:
+        rgba(0,161,214,.3);
+
+    background:#0e0e0e;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.4);
+}
+
+
+.method:active{
+
+    transform:scale(.985);
+}
+
+
+.method-icon{
+
+    width:52px;
+    height:52px;
+
+    flex:none;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:#111;
+
+    border:1px solid rgba(255,255,255,.07);
+
+    color:var(--primary);
+}
+
+
+.method-icon svg{
+
+    width:25px;
+    height:25px;
+}
+
+
+.method-info{
+
+    flex:1;
+}
+
+
+.method-info strong{
+
+    display:block;
+
+    font-size:14px;
+
+    font-weight:700;
+}
+
+
+.method-info span{
+
+    display:block;
+
+    color:#5f5f5f;
+
+    font-size:10px;
+
+    margin-top:4px;
+}
+
+
+.method-arrow{
+
+    width:34px;
+
+    height:34px;
+
+    border-radius:11px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:#555;
+
+    background:#111;
+
+    font-size:20px;
+}
+
+
+/* Bilibili logo in method */
+
+.bili-small{
+
+    width:27px;
+    height:27px;
+
+    color:var(--primary);
+
+    filter:
+        drop-shadow(
+            0 0 8px rgba(0,161,214,.4)
+        );
+}
+
+
+/* Google */
+
+.google-letter{
+
+    font-family:Arial;
+
+    font-weight:800;
+
+    font-size:25px;
+
+    color:#fff;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.divider{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    color:#454545;
+
+    font-size:10px;
+
+    margin:24px 0;
+}
+
+
+.divider::before,
+.divider::after{
+
+    content:"";
+
+    height:1px;
+
+    flex:1;
+
+    background:rgba(255,255,255,.07);
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.input-group{
+
+    margin-bottom:16px;
+}
+
+
+.input-label{
+
+    display:block;
+
+    font-size:11px;
+
+    color:#999;
+
+    margin:0 4px 8px;
+}
+
+
+.input-wrap{
+
+    position:relative;
+}
+
+
+.input{
+
+    width:100%;
+
+    height:58px;
+
+    border-radius:17px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    outline:none;
+
+    background:#070707;
+
+    color:#fff;
+
+    padding:0 17px;
+
+    font-family:var(--font);
+
+    font-size:13px;
+
+    transition:.25s;
+}
+
+
+.input::placeholder{
+
+    color:#414141;
+}
+
+
+.input:focus{
+
+    border-color:
+        rgba(0,161,214,.55);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(0,161,214,.06),
+
+        0 0 25px
+        rgba(0,161,214,.06);
+}
+
+
+.toggle-password{
+
+    position:absolute;
+
+    left:15px;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    border:0;
+
+    background:none;
+
+    color:#555;
+
+    cursor:pointer;
+
+    font-size:16px;
+}
+
+
+/* =========================================================
+   MAIN BUTTON
+========================================================= */
+
+.primary-btn{
+
+    width:100%;
+
+    height:60px;
+
+    border:0;
+
+    border-radius:18px;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #12b7ec,
+            #008ec2
+        );
+
+    color:white;
+
+    font-family:var(--font);
+
+    font-size:13px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+
+        0 15px 40px
+        rgba(0,161,214,.18),
+
+        inset 0 1px 0
+        rgba(255,255,255,.25);
+
+    transition:.25s;
+}
+
+
+.primary-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+
+        0 20px 50px
+        rgba(0,161,214,.28);
+}
+
+
+.primary-btn:active{
+
+    transform:scale(.985);
+}
+
+
+/* =========================================================
+   BACK
+========================================================= */
+
+.back-btn{
+
+    display:block;
+
+    border:0;
+
+    background:none;
+
+    color:#555;
+
+    font-family:var(--font);
+
+    font-size:11px;
+
+    margin:17px auto 0;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+
+.back-btn:hover{
+
+    color:#fff;
+}
+
+
+/* =========================================================
+   OTP
+========================================================= */
+
+.otp{
+
+    direction:ltr;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:9px;
+
+    margin:30px 0 20px;
+}
+
+
+.otp input{
+
+    width:57px;
+    height:62px;
+
+    border-radius:17px;
+
+    border:1px solid rgba(255,255,255,.09);
+
+    background:#070707;
+
+    color:#fff;
+
+    outline:none;
+
+    text-align:center;
+
+    font-size:23px;
+
+    font-weight:800;
+
+    font-family:var(--font);
+
+    transition:.2s;
+}
+
+
+.otp input:focus{
+
+    border-color:var(--primary);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(0,161,214,.06),
+
+        0 0 25px
+        rgba(0,161,214,.12);
+}
+
+
+.otp-status{
+
+    text-align:center;
+
+    color:#666;
+
+    font-size:11px;
+
+    margin-bottom:22px;
+}
+
+
+.otp-status strong{
+
+    color:var(--primary);
+}
+
+
+.resend{
+
+    color:#aaa;
+
+    cursor:pointer;
+
+    margin-right:5px;
+}
+
+
+.resend.disabled{
+
+    color:#333;
+
+    pointer-events:none;
+}
+
+
+/* =========================================================
+   GOOGLE PAGE
+========================================================= */
+
+.google-page{
+
+    text-align:center;
+}
+
+
+.google-logo{
+
+    width:92px;
+    height:92px;
+
+    margin:0 auto 25px;
+
+    border-radius:28px;
+
+    background:#fff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 25px 60px rgba(255,255,255,.08);
+}
+
+
+.google-logo span{
+
+    font-family:Arial;
+
+    font-size:47px;
+
+    font-weight:700;
+
+    color:#4285F4;
+}
+
+
+.google-account{
+
+    margin:25px 0;
+
+    padding:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    border-radius:19px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:#080808;
+
+    text-align:right;
+}
+
+
+.google-avatar{
+
+    width:46px;
+    height:46px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:#202020;
+
+    color:#fff;
+
+    font-weight:800;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile-icon{
+
+    width:82px;
+    height:82px;
+
+    margin:0 auto 20px;
+
+    border-radius:27px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:var(--primary);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,161,214,.15),
+            rgba(0,161,214,.02)
+        );
+
+    border:1px solid rgba(0,161,214,.18);
+
+    box-shadow:
+        0 20px 60px rgba(0,161,214,.09);
+}
+
+
+.profile-icon svg{
+
+    width:38px;
+    height:38px;
+}
+
+
+/* =========================================================
+   SUCCESS
+========================================================= */
+
+.success{
+
+    text-align:center;
+
+    padding:15px 0 5px;
+}
+
+
+.success-logo{
+
+    width:190px;
+    height:190px;
+
+    margin:0 auto 28px;
+
+    border-radius:60px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(0,161,214,.18),
+            rgba(0,161,214,.025) 62%,
+            transparent
+        );
+
+    border:1px solid rgba(0,161,214,.18);
+
+    box-shadow:
+        0 0 80px rgba(0,161,214,.13);
+}
+
+
+.success-logo::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:20px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(0,161,214,.18);
+
+    animation:
+        successPulse 2s ease-in-out infinite;
+}
+
+
+.success-logo .bili-svg{
+
+    width:105px;
+    height:105px;
+}
+
+
+.success h2{
+
+    font-size:28px;
+
+    font-weight:900;
+
+    margin-bottom:10px;
+}
+
+
+.success h2 span{
+
+    color:var(--primary);
+}
+
+
+.success p{
+
+    color:#777;
+
+    font-size:12px;
+
+    line-height:2;
+
+    margin-bottom:28px;
+}
+
+
+@keyframes successPulse{
+
+    0%,100%{
+        transform:scale(.9);
+        opacity:.3;
+    }
+
+    50%{
+        transform:scale(1.05);
+        opacity:1;
+    }
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+
+    text-align:center;
+
+    color:#353535;
+
+    font-size:9px;
+
+    margin-top:18px;
+}
+
+
+.footer span{
+
+    color:var(--primary);
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+
+    position:fixed;
+
+    z-index:1000;
+
+    left:50%;
+
+    bottom:25px;
+
+    transform:
+        translate(-50%,30px);
+
+    width:
+        min(
+            calc(100% - 30px),
+            420px
+        );
+
+    padding:15px 18px;
+
+    text-align:center;
+
+    font-size:11px;
+
+    color:#fff;
+
+    background:#111;
+
+    border:1px solid
+        rgba(0,161,214,.22);
+
+    border-radius:17px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.7);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    transition:.35s;
+}
+
+
+.toast.show{
+
+    opacity:1;
+
+    transform:
+        translate(-50%,0);
+}
+
+
+/* =========================================================
+   ANDROID
+========================================================= */
+
+body.android .hero{
+
+    display:none;
+}
+
+
+body.android .auth{
+
+    width:100%;
+
+    padding:
+        24px
+        18px
+        24px;
+}
+
+
+body.android .auth-wrap{
+
+    max-width:520px;
+}
+
+
+body.android .auth-card{
+
+    padding:27px 20px 23px;
+
+    border-radius:28px;
+}
+
+
+body.android .title h1{
+
+    font-size:25px;
+}
+
+
+/* =========================================================
+   IPHONE
+========================================================= */
+
+body.iphone .hero{
+
+    display:none;
+}
+
+
+body.iphone .auth{
+
+    width:100%;
+
+    min-height:100vh;
+
+    padding:
+
+        max(22px, env(safe-area-inset-top))
+
+        16px
+
+        max(25px, env(safe-area-inset-bottom));
+}
+
+
+body.iphone .auth-card{
+
+    padding:25px 18px 22px;
+
+    border-radius:27px;
+}
+
+
+body.iphone .input{
+
+    height:56px;
+
+    border-radius:16px;
+}
+
+
+body.iphone .primary-btn{
+
+    height:58px;
+
+    border-radius:17px;
+}
+
+
+body.iphone .method{
+
+    min-height:70px;
+
+    border-radius:18px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width:1100px){
+
+    .hero{
+
+        width:45%;
+    }
+
+    .auth{
+
+        width:55%;
+
+        padding:30px;
+    }
+
+    .hero-logo{
+
+        width:210px;
+        height:210px;
+    }
+
+    .hero-title{
+
+        font-size:37px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:700px){
+
+    .app{
+
+        min-height:100dvh;
+    }
+
+
+    .hero{
+
+        display:none;
+    }
+
+
+    .auth{
+
+        width:100%;
+
+        min-height:100dvh;
+
+        padding:
+            18px
+            15px
+            max(18px, env(safe-area-inset-bottom));
+    }
+
+
+    .auth-wrap{
+
+        max-width:500px;
+    }
+
+
+    .auth-card{
+
+        padding:25px 18px 21px;
+
+        border-radius:28px;
+    }
+
+
+    .mobile-brand{
+
+        display:flex;
+
+        justify-content:center;
+
+        align-items:center;
+
+        margin-bottom:20px;
+    }
+
+
+    .mobile-brand-logo{
+
+        width:57px;
+        height:57px;
+
+        border-radius:18px;
+
+        display:flex;
+
+        align-items:center;
+        justify-content:center;
+
+        background:#080808;
+
+        border:1px solid
+            rgba(0,161,214,.2);
+
+        box-shadow:
+            0 0 35px rgba(0,161,214,.08);
+    }
+
+
+    .mobile-brand-logo .bili-svg{
+
+        width:31px;
+        height:31px;
+    }
+
+
+    .title{
+
+        text-align:center;
+
+        margin-bottom:24px;
+    }
+
+
+    .title h1{
+
+        font-size:24px;
+
+        letter-spacing:-.5px;
+    }
+
+
+    .title p{
+
+        font-size:11px;
+    }
+
+
+    .progress{
+
+        margin-bottom:25px;
+    }
+
+
+    .otp{
+
+        gap:5px;
+    }
+
+
+    .otp input{
+
+        width:calc(
+            (100vw - 80px) / 6
+        );
+
+        max-width:52px;
+
+        height:55px;
+
+        border-radius:15px;
+    }
+
+
+    .success-logo{
+
+        width:160px;
+        height:160px;
+
+        border-radius:50px;
+    }
+
+
+    .success-logo .bili-svg{
+
+        width:85px;
+        height:85px;
+    }
+
+
+    .success h2{
+
+        font-size:24px;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media(max-width:370px){
+
+    .auth{
+
+        padding-left:10px;
+        padding-right:10px;
+    }
+
+
+    .auth-card{
+
+        padding:21px 14px;
+    }
+
+
+    .method{
+
+        min-height:64px;
+    }
+
+
+    .method-icon{
+
+        width:46px;
+        height:46px;
+    }
+
+
+    .method-info strong{
+
+        font-size:12px;
+    }
+
+
+    .method-info span{
+
+        font-size:9px;
+    }
+
+
+    .otp input{
+
+        height:50px;
+
+        font-size:18px;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+
+        animation-duration:.01ms !important;
+
+        animation-iteration-count:1 !important;
+
+        scroll-behavior:auto !important;
+
+        transition-duration:.01ms !important;
+    }
+}
+
 </style>
 </head>
 
-<body>
 
-<div id="stars" aria-hidden="true"></div>
+<body>
 
 <div class="app">
 
-  <header class="m-header" id="mHeader">
-    <div class="m-user" id="mUserBtn" role="button" tabindex="0">
-      <div class="m-avatar"><span>ر</span></div>
-      <div class="m-user-text">
-        <span class="m-hello" id="mHello">عصر بخیر</span>
-        <span class="m-name">کاربر راینو</span>
-      </div>
-    </div>
-    <div class="m-actions">
-      <button class="m-icon-btn" id="mThemeBtn" aria-label="تغییر تم">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M5 5l1.5 1.5M17.5 17.5 19 19M3 12h2M19 12h2M5 19l1.5-1.5M17.5 6.5 19 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/></svg>
-      </button>
-      <button class="m-icon-btn" id="mMenuBtn" aria-label="منو">
-        <span class="dot" aria-hidden="true"></span>
-        <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-  </header>
 
-  <main class="m-scroll" id="mScroll">
+<!-- ======================================================
+     WINDOWS / DESKTOP HERO
+====================================================== -->
 
-    <section class="m-hero">
-      <div class="m-eyebrow">
-        <span id="mGreeting">عصر بخیر کاربر گرامی</span>
-        <span class="wave" aria-hidden="true">👋</span>
-      </div>
-      <h1 class="m-title">امروز چه می‌خوای <span class="accent">بدونی؟</span></h1>
-      <p class="m-subtitle">دستیار هوشمند راینو آماده‌ی کمک به توست</p>
-    </section>
+<section class="hero">
 
-    <div class="m-quick-scroll">
-      <button class="m-quick-chip" data-fill="یک برنامه حرفه‌ای برای پروژه‌ام بنویس">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M8 5h8M8 9h8M8 13h5M5 3h14v18H5z" stroke="currentColor" stroke-width="1.5"/></svg>
-        برنامه‌نویسی
-      </button>
-      <button class="m-quick-chip" data-fill="این متن را حرفه‌ای و خوانا ویرایش کن">
-        <svg viewBox="0 0 24 24" fill="none"><path d="m4 17 10-10 3 3L7 20H4v-3ZM14 7l2-2 3 3-2 2" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-        ویرایش متن
-      </button>
-      <button class="m-quick-chip" data-fill="این متن را به انگلیسی ترجمه کن">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M5 5h8M9 5c0 5-2 8-5 10M7 10c1.5 2 3 3.5 5 5M14 18h6M17 6l4 12M14.8 14h4.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        ترجمه      </button>
-      <button class="m-quick-chip" data-fill="چند ایده خلاقانه برای این موضوع بده">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 21h4M8.2 14.5A6 6 0 1 1 16 14.5c-.8.7-1 1.3-1 2.5H9.2c0-1.2-.2-1.8-1-2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        ایده‌پردازی
-      </button>
-      <button class="m-quick-chip" data-fill="این موضوع را برای من آموزش بده">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5 12 3l8 2.5-8 2.5L4 5.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M7 8v5c2.7 2 7.3 2 10 0V8M20 6v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        یادگیری
-      </button>
+    <div class="hero-grid"></div>
+
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+
+
+    <div class="hero-content">
+
+        <div class="hero-logo">
+
+            <!-- BILIBILI ORIGINAL SVG -->
+            <svg
+                class="bili-svg"
+                fill="currentColor"
+                fill-rule="evenodd"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+
+                <title>bilibili index</title>
+
+                <path d="M11.995 0c2.204-.001 3.701 2.07 4.497 3.874.374.849.672 1.728.892 2.638a.09.09 0 00.066.066c.885.209 1.728.486 2.529.83 1.17.504 2.236 1.17 3.076 2.13.195.224.386.52.574.89.78 1.539.27 3.194-.905 4.35-1.412 1.39-3.384 2.137-5.264 2.608a.058.058 0 00-.044.047c-.036.227-.184.734-.443 1.522-.71 2.16-2.34 5.044-4.966 5.045-2.625.001-4.258-2.88-4.97-5.04-.26-.788-.408-1.295-.446-1.522a.059.059 0 00-.043-.047c-1.88-.468-3.853-1.214-5.267-2.602-1.177-1.155-1.688-2.81-.909-4.35.188-.37.378-.666.573-.89.839-.962 1.905-1.628 3.074-2.133a15.26 15.26 0 012.529-.833.087.087 0 00.065-.066c.22-.91.516-1.79.89-2.639C8.296 2.072 9.791.001 11.994 0zm5.915 8.994l.176 1.29a.068.068 0 00.026.043c.415.318.687.68.815 1.083a1.996 1.996 0 01-1.846 2.596 2.001 2.001 0 01-2.058-2.282c.075-.52.359-.977.852-1.369a.052.052 0 00.02-.047c-.102-.978-.311-1.911-.559-2.993-.3-1.31-.727-2.529-1.45-3.705a3.868 3.868 0 00-.506-.665c-.48-.494-.997-.897-1.696-.728-.476.116-1.069.654-1.34 1.043a10.085 10.085 0 00-1.399 2.938.02.02 0 00.022.016l1.588-.074a.07.07 0 00.046-.02c.638-.632 1.57-.76 2.337-.308.318.187.569.478.754.873.456.977-.123 2.14-1.06 2.482-.879.321-1.8-.006-2.294-.809a.068.068 0 00-.061-.032 23.52 23.52 0 00-2.412.209c-.676.094-1.403.296-2.014.5-.692.228-1.347.52-1.965.876-.885.51-2.189 1.567-1.536 2.725.119.211.233.373.343.487.89.92 2 1.415 3.3 1.852a.022.022 0 00.029-.023l-.157-1.145a.068.068 0 00-.033-.05 2.08 2.08 0 01-.848-.96c-.415-.925-.03-1.983.792-2.49a2.004 2.004 0 012.415.239c.345.315.623.855.642 1.356.026.697-.253 1.239-.782 1.703a.057.057 0 00-.02.05c.165 1.255.485 2.545.787 3.705.262 1.004.69 2.098 1.296 3.041.315.49.697.92 1.135 1.189.526.323 1.05.312 1.57-.033.666-.442 1.045-1.034 1.47-1.822a9.514 9.514 0 00.77-1.89.017.017 0 00-.018-.014l-1.336.063a.06.06 0 00-.05.033 1.822 1.822 0 01-1.279 1.008 1.85 1.85 0 01-1.878-.665c-.558-.723-.557-1.598-.003-2.32a1.78 1.78 0 011.063-.668c.6-.133 1.164.016 1.693.447a.076.076 0 00.051.017c.83-.027 1.64-.098 2.431-.213.62-.09 1.364-.288 1.908-.442a11.537 11.537 0 002.236-.9c.732-.386 1.634-1.033 1.89-1.847.4-1.269-1.44-2.406-2.352-2.802-.637-.277-1.13-.467-1.479-.57a.02.02 0 00-.019.003.02.02 0 00-.006.009.022.022 0 000 .01z"/>
+            </svg>
+
+        </div>
+
+
+        <h1 class="hero-title">
+            دنیای خودت را
+            <span>شروع کن</span>
+        </h1>
+
+
+        <p class="hero-description">
+            یک تجربه ورود مدرن، سریع و امن با طراحی اختصاصی
+            برای Bilibili.
+        </p>
+
     </div>
 
-    <div class="m-section-head">
-      <div class="m-section-title">امکانات ویژه</div>
-      <div class="m-section-link">همه</div>
-    </div>
-    <div class="m-cards-scroll">
-      <div class="m-feature f-blue" data-action="channel">
-        <div class="m-feature-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="m5 12 14-6-3 13-4-5-4 2 1-5-4 1Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>
+</section>
+
+
+<!-- ======================================================
+     AUTH
+====================================================== -->
+
+<section class="auth">
+
+<div class="auth-wrap">
+
+
+    <!-- MOBILE LOGO -->
+
+    <div class="mobile-brand">
+
+        <div class="mobile-brand-logo">
+
+            <svg
+                class="bili-svg"
+                fill="currentColor"
+                fill-rule="evenodd"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+
+                <path d="M11.995 0c2.204-.001 3.701 2.07 4.497 3.874.374.849.672 1.728.892 2.638a.09.09 0 00.066.066c.885.209 1.728.486 2.529.83 1.17.504 2.236 1.17 3.076 2.13.195.224.386.52.574.89.78 1.539.27 3.194-.905 4.35-1.412 1.39-3.384 2.137-5.264 2.608a.058.058 0 00-.044.047c-.036.227-.184.734-.443 1.522-.71 2.16-2.34 5.044-4.966 5.045-2.625.001-4.258-2.88-4.97-5.04-.26-.788-.408-1.295-.446-1.522a.059.059 0 00-.043-.047c-1.88-.468-3.853-1.214-5.267-2.602-1.177-1.155-1.688-2.81-.909-4.35.188-.37.378-.666.573-.89.839-.962 1.905-1.628 3.074-2.133a15.26 15.26 0 012.529-.833.087.087 0 00.065-.066c.22-.91.516-1.79.89-2.639C8.296 2.072 9.791.001 11.994 0zm5.915 8.994l.176 1.29a.068.068 0 00.026.043c.415.318.687.68.815 1.083a1.996 1.996 0 01-1.846 2.596 2.001 2.001 0 01-2.058-2.282c.075-.52.359-.977.852-1.369a.052.052 0 00.02-.047c-.102-.978-.311-1.911-.559-2.993-.3-1.31-.727-2.529-1.45-3.705a3.868 3.868 0 00-.506-.665c-.48-.494-.997-.897-1.696-.728-.476.116-1.069.654-1.34 1.043a10.085 10.085 0 00-1.399 2.938.02.02 0 00.022.016l1.588-.074a.07.07 0 00.046-.02c.638-.632 1.57-.76 2.337-.308.318.187.569.478.754.873.456.977-.123 2.14-1.06 2.482-.879.321-1.8-.006-2.294-.809a.068.068 0 00-.061-.032 23.52 23.52 0 00-2.412.209c-.676.094-1.403.296-2.014.5-.692.228-1.347.52-1.965.876-.885.51-2.189 1.567-1.536 2.725.119.211.233.373.343.487.89.92 2 1.415 3.3 1.852a.022.022 0 00.029-.023l-.157-1.145a.068.068 0 00-.033-.05 2.08 2.08 0 01-.848-.96c-.415-.925-.03-1.983.792-2.49a2.004 2.004 0 012.415.239c.345.315.623.855.642 1.356.026.697-.253 1.239-.782 1.703a.057.057 0 00-.02.05c.165 1.255.485 2.545.787 3.705.262 1.004.69 2.098 1.296 3.041.315.49.697.92 1.135 1.189.526.323 1.05.312 1.57-.033.666-.442 1.045-1.034 1.47-1.822a9.514 9.514 0 00.77-1.89.017.017 0 00-.018-.014l-1.336.063a.06.06 0 00-.05.033 1.822 1.822 0 01-1.279 1.008 1.85 1.85 0 01-1.878-.665c-.558-.723-.557-1.598-.003-2.32a1.78 1.78 0 011.063-.668c.6-.133 1.164.016 1.693.447a.076.076 0 00.051.017c.83-.027 1.64-.098 2.431-.213.62-.09 1.364-.288 1.908-.442a11.537 11.537 0 002.236-.9c.732-.386 1.634-1.033 1.89-1.847.4-1.269-1.44-2.406-2.352-2.802-.637-.277-1.13-.467-1.479-.57a.02.02 0 00-.019.003.02.02 0 00-.006.009.022.022 0 000 .01z"/>
+            </svg>
+
         </div>
-        <div class="m-feature-text">
-          <div class="m-feature-title">کانال راینو</div>
-          <div class="m-feature-sub">آموزش در تلگرام</div>
-        </div>
-      </div>
-      <div class="m-feature f-purple" data-action="apk">
-        <div class="m-feature-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 4v11M8 11l4 4 4-4M5 19h14" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="m-feature-text">
-          <div class="m-feature-title">دانلود اپلیکیشن</div>
-          <div class="m-feature-sub">نسخه APK</div>
-        </div>
-      </div>
-      <div class="m-feature f-green" data-action="write">
-        <div class="m-feature-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M7 8h10v9H7zM9 8V5h6v3M5 11h2M17 11h2M9 17v2M15 17v2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-        <div class="m-feature-text">
-          <div class="m-feature-title">رایت راینو</div>
-          <div class="m-feature-sub">برای موبایل</div>
-        </div>
-      </div>
-      <div class="m-feature f-red" data-action="support">
-        <div class="m-feature-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 10h8M8 13h5" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
-        </div>
-        <div class="m-feature-text">
-          <div class="m-feature-title">پشتیبانی</div>
-          <div class="m-feature-sub">۲۴ ساعته</div>
-        </div>
-      </div>
-      <div class="m-feature f-indigo" data-action="pro">
-        <div class="m-feature-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M6 9.5 12 5l6 4.5v8.5H6V9.5Z" stroke="white" stroke-width="1.5"/><path d="M9 18v-5h6v5" stroke="white" stroke-width="1.5"/></svg>
-        </div>
-        <div class="m-feature-text">
-          <div class="m-feature-title">راینو پرو</div>
-          <div class="m-feature-sub">نسخه حرفه‌ای</div>
-        </div>
-      </div>
+
     </div>
 
-    <div class="m-section-head">
-      <div class="m-section-title">گفتگوهای اخیر</div>
-      <div class="m-section-link" id="mClearHistory">پاک کردن</div>
-    </div>
-    <div class="m-history" id="mHistory">
-      <div class="m-empty">
-        <div class="m-empty-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7" stroke="currentColor" stroke-width="1.8"/><path d="M4 4v4.7h4.7M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+
+    <div class="auth-card">
+
+
+        <!-- =================================================
+             PROGRESS
+        ================================================== -->
+
+        <div class="progress">
+
+            <div
+                class="progress-item active"
+                id="progress1">
+            </div>
+
+            <div
+                class="progress-item"
+                id="progress2">
+            </div>
+
+            <div
+                class="progress-item"
+                id="progress3">
+            </div>
+
         </div>
-        <div class="m-empty-title">تاریخچه‌ای وجود ندارد</div>
-        <div class="m-empty-sub">اولین پیام خود را بفرستید</div>
-      </div>
-    </div>
 
-    <div style="height:20px"></div>
-  </main>
 
-  <div class="m-composer" id="mComposer">
-    <div class="m-composer-inner">
-      <button class="m-add-btn" id="mAddBtn" aria-label="افزودن">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
-      <textarea id="mPrompt" class="m-prompt" placeholder="پیام خود را بنویسید..." rows="1" aria-label="متن پیام"></textarea>
-      <button class="m-send-btn" id="mSend" aria-label="ارسال" disabled>
-        <svg viewBox="0 0 24 24" fill="none"><path d="m4 4 17 8-17 8 3.5-8L4 4Z" fill="currentColor"/></svg>
-      </button>
-    </div>
-  </div>
+        <!-- =================================================
+             SCREEN 1
+        ================================================== -->
 
-  <nav class="m-tabbar" id="mTabbar" aria-label="نوار پایین">
-    <button class="m-tab active" data-tab="home">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9 20v-5h6v5" stroke="currentColor" stroke-width="1.9"/></svg>
-      <span>خانه</span>
-    </button>
-    <button class="m-tab" data-tab="chat">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9 10h6M9 13h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <span>گفتگو</span>
-      <span class="badge">۳</span>
-    </button>
-    <button class="m-tab" data-tab="create">
-      <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.9"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-      <span>ساخت</span>
-    </button>
-    <button class="m-tab" data-tab="explore">
-      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.9"/><path d="m14.5 9.5-1.5 4-4 1.5 1.5-4 4-1.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-      <span>کاوش</span>
-    </button>
-    <button class="m-tab" data-tab="profile">
-      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.9"/><path d="M5 20c.7-3.2 3-5 7-5s6.3 1.8 7 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
-      <span>پروفایل</span>
-    </button>
-  </nav>
+        <div
+            class="screen active"
+            id="screen1">
 
-  <div class="m-drawer-backdrop" id="mDrawerBackdrop"></div>
-  <aside class="m-drawer" id="mDrawer" aria-label="منوی کناری">
-    <div class="m-drawer-head">
-      <div class="m-drawer-logo" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3 14.2 8l5.3.5-4 3.5 1.2 5.2L12 14.5 7.3 17.2 8.5 12l-4-3.5L9.8 8 12 3Z" fill="currentColor"/></svg>
-      </div>
-      <div>
-        <div class="m-drawer-title">راینو</div>
-        <div class="m-drawer-sub">دستیار هوشمند</div>
-      </div>
-    </div>
+            <div class="title">
 
-    <nav class="m-drawer-nav">
-      <div class="m-drawer-item active" data-action="home">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5 12 4l8 6.5V20H4v-9.5Z" stroke="currentColor" stroke-width="1.9"/><path d="M9 20v-5h6v5" stroke="currentColor" stroke-width="1.9"/></svg>
-        خانه
-      </div>
-      <div class="m-drawer-item" data-action="chat">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
-        گفتگوها
-        <span class="badge">۳</span>
-      </div>
-      <div class="m-drawer-item" data-action="shop">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M4 9h16l-1 11H5L4 9Z" stroke="currentColor" stroke-width="1.7"/><path d="M7 9V6a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.7"/></svg>
-        فروشگاه
-      </div>
-      <div class="m-drawer-item" data-action="image">
-        <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><path d="m6 17 4-4 3 3 2-2 3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        تصویرساز
-      </div>
-      <div class="m-drawer-item" data-action="voice">
-        <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="12" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        دستیار صوتی
-      </div>
-      <div class="m-drawer-item" data-action="history">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7" stroke="currentColor" stroke-width="1.8"/><path d="M4 4v4.7h4.7M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        تاریخچه
-      </div>
-      <div class="m-drawer-item" data-action="settings">
-        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v2M12 19v2M5 5l1.5 1.5M17.5 17.5 19 19M3 12h2M19 12h2M5 19l1.5-1.5M17.5 6.5 19 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        تنظیمات
-      </div>
-      <div class="m-drawer-item" data-action="support">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 10h8M8 13h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        پشتیبانی
-      </div>
-    </nav>
+                <h1>
+                    ورود به حساب
+                </h1>
 
-    <div class="m-drawer-footer">
-      <div class="m-drawer-user" id="mDrawerUser">
-        <div class="m-avatar"><span>ر</span></div>
-        <div class="m-drawer-user-text">
-          <div class="m-drawer-user-name">کاربر راینو</div>
-          <div class="m-drawer-user-plan">✦ نسخه رایگان</div>
+                <p>
+                    روش ورود موردنظر خود را انتخاب کنید.
+                    سریع، ساده و امن.
+                </p>
+
+            </div>
+
+
+            <div class="methods">
+
+
+                <!-- EMAIL -->
+
+                <button
+                    class="method"
+                    onclick="chooseMethod('email')">
+
+                    <div class="method-icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <rect
+                                x="3"
+                                y="5"
+                                width="18"
+                                height="14"
+                                rx="3"/>
+
+                            <path
+                                d="m4 7 8 6 8-6"/>
+
+                        </svg>
+
+                    </div>
+
+
+                    <div class="method-info">
+
+                        <strong>
+                            ورود با ایمیل
+                        </strong>
+
+                        <span>
+                            کد تأیید به ایمیل شما ارسال می‌شود
+                        </span>
+
+                    </div>
+
+
+                    <div class="method-arrow">
+                        ‹
+                    </div>
+
+                </button>
+
+
+                <!-- PHONE -->
+
+                <button
+                    class="method"
+                    onclick="chooseMethod('phone')">
+
+                    <div class="method-icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7">
+
+                            <rect
+                                x="7"
+                                y="2.5"
+                                width="10"
+                                height="19"
+                                rx="2.5"/>
+
+                            <path
+                                d="M10 18h4"/>
+
+                        </svg>
+
+                    </div>
+
+
+                    <div class="method-info">
+
+                        <strong>
+                            شماره تلفن
+                        </strong>
+
+                        <span>
+                            کد تأیید پیامکی دریافت کنید
+                        </span>
+
+                    </div>
+
+
+                    <div class="method-arrow">
+                        ‹
+                    </div>
+
+                </button>
+
+
+                <!-- GOOGLE -->
+
+                <button
+                    class="method"
+                    onclick="chooseMethod('google')">
+
+                    <div class="method-icon">
+
+                        <span class="google-letter">
+                            G
+                        </span>
+
+                    </div>
+
+
+                    <div class="method-info">
+
+                        <strong>
+                            ورود با Google
+                        </strong>
+
+                        <span>
+                            استفاده از حساب Google
+                        </span>
+
+                    </div>
+
+
+                    <div class="method-arrow">
+                        ‹
+                    </div>
+
+                </button>
+
+            </div>
+
+
+            <div class="divider">
+                ورود امن و رمزگذاری‌شده
+            </div>
+
+
+            <div class="footer">
+                با ادامه، شرایط استفاده و حریم خصوصی را می‌پذیرید.
+            </div>
+
         </div>
-        <svg viewBox="0 0 24 24" fill="none" style="width:16px;height:16px;color:var(--muted)"><path d="m14 6-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-    </div>
-  </aside>
 
-  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+        <!-- =================================================
+             SCREEN 2
+        ================================================== -->
+
+        <div
+            class="screen"
+            id="screen2">
+
+            <div class="title">
+
+                <h1 id="methodTitle">
+                    ورود با ایمیل
+                </h1>
+
+                <p id="methodDescription">
+                    اطلاعات خود را وارد کنید.
+                </p>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div
+                id="emailBox"
+                class="input-group">
+
+                <label class="input-label">
+                    ایمیل
+                </label>
+
+                <input
+                    id="email"
+                    class="input"
+                    type="email"
+                    placeholder="example@gmail.com">
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div
+                id="phoneBox"
+                class="input-group"
+                style="display:none">
+
+                <label class="input-label">
+                    شماره تلفن
+                </label>
+
+                <input
+                    id="phone"
+                    class="input"
+                    type="tel"
+                    inputmode="tel"
+                    placeholder="0912 123 4567">
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="sendVerificationCode()">
+
+                ارسال کد تأیید
+
+            </button>
+
+
+            <button
+                class="back-btn"
+                onclick="go(1)">
+
+                بازگشت
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             SCREEN 3 OTP
+        ================================================== -->
+
+        <div
+            class="screen"
+            id="screen3">
+
+            <div class="title">
+
+                <h1>
+                    تأیید حساب
+                </h1>
+
+                <p>
+                    کد ۶ رقمی ارسال‌شده را وارد کنید.
+                </p>
+
+                <p
+                    id="sentAddress"
+                    style="
+                        color:#00A1D6;
+                        margin-top:5px;
+                    ">
+                </p>
+
+            </div>
+
+
+            <div class="otp">
+
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+
+            </div>
+
+
+            <div class="otp-status">
+
+                ارسال مجدد در
+
+                <strong id="timer">
+                    60
+                </strong>
+
+                ثانیه
+
+                <span
+                    id="resend"
+                    class="resend disabled"
+                    onclick="resendCode()">
+
+                    ارسال مجدد
+
+                </span>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="verifyCode()">
+
+                تأیید و ادامه
+
+            </button>
+
+
+            <button
+                class="back-btn"
+                onclick="go(2)">
+
+                تغییر اطلاعات
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             SCREEN 4 PROFILE
+        ================================================== -->
+
+        <div
+            class="screen"
+            id="screen4">
+
+            <div class="profile-icon">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5">
+
+                    <circle
+                        cx="12"
+                        cy="8"
+                        r="3.5"/>
+
+                    <path
+                        d="M4.5 21c.7-4.1 3.1-6.3 7.5-6.3s6.8 2.2 7.5 6.3"/>
+
+                </svg>
+
+            </div>
+
+
+            <div class="title">
+
+                <h1>
+                    تقریباً تمام شد
+                </h1>
+
+                <p>
+                    اطلاعات حساب خود را تکمیل کنید.
+                </p>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label class="input-label">
+                    نام و نام خانوادگی
+                </label>
+
+                <input
+                    id="fullName"
+                    class="input"
+                    type="text"
+                    placeholder="مثلاً علی محمدی">
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label class="input-label">
+                    رمز عبور
+                </label>
+
+                <div class="input-wrap">
+
+                    <input
+                        id="password"
+                        class="input"
+                        type="password"
+                        placeholder="حداقل ۸ کاراکتر">
+
+                    <button
+                        class="toggle-password"
+                        onclick="togglePassword('password')">
+
+                        ◉
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label class="input-label">
+                    تکرار رمز عبور
+                </label>
+
+                <div class="input-wrap">
+
+                    <input
+                        id="passwordConfirm"
+                        class="input"
+                        type="password"
+                        placeholder="رمز عبور را دوباره وارد کنید">
+
+                    <button
+                        class="toggle-password"
+                        onclick="togglePassword('passwordConfirm')">
+
+                        ◉
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="finishSignup()">
+
+                ساخت حساب و ادامه
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             SCREEN 5 GOOGLE
+        ================================================== -->
+
+        <div
+            class="screen"
+            id="screen5">
+
+            <div class="google-page">
+
+                <div class="google-logo">
+
+                    <span>
+                        G
+                    </span>
+
+                </div>
+
+
+                <div class="title">
+
+                    <h1>
+                        ورود با Google
+                    </h1>
+
+                    <p>
+                        حساب Google خود را انتخاب کنید.
+                    </p>
+
+                </div>
+
+
+                <div class="google-account">
+
+                    <div class="google-avatar">
+                        G
+                    </div>
+
+                    <div>
+
+                        <strong
+                            style="font-size:13px">
+
+                            حساب Google
+
+                        </strong>
+
+                        <div
+                            style="
+                                color:#555;
+                                font-size:10px;
+                                margin-top:4px;
+                            ">
+
+                            برای ادامه انتخاب کنید
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    onclick="googleContinue()">
+
+                    ادامه با Google
+
+                </button>
+
+
+                <button
+                    class="back-btn"
+                    onclick="go(1)">
+
+                    بازگشت
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SCREEN 6 SUCCESS
+        ================================================== -->
+
+        <div
+            class="screen"
+            id="screen6">
+
+            <div class="success">
+
+
+                <div class="success-logo">
+
+                    <svg
+                        class="bili-svg"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M11.995 0c2.204-.001 3.701 2.07 4.497 3.874.374.849.672 1.728.892 2.638a.09.09 0 00.066.066c.885.209 1.728.486 2.529.83 1.17.504 2.236 1.17 3.076 2.13.195.224.386.52.574.89.78 1.539.27 3.194-.905 4.35-1.412 1.39-3.384 2.137-5.264 2.608a.058.058 0 00-.044.047c-.036.227-.184.734-.443 1.522-.71 2.16-2.34 5.044-4.966 5.045-2.625.001-4.258-2.88-4.97-5.04-.26-.788-.408-1.295-.446-1.522a.059.059 0 00-.043-.047c-1.88-.468-3.853-1.214-5.267-2.602-1.177-1.155-1.688-2.81-.909-4.35.188-.37.378-.666.573-.89.839-.962 1.905-1.628 3.074-2.133a15.26 15.26 0 012.529-.833.087.087 0 00.065-.066c.22-.91.516-1.79.89-2.639C8.296 2.072 9.791.001 11.994 0zm5.915 8.994l.176 1.29a.068.068 0 00.026.043c.415.318.687.68.815 1.083a1.996 1.996 0 01-1.846 2.596 2.001 2.001 0 01-2.058-2.282c.075-.52.359-.977.852-1.369a.052.052 0 00.02-.047c-.102-.978-.311-1.911-.559-2.993-.3-1.31-.727-2.529-1.45-3.705a3.868 3.868 0 00-.506-.665c-.48-.494-.997-.897-1.696-.728-.476.116-1.069.654-1.34 1.043a10.085 10.085 0 00-1.399 2.938.02.02 0 00.022.016l1.588-.074a.07.07 0 00.046-.02c.638-.632 1.57-.76 2.337-.308.318.187.569.478.754.873.456.977-.123 2.14-1.06 2.482-.879.321-1.8-.006-2.294-.809a.068.068 0 00-.061-.032 23.52 23.52 0 00-2.412.209c-.676.094-1.403.296-2.014.5-.692.228-1.347.52-1.965.876-.885.51-2.189 1.567-1.536 2.725.119.211.233.373.343.487.89.92 2 1.415 3.3 1.852a.022.022 0 00.029-.023l-.157-1.145a.068.068 0 00-.033-.05 2.08 2.08 0 01-.848-.96c-.415-.925-.03-1.983.792-2.49a2.004 2.004 0 012.415.239c.345.315.623.855.642 1.356.026.697-.253 1.239-.782 1.703a.057.057 0 00-.02.05c.165 1.255.485 2.545.787 3.705.262 1.004.69 2.098 1.296 3.041.315.49.697.92 1.135 1.189.526.323 1.05.312 1.57-.033.666-.442 1.045-1.034 1.47-1.822a9.514 9.514 0 00.77-1.89.017.017 0 00-.018-.014l-1.336.063a.06.06 0 00-.05.033 1.822 1.822 0 01-1.279 1.008 1.85 1.85 0 01-1.878-.665c-.558-.723-.557-1.598-.003-2.32a1.78 1.78 0 011.063-.668c.6-.133 1.164.016 1.693.447a.076.076 0 00.051.017c.83-.027 1.64-.098 2.431-.213.62-.09 1.364-.288 1.908-.442a11.537 11.537 0 002.236-.9c.732-.386 1.634-1.033 1.89-1.847.4-1.269-1.44-2.406-2.352-2.802-.637-.277-1.13-.467-1.479-.57a.02.02 0 00-.019.003.02.02 0 00-.006.009.022.022 0 000 .01z"/>
+
+                    </svg>
+
+                </div>
+
+
+                <h2>
+                    ورود <span>موفق بود!</span>
+                </h2>
+
+
+                <p>
+                    حساب شما با موفقیت آماده شد.<br>
+                    به دنیای جدید خود خوش آمدید.
+                </p>
+
+
+                <button
+                    class="primary-btn"
+                    onclick="startApp()">
+
+                    شروع کنید
+                    <span style="margin-right:8px">←</span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer">
+        Bilibili Experience
+        <span>•</span>
+        Secure Login
+    </div>
 
 </div>
 
+</section>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast">
+</div>
+
+
 <script>
-(() => {
-  "use strict";
 
-  const $  = (s, ctx=document) => ctx.querySelector(s);
-  const $$ = (s, ctx=document) => [...ctx.querySelectorAll(s)];
+/* =========================================================
+   DEVICE DETECTION
+========================================================= */
 
-  /* ============ STARS ============ */
-  (function createStars(){
-    const layer = $("#stars");
-    if(!layer) return;
-    const frag = document.createDocumentFragment();
-    const count = 45;
-    for(let i=0;i<count;i++){
-      const s = document.createElement("span");
-      s.className = "star";
-      const size = Math.random() < .8 ? 1 : 2;
-      s.style.width = size + "px";
-      s.style.height = size + "px";
-      s.style.left = (Math.random()*100).toFixed(2) + "%";
-      s.style.top  = (Math.random()*100).toFixed(2) + "%";
-      s.style.setProperty("--dur", (3 + Math.random()*4).toFixed(2) + "s");
-      s.style.setProperty("--delay", (-Math.random()*4).toFixed(2) + "s");
-      frag.appendChild(s);
+(function(){
+
+    const ua =
+        navigator.userAgent ||
+        navigator.vendor ||
+        window.opera;
+
+    if(/iPhone|iPad|iPod/i.test(ua)){
+
+        document.body.classList.add("iphone");
+
+    }else if(/Android/i.test(ua)){
+
+        document.body.classList.add("android");
+
+    }else{
+
+        document.body.classList.add("windows");
+
     }
-    layer.appendChild(frag);
-  })();
-
-  /* ============ GREETING ============ */
-  (function setGreeting(){
-    const h = new Date().getHours();
-    let short, long;
-    if(h < 5)       { short = "شب بخیر";   long = "شب بخیر کاربر گرامی"; }
-    else if(h < 12) { short = "صبح بخیر";  long = "صبح بخیر کاربر گرامی"; }
-    else if(h < 17) { short = "ظهر بخیر";  long = "ظهر بخیر کاربر گرامی"; }
-    else if(h < 20) { short = "عصر بخیر";  long = "عصر بخیر کاربر گرامی"; }
-    else            { short = "شب بخیر";   long = "شب بخیر کاربر گرامی"; }
-    const el1 = $("#mGreeting"); if(el1) el1.textContent = long;
-    const el2 = $("#mHello");    if(el2) el2.textContent = short;
-  })();
-
-  /* ============ TOAST ============ */
-  function toast(message, type = "info"){
-    const wrap = $("#toastWrap");
-    if(!wrap) return;
-    const icons = {
-      success: '<svg viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-      info:    '<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16h.01" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg>',
-      error:   '<svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16h.01" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg>'
-    };
-    const el = document.createElement("div");
-    el.className = "toast " + type;
-    el.innerHTML = '<span class="toast-icon">' + (icons[type]||icons.info) + '</span><span>' + message + '</span>';
-    wrap.appendChild(el);
-    setTimeout(() => {
-      el.classList.add("out");
-      setTimeout(() => el.remove(), 300);
-    }, 2400);
-  }
-
-  /* ============ RIPPLE ============ */
-  function attachRipple(el){
-    if(!el) return;
-    el.style.position = el.style.position || "relative";
-    el.style.overflow = "hidden";
-    el.addEventListener("pointerdown", e => {
-      const rect = el.getBoundingClientRect();
-      const size = Math.max(rect.width, rect.height);
-      const r = document.createElement("span");
-      r.className = "ripple";
-      r.style.width = r.style.height = size + "px";
-      r.style.left = (e.clientX - rect.left - size/2) + "px";
-      r.style.top  = (e.clientY - rect.top  - size/2) + "px";
-      el.appendChild(r);
-      setTimeout(() => r.remove(), 620);
-    });
-  }
-  $$(".m-tab, .m-icon-btn, .m-add-btn, .m-send-btn").forEach(attachRipple);
-
-  /* ============ COMPOSER ============ */
-  const prompt = $("#mPrompt");
-  const send = $("#mSend");
-
-  function autoGrow(){
-    if(!prompt) return;
-    prompt.style.height = "auto";
-    prompt.style.height = Math.min(prompt.scrollHeight, 120) + "px";
-  }
-  function updateSend(){
-    if(send) send.disabled = !prompt.value.trim();
-  }
-  prompt?.addEventListener("input", () => { autoGrow(); updateSend(); });
-
-  /* ============ QUICK CHIPS ============ */
-  $$(".m-quick-chip").forEach(chip => {
-    chip.addEventListener("click", () => {
-      prompt.value = chip.dataset.fill || "";
-      prompt.focus();
-      autoGrow();
-      updateSend();
-      prompt.setSelectionRange(prompt.value.length, prompt.value.length);
-    });
-  });
-
-  /* ============ HISTORY ============ */
-  const historyList = $("#mHistory");
-  const history = [];
-
-  function timeAgo(ts){
-    const s = Math.floor((Date.now() - ts)/1000);
-    if(s < 60) return "همین حالا";
-    const m = Math.floor(s/60);
-    if(m < 60) return m + " دقیقه پیش";
-    const h = Math.floor(m/60);
-    if(h < 24) return h + " ساعت پیش";
-    return Math.floor(h/24) + " روز پیش";
-  }
-
-  function renderHistory(){
-    if(!historyList) return;
-    if(history.length === 0){
-      historyList.innerHTML = `
-        <div class="m-empty">
-          <div class="m-empty-icon">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7" stroke="currentColor" stroke-width="1.8"/><path d="M4 4v4.7h4.7M12 8v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </div>
-          <div class="m-empty-title">تاریخچه‌ای وجود ندارد</div>
-          <div class="m-empty-sub">اولین پیام خود را بفرستید</div>
-        </div>`;
-      return;
-    }
-    historyList.innerHTML = history.map((item, i) => {
-      const safe = item.text.replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
-      return `<div class="m-history-item" data-idx="${i}" style="animation-delay:${i*.04}s">
-        <div class="m-history-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 6h14v10H9l-4 4V6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="m-history-body">
-          <div class="m-history-text">${safe}</div>
-          <div class="m-history-time">${timeAgo(item.time)}</div>
-        </div>
-        <div class="m-history-chev">
-          <svg viewBox="0 0 24 24" fill="none"><path d="m14 6-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-      </div>`;
-    }).join("");
-
-    $$(".m-history-item", historyList).forEach(el => {
-      el.addEventListener("click", () => {
-        const i = +el.dataset.idx;
-        prompt.value = history[i].text;
-        prompt.focus();
-        autoGrow();
-        updateSend();
-        $("#mScroll")?.scrollTo({top:0,behavior:"smooth"});
-      });
-    });
-  }
-
-  function addHistory(text){
-    history.unshift({ text, time: Date.now() });
-    if(history.length > 10) history.pop();
-    renderHistory();
-  }
-  renderHistory();
-
-  $("#mClearHistory")?.addEventListener("click", () => {
-    if(history.length === 0){ toast("تاریخچه خالی است", "info"); return; }
-    history.length = 0;
-    renderHistory();
-    toast("تاریخچه پاک شد", "success");
-  });
-
-  /* ============ SEND ============ */
-  function handleSend(){
-    const v = prompt.value.trim();
-    if(!v) return;
-    toast("پیام شما ارسال شد", "success");
-    addHistory(v);
-    prompt.value = "";
-    autoGrow();
-    updateSend();
-    prompt.focus();
-    if(navigator.vibrate) navigator.vibrate(10);
-  }
-  send?.addEventListener("click", handleSend);
-  prompt?.addEventListener("keydown", e => {
-    if(e.key === "Enter" && !e.shiftKey){
-      e.preventDefault();
-      handleSend();
-    }
-  });
-
-  /* ============ HEADER SCROLL ============ */
-  const scroller = $("#mScroll");
-  const header = $("#mHeader");
-  scroller?.addEventListener("scroll", () => {
-    header?.classList.toggle("scrolled", scroller.scrollTop > 4);
-  }, {passive:true});
-
-  /* ============ TABS ============ */
-  $$(".m-tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      $$(".m-tab").forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
-      if(navigator.vibrate) navigator.vibrate(8);
-      const name = tab.querySelector("span")?.textContent || "";
-      if(tab.dataset.tab !== "home") toast(name, "info");
-      else scroller?.scrollTo({top:0, behavior:"smooth"});
-    });
-  });
-
-  /* ============ DRAWER ============ */
-  const drawer = $("#mDrawer");
-  const backdrop = $("#mDrawerBackdrop");
-  const menuBtn = $("#mMenuBtn");
-
-  function openDrawer(){
-    drawer?.classList.add("open");
-    backdrop?.classList.add("show");
-  }
-  function closeDrawer(){
-    drawer?.classList.remove("open");
-    backdrop?.classList.remove("show");
-  }
-  menuBtn?.addEventListener("click", openDrawer);
-  backdrop?.addEventListener("click", closeDrawer);
-
-  let touchStartX = 0, touchCurrentX = 0, dragging = false;
-  drawer?.addEventListener("touchstart", e => {
-    touchStartX = e.touches[0].clientX;
-    touchCurrentX = touchStartX;
-    dragging = true;
-    drawer.style.transition = "none";
-  }, {passive:true});
-  drawer?.addEventListener("touchmove", e => {
-    if(!dragging) return;
-    touchCurrentX = e.touches[0].clientX;
-    const dx = touchCurrentX - touchStartX;
-    if(dx > 0) drawer.style.transform = `translateX(${dx}px)`;
-  }, {passive:true});
-  drawer?.addEventListener("touchend", () => {
-    dragging = false;
-    drawer.style.transition = "";
-    drawer.style.transform = "";
-    if(touchCurrentX - touchStartX > 80) closeDrawer();
-  });
-
-  $$(".m-drawer-item").forEach(item => {
-    item.addEventListener("click", () => {
-      $$(".m-drawer-item").forEach(i => i.classList.remove("active"));
-      item.classList.add("active");
-      const name = item.textContent.trim();
-      if(item.dataset.action !== "home") toast(name, "info");
-      closeDrawer();
-    });
-  });
-
-  $("#mDrawerUser")?.addEventListener("click", () => {
-    toast("پروفایل کاربری", "info");
-    closeDrawer();
-  });
-
-  /* ============ FEATURE CARDS ============ */
-  const featureNames = {
-    channel: "عضویت در کانال راینو",
-    apk: "دانلود اپلیکیشن",
-    write: "رایت راینو",
-    support: "ارتباط با پشتیبانی",
-    pro: "راینو پرو"
-  };
-  $$(".m-feature").forEach(card => {
-    card.addEventListener("click", () => {
-      toast(featureNames[card.dataset.action] || "ویژگی", "info");
-      if(navigator.vibrate) navigator.vibrate(8);
-    });
-  });
-
-  /* ============ MISC ============ */
-  $("#mThemeBtn")?.addEventListener("click", () => {
-    toast("حالت تاریک فعال است", "info");
-  });
-
-  $("#mUserBtn")?.addEventListener("click", () => {
-    toast("خوش آمدید 👋", "info");
-  });
-
-  $("#mAddBtn")?.addEventListener("click", () => {
-    toast("افزودن فایل", "info");
-  });
-
-  // initial
-  autoGrow();
-  updateSend();
-  setTimeout(() => toast("به راینو خوش آمدید ✨", "success"), 700);
 
 })();
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let loginMethod = "";
+
+let timerInterval = null;
+
+let timeLeft = 60;
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function go(screenNumber){
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen => {
+
+            screen.classList.remove("active");
+
+        });
+
+
+    const screen =
+        document.getElementById(
+            "screen" + screenNumber
+        );
+
+
+    if(screen){
+
+        screen.classList.add("active");
+
+    }
+
+
+    updateProgress(screenNumber);
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+function updateProgress(screen){
+
+    const items = [
+        document.getElementById("progress1"),
+        document.getElementById("progress2"),
+        document.getElementById("progress3")
+    ];
+
+
+    items.forEach(item =>
+        item.classList.remove("active")
+    );
+
+
+    if(screen === 1){
+
+        items[0].classList.add("active");
+
+    }
+
+    else if(screen === 2 || screen === 3){
+
+        items[0].classList.add("active");
+        items[1].classList.add("active");
+
+    }
+
+    else{
+
+        items[0].classList.add("active");
+        items[1].classList.add("active");
+        items[2].classList.add("active");
+
+    }
+}
+
+
+/* =========================================================
+   METHOD
+========================================================= */
+
+function chooseMethod(method){
+
+    loginMethod = method;
+
+
+    if(method === "google"){
+
+        go(5);
+
+        return;
+    }
+
+
+    const title =
+        document.getElementById("methodTitle");
+
+    const description =
+        document.getElementById(
+            "methodDescription"
+        );
+
+    const emailBox =
+        document.getElementById("emailBox");
+
+    const phoneBox =
+        document.getElementById("phoneBox");
+
+
+    if(method === "email"){
+
+        title.innerText =
+            "ورود با ایمیل";
+
+        description.innerText =
+            "ایمیل خود را وارد کنید تا کد تأیید ارسال شود.";
+
+        emailBox.style.display =
+            "block";
+
+        phoneBox.style.display =
+            "none";
+
+    }
+
+
+    if(method === "phone"){
+
+        title.innerText =
+            "ورود با شماره تلفن";
+
+        description.innerText =
+            "شماره تلفن خود را وارد کنید تا کد تأیید ارسال شود.";
+
+        emailBox.style.display =
+            "none";
+
+        phoneBox.style.display =
+            "block";
+
+    }
+
+
+    go(2);
+}
+
+
+/* =========================================================
+   SEND CODE
+========================================================= */
+
+function sendVerificationCode(){
+
+    let value = "";
+
+
+    if(loginMethod === "email"){
+
+        value =
+            document.getElementById("email")
+            .value
+            .trim();
+
+
+        if(
+            !value ||
+            !value.includes("@") ||
+            !value.includes(".")
+        ){
+
+            toast(
+                "لطفاً یک ایمیل معتبر وارد کنید."
+            );
+
+            return;
+        }
+
+    }
+
+
+    if(loginMethod === "phone"){
+
+        value =
+            document.getElementById("phone")
+            .value
+            .trim();
+
+
+        const digits =
+            value.replace(/\D/g,"");
+
+
+        if(digits.length < 10){
+
+            toast(
+                "لطفاً شماره تلفن معتبر وارد کنید."
+            );
+
+            return;
+        }
+
+    }
+
+
+    document.getElementById(
+        "sentAddress"
+    ).innerText = value;
+
+
+    clearOTP();
+
+    go(3);
+
+    startTimer();
+
+
+    toast(
+        "کد تأیید با موفقیت ارسال شد."
+    );
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+function startTimer(){
+
+    clearInterval(timerInterval);
+
+    timeLeft = 60;
+
+    const timer =
+        document.getElementById("timer");
+
+    const resend =
+        document.getElementById("resend");
+
+
+    resend.classList.add("disabled");
+
+    timer.innerText =
+        timeLeft;
+
+
+    timerInterval =
+        setInterval(function(){
+
+            timeLeft--;
+
+            timer.innerText =
+                timeLeft;
+
+
+            if(timeLeft <= 0){
+
+                clearInterval(
+                    timerInterval
+                );
+
+                resend.classList.remove(
+                    "disabled"
+                );
+
+            }
+
+        },1000);
+}
+
+
+/* =========================================================
+   RESEND
+========================================================= */
+
+function resendCode(){
+
+    sendVerificationCode();
+
+}
+
+
+/* =========================================================
+   OTP
+========================================================= */
+
+const otpInputs =
+    document.querySelectorAll(
+        ".otp input"
+    );
+
+
+otpInputs.forEach(
+    function(input,index){
+
+        input.addEventListener(
+            "input",
+            function(){
+
+                this.value =
+                    this.value.replace(
+                        /\D/g,
+                        ""
+                    );
+
+
+                if(
+                    this.value &&
+                    index <
+                    otpInputs.length - 1
+                ){
+
+                    otpInputs[
+                        index + 1
+                    ].focus();
+
+                }
+
+            }
+        );
+
+
+        input.addEventListener(
+            "keydown",
+            function(e){
+
+                if(
+                    e.key === "Backspace" &&
+                    !this.value &&
+                    index > 0
+                ){
+
+                    otpInputs[
+                        index - 1
+                    ].focus();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   CLEAR OTP
+========================================================= */
+
+function clearOTP(){
+
+    otpInputs.forEach(
+        input => input.value = ""
+    );
+
+}
+
+
+/* =========================================================
+   VERIFY
+========================================================= */
+
+function verifyCode(){
+
+    let code = "";
+
+
+    otpInputs.forEach(
+        input => {
+
+            code += input.value;
+
+        }
+    );
+
+
+    if(code.length !== 6){
+
+        toast(
+            "کد ۶ رقمی را کامل وارد کنید."
+        );
+
+        return;
+    }
+
+
+    toast(
+        "کد با موفقیت تأیید شد."
+    );
+
+
+    setTimeout(
+        function(){
+
+            go(4);
+
+        },
+        500
+    );
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+function finishSignup(){
+
+    const name =
+        document.getElementById(
+            "fullName"
+        ).value.trim();
+
+
+    const password =
+        document.getElementById(
+            "password"
+        ).value;
+
+
+    const confirm =
+        document.getElementById(
+            "passwordConfirm"
+        ).value;
+
+
+    if(name.length < 2){
+
+        toast(
+            "لطفاً نام و نام خانوادگی را وارد کنید."
+        );
+
+        return;
+    }
+
+
+    if(password.length < 8){
+
+        toast(
+            "رمز عبور باید حداقل ۸ کاراکتر باشد."
+        );
+
+        return;
+    }
+
+
+    if(password !== confirm){
+
+        toast(
+            "رمز عبور و تکرار آن یکسان نیست."
+        );
+
+        return;
+    }
+
+
+    toast(
+        "حساب شما با موفقیت ساخته شد."
+    );
+
+
+    setTimeout(
+        function(){
+
+            go(6);
+
+        },
+        600
+    );
+}
+
+
+/* =========================================================
+   GOOGLE
+========================================================= */
+
+function googleContinue(){
+
+    toast(
+        "ورود با Google با موفقیت انجام شد."
+    );
+
+
+    setTimeout(
+        function(){
+
+            go(6);
+
+        },
+        700
+    );
+}
+
+
+/* =========================================================
+   PASSWORD
+========================================================= */
+
+function togglePassword(id){
+
+    const input =
+        document.getElementById(id);
+
+
+    if(input.type === "password"){
+
+        input.type = "text";
+
+    }else{
+
+        input.type = "password";
+
+    }
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+function startApp(){
+
+    toast(
+        "خوش آمدید! در حال ورود..."
+    );
+
+
+    setTimeout(
+        function(){
+
+            /*
+              این قسمت را با آدرس صفحه اصلی
+              سایت خودت عوض کن.
+
+              مثال:
+
+              location.href = "home.html";
+            */
+
+            location.hash = "home";
+
+        },
+        900
+    );
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer = null;
+
+
+function toast(message){
+
+    const element =
+        document.getElementById("toast");
+
+
+    element.innerText =
+        message;
+
+
+    element.classList.add("show");
+
+
+    clearTimeout(toastTimer);
+
+
+    toastTimer =
+        setTimeout(
+            function(){
+
+                element.classList.remove(
+                    "show"
+                );
+
+            },
+            2600
+        );
+}
+
 </script>
+
 </body>
 </html>
