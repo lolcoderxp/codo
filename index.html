@@ -17,25 +17,23 @@
 
         body {
             font-family: 'Vazirmatn', sans-serif;
-            background-color: #f0f2f5;
+            background-color: #ffffff;
             display: flex;
             justify-content: center;
-            padding: 20px;
+            padding: 0;
             color: #333;
+            min-height: 100vh;
         }
 
         /* شبیه‌سازی صفحه موبایل */
         .mobile-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             background-color: #ffffff;
-            border-radius: 25px; /* گردی بیشتر برای کل صفحه */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 15px;
+            padding: 15px 18px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            border: 1px solid #ddd;
+            gap: 22px;
         }
 
         /* ۱. هدر */
@@ -43,19 +41,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
         }
 
         .header-right, .header-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .icon-btn {
-            width: 35px;
-            height: 35px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: 1px solid #555;
             display: flex;
@@ -63,13 +59,13 @@
             align-items: center;
             cursor: pointer;
             background: transparent;
-            font-size: 16px;
+            font-size: 17px;
         }
 
-        /* --- استایل دکمه منو همبرگری --- */
+        /* دکمه منو همبرگری */
         .menu-btn {
-            width: 35px;
-            height: 35px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: 1px solid #555;
             background: transparent;
@@ -79,7 +75,7 @@
             align-items: center;
             gap: 5px;
             cursor: pointer;
-            padding: 0 8px;
+            padding: 0 9px;
         }
 
         .menu-line {
@@ -90,64 +86,61 @@
 
         .menu-line.top { width: 100%; }
         .menu-line.bottom { width: 50%; }
-        /* ---------------------------------------- */
 
-        /* --- دکمه ورود / ثبت نام --- */
+        /* دکمه ورود / ثبت نام */
         .login-btn {
             font-family: 'Vazirmatn', sans-serif;
             font-size: 13px;
             font-weight: bold;
             border: 1px solid #555;
-            padding: 6px 15px;
-            border-radius: 25px; /* گردی بیشتر */
+            padding: 7px 15px;
+            border-radius: 22px;
             background: transparent;
             cursor: pointer;
             color: #333;
         }
 
-        /* ۲. منوی دسته‌بندی (باکس عریض و کم‌ارتفاع با باکس داخلی) */
+        /* ۲. منوی دسته‌بندی (چهار باکس کوچک داخل باکس عریض) */
         .categories-wrapper {
             border: 1px solid #555;
-            border-radius: 25px; /* گردی بسیار نرم برای باکس بیرونی */
-            padding: 5px 8px;    /* کاهش پدینگ برای کم‌ارتفاع شدن */
+            border-radius: 22px;
+            padding: 5px 8px;
             display: flex;
-            justify-content: center; /* وسط‌چین کردن باکس داخلی */
-        }
-
-        /* باکس داخلی که متن‌ها را در خود جای می‌دهد */
-        .categories-inner {
-            display: flex;
-            gap: 15px;
+            justify-content: space-between;
             align-items: center;
-            white-space: nowrap;
-            padding: 4px 12px;   /* پدینگ داخلی */
-            border: 1px solid #aaa; /* حاشیه برای باکس داخلی */
-            border-radius: 20px; /* گردی نرم برای باکس داخلی */
-            width: 100%;         /* پر کردن عرض باکس بیرونی */
-            justify-content: space-around; /* پخش شدن متن‌ها */
+            gap: 6px;
+            width: 100%; /* پر کردن عرض کامل */
         }
 
         .category-pill {
-            font-size: 13px;
+            font-size: 11px; /* کوچک‌تر تا در باکس جا شود */
             cursor: pointer;
-            padding: 2px 0; /* کاهش پدینگ عمودی برای کم‌ارتفاعی */
+            padding: 4px 8px;
+            border: 1px solid #aaa;
+            border-radius: 16px;
             color: #555;
+            white-space: nowrap;
+            background-color: transparent;
+            flex: 1; /* تقسیم مساوی عرض بین چهار باکس */
+            text-align: center; /* وسط‌چین کردن متن */
+            min-width: 0; /* جلوگیری از سرریز */
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* استایل برای تب فعال */
         .category-pill.active {
             font-weight: bold;
             color: #000;
-            border-bottom: 2px solid #333;
+            border-color: #333;
+            background-color: #f0f0f0;
         }
-        /* ---------------------------------------- */
 
         /* ۳. بنر اصلی */
         .banner {
             border: 2px solid #555;
-            border-radius: 25px; /* گردی نرم */
+            border-radius: 25px;
             padding: 15px;
-            height: 160px;
+            height: 170px;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -162,9 +155,9 @@
 
         .banner-title {
             border: 1px solid #555;
-            padding: 3px 10px;
-            border-radius: 20px; /* گردی نرم */
-            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
         }
 
         .banner-bottom {
@@ -175,30 +168,30 @@
 
         .banner-text {
             border: 1px solid #555;
-            padding: 3px 10px;
-            border-radius: 20px; /* گردی نرم */
-            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
         }
 
         .banner-shapes {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
             align-items: flex-end;
         }
 
         .shape-rect {
-            width: 30px;
-            height: 8px;
+            width: 32px;
+            height: 9px;
             border: 1px solid #555;
-            border-radius: 10px; /* گردی نرم */
+            border-radius: 10px;
         }
         
         .shape-square {
-            width: 25px;
-            height: 25px;
+            width: 27px;
+            height: 27px;
             border: 1px solid #555;
-            border-radius: 10px; /* گردی نرم */
+            border-radius: 10px;
         }
 
         /* ۴. ردیف دایره‌ها */
@@ -212,21 +205,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
         .circle {
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border: 1px solid #555;
             border-radius: 50%;
         }
 
         .circle-line {
-            width: 35px;
+            width: 38px;
             height: 5px;
             border: 1px solid #555;
-            border-radius: 10px; /* گردی نرم */
+            border-radius: 10px;
         }
 
         /* ۵. بخش متنی */
@@ -236,13 +229,13 @@
         }
 
         .text-section h3 {
-            font-size: 14px;
-            margin-bottom: 5px;
+            font-size: 15px;
+            margin-bottom: 6px;
             font-weight: normal;
         }
 
         .text-section p {
-            font-size: 12px;
+            font-size: 13px;
             color: #666;
         }
 
@@ -250,21 +243,21 @@
         .bottom-cards {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
+            gap: 12px;
         }
 
         .card {
             flex: 1;
             aspect-ratio: 1 / 1;
             border: 2px solid #555;
-            border-radius: 25px; /* گردی نرم */
+            border-radius: 25px;
         }
 
         /* فوتر */
         .footer-text {
             text-align: center;
-            font-size: 12px;
-            padding-top: 10px;
+            font-size: 13px;
+            padding-top: 12px;
             border-top: 1px solid #eee;
             color: #555;
         }
@@ -289,21 +282,19 @@
             </div>
         </header>
 
-        <!-- ۲. منوی دسته‌بندی (باکس عریض + باکس داخلی) -->
+        <!-- ۲. منوی دسته‌بندی (چهار باکس جدید) -->
         <nav class="categories-wrapper">
-            <div class="categories-inner">
-                <span class="category-pill active">همه</span>
-                <span class="category-pill">لوازم خانگی</span>
-                <span class="category-pill">خودرو</span>
-                <span class="category-pill">پوشاک</span>
-            </div>
+            <span class="category-pill active">فروشگاه</span>
+            <span class="category-pill">هوش مصنوعی</span>
+            <span class="category-pill">خرید</span>
+            <span class="category-pill">امور مالی</span>
         </nav>
 
         <!-- ۳. بنر اصلی -->
         <section class="banner">
             <div class="banner-top">
                 <span class="banner-title">محصولات</span>
-                <button class="icon-btn" style="width: 25px; height: 25px; font-size: 12px;">✕</button>
+                <button class="icon-btn" style="width: 27px; height: 27px; font-size: 13px;">✕</button>
             </div>
             <div class="banner-bottom">
                 <span class="banner-text">اشتراک و نمایش</span>
