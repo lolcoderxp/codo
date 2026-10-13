@@ -14,26 +14,21 @@
   <style>
     :root {
       --blue: #2f80ed;
-      --blue-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
       --blue-light: #eef6ff;
-      --green: #26b99a;
-      --purple: #8d78e8;
-      --orange: #ff9f43;
       --text: #111827;
       --muted: #6b7280;
       --background: #f7f9fc;
       --surface: #ffffff;
       --border: rgba(226, 232, 240, 0.8);
-      --radius: 28px;
+      --radius: 24px;
       
-      /* سایه‌های سه‌بعدی و نرم درخواستی شما */
       --shadow-3d: 
-        0 14px 30px -8px rgba(31, 41, 55, 0.08),
-        0 4px 12px -2px rgba(31, 41, 55, 0.04),
+        0 10px 25px -8px rgba(31, 41, 55, 0.08),
+        0 4px 10px -2px rgba(31, 41, 55, 0.04),
         inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
       --shadow-card:
-        0 10px 25px -5px rgba(15, 23, 42, 0.06),
-        0 8px 10px -6px rgba(15, 23, 42, 0.04);
+        0 6px 18px -5px rgba(15, 23, 42, 0.06),
+        0 4px 8px -4px rgba(15, 23, 42, 0.04);
       --shadow-pressed:
         0 2px 4px rgba(15, 23, 42, 0.06),
         inset 0 2px 4px rgba(15, 23, 42, 0.06);
@@ -57,8 +52,6 @@
       background: var(--background);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-rendering: optimizeLegibility;
     }
 
     button, input {
@@ -81,109 +74,120 @@
 
     .app {
       width: 100%;
-      max-width: 500px;
+      max-width: 480px;
       min-height: 100dvh;
       margin: 0 auto;
-      padding: 0 18px 120px;
+      padding: 0 16px 120px;
       position: relative;
       background: #ffffff;
-      box-shadow: 0 0 50px rgba(15, 23, 42, 0.05);
+      overflow: hidden;
     }
 
-    /* Header */
+    /* =========================================
+       Header - با انیمیشن ورود
+       ========================================= */
     .topbar {
-      height: 70px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding-top: 8px;
+      gap: 10px;
+      padding-top: 6px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .brand-logo {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
       color: #fff;
       display: grid;
       place-items: center;
-      font-size: 22px;
+      font-size: 19px;
       font-weight: 900;
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255,255,255,0.4);
-      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255,255,255,0.4); }
+      50% { box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255,255,255,0.4); }
     }
 
     .brand-name {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
-      letter-spacing: -0.3px;
-      background: linear-gradient(135deg, #111827 0%, #374151 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--text);
     }
 
     .brand-caption {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--muted);
-      margin-top: -2px;
       font-weight: 500;
+      margin-top: -1px;
     }
 
     .icon-button {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background: #f1f5f9;
       display: grid;
       place-items: center;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8);
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
 
     .icon-button:active {
       transform: scale(0.92);
-      background: #e2e8f0;
       box-shadow: var(--shadow-pressed);
     }
 
     .icon-button svg {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       stroke: #475569;
       stroke-width: 2;
     }
 
-    /* Search */
+    /* =========================================
+       Search - با انیمیشن ورود
+       ========================================= */
     .search-box {
       display: flex;
       align-items: center;
-      height: 52px;
-      border-radius: 26px;
+      height: 46px;
+      border-radius: 23px;
       background: #f8fafc;
       border: 1px solid rgba(226, 232, 240, 0.8);
-      padding: 0 18px;
-      gap: 12px;
-      margin-top: 8px;
-      box-shadow: inset 0 2px 4px rgba(15, 23, 42, 0.02), 0 2px 6px rgba(15, 23, 42, 0.01);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 0 16px;
+      gap: 10px;
+      margin-top: 6px;
+      box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.02);
+      transition: all 0.3s ease;
+      animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
     }
 
     .search-box:focus-within {
       background: #ffffff;
       border-color: #3b82f6;
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12), inset 0 1px 2px rgba(15, 23, 42, 0.02);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
     }
 
     .search-box svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       flex-shrink: 0;
       stroke: #94a3b8;
     }
@@ -194,138 +198,159 @@
       border: none;
       outline: none;
       background: transparent;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 13px;
       color: var(--text);
     }
 
     .search-box input::placeholder {
       color: #94a3b8;
-      font-weight: 400;
     }
 
-    /* Categories */
-    .categories {
+    /* =========================================
+       Categories - لبه‌های بسیار گرد و زیبا با انیمیشن
+       ========================================= */
+    .categories-box {
+      margin: 14px auto 0;
+      width: 94%;
+      background: #ffffff;
+      border-radius: 24px; /* گردتر و زیباتر */
+      padding: 4px;
       display: flex;
-      gap: 8px;
       align-items: center;
-      overflow-x: auto;
-      scrollbar-width: none;
-      margin: 18px -4px 0;
-      padding: 4px 4px 10px;
+      gap: 3px;
+      box-shadow: 
+        0 8px 25px -5px rgba(15, 23, 42, 0.08),
+        0 4px 10px -3px rgba(15, 23, 42, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(226, 232, 240, 0.6);
+      overflow: hidden;
+      animation: bounceIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    .categories::-webkit-scrollbar,
-    .apps-row::-webkit-scrollbar {
-      display: none;
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.02); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     .category {
-      flex: 0 0 auto;
-      min-height: 40px;
-      padding: 0 20px;
+      flex: 1;
+      min-height: 32px;
+      padding: 0 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      border-radius: 999px;
+      gap: 4px;
+      border-radius: 16px;
       color: #64748b;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 600;
-      background: #f1f5f9;
-      border: 1px solid rgba(226, 232, 240, 0.5);
       white-space: nowrap;
-      box-shadow: 0 2px 5px rgba(15, 23, 42, 0.02);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: transparent;
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 16px;
+    }
+
+    .category:hover::before {
+      opacity: 1;
     }
 
     .category.active {
       color: #ffffff;
       background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      border-color: transparent;
-      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255,255,255,0.4);
-      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+      font-weight: 700;
+      transform: scale(1.02);
+    }
+
+    .category.active::before {
+      opacity: 0;
     }
 
     .category:active {
-      transform: scale(0.95);
+      transform: scale(0.96);
     }
 
-    /* Sections */
+    /* =========================================
+       Sections
+       ========================================= */
     .section {
-      margin-top: 26px;
+      margin-top: 18px;
     }
 
     .section-heading {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 6px;
+      gap: 10px;
+      margin-bottom: 4px;
     }
 
     .section-title {
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 800;
       margin: 0;
-      letter-spacing: -0.3px;
       color: var(--text);
+      animation: fadeInUp 0.5s ease both;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .section-description {
-      margin: 4px 0 14px;
+      margin: 2px 0 10px;
       color: var(--muted);
-      font-size: 12px;
-      line-height: 1.9;
-      font-weight: 500;
+      font-size: 11px;
+      line-height: 1.7;
     }
 
-    .see-all {
-      color: #3b82f6;
-      font-size: 12.5px;
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #eff6ff;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .see-all:active {
-      transform: scale(0.94);
-      background: #dbeafe;
-    }
-
-    /* Featured Cards */
+    /* =========================================
+       Featured Cards
+       ========================================= */
     .featured-track {
       display: flex;
-      gap: 14px;
+      gap: 12px;
       overflow-x: auto;
-      margin: 0 -18px;
-      padding: 4px 18px 10px;
+      margin: 0 -16px;
+      padding: 4px 16px 8px;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
     }
 
-    .featured-track::-webkit-scrollbar {
-      display: none;
-    }
+    .featured-track::-webkit-scrollbar { display: none; }
 
     .feature-card {
       position: relative;
       flex: 0 0 100%;
-      height: 226px;
-      border-radius: 28px;
+      height: 190px;
+      border-radius: 24px;
       overflow: hidden;
       isolation: isolate;
       scroll-snap-align: start;
       box-shadow: var(--shadow-3d);
       cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       background: #111;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
     }
 
     .feature-art {
@@ -335,13 +360,18 @@
       height: 100%;
       object-fit: cover;
       z-index: 0;
+      transition: transform 0.5s ease;
+    }
+
+    .feature-card:hover .feature-art {
+      transform: scale(1.05);
     }
 
     .feature-overlay {
       position: absolute;
       inset: 0;
       z-index: 1;
-      background: linear-gradient(to top, rgba(17, 24, 39, 0.85) 0%, rgba(17, 24, 39, 0.2) 50%, transparent 100%);
+      background: linear-gradient(to top, rgba(17, 24, 39, 0.9) 0%, rgba(17, 24, 39, 0.1) 60%, transparent 100%);
     }
 
     .feature-badge {
@@ -349,45 +379,40 @@
       top: 0;
       right: 0;
       z-index: 3;
-      padding: 10px 18px;
-      border-radius: 0 0 0 22px;
+      padding: 8px 14px;
+      border-radius: 0 0 0 18px;
       color: white;
-      font-size: 11.5px;
+      font-size: 10.5px;
       font-weight: 700;
       background: rgba(255, 255, 255, 0.22);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-left: 1px solid rgba(255,255,255,0.3);
       border-bottom: 1px solid rgba(255,255,255,0.3);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .feature-content {
       position: absolute;
-      bottom: 16px;
-      right: 16px;
-      left: 16px;
+      bottom: 12px;
+      right: 12px;
+      left: 12px;
       z-index: 3;
       display: flex;
       align-items: flex-end;
-      gap: 12px;
+      gap: 10px;
       color: white;
     }
 
-    .feature-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .feature-info { flex: 1; min-width: 0; }
 
     .feature-name {
-      font-size: 19px;
+      font-size: 16px;
       font-weight: 800;
-      margin: 0 0 4px;
+      margin: 0 0 2px;
     }
 
     .feature-subtitle {
-      font-size: 11px;
-      line-height: 1.8;
+      font-size: 10px;
       opacity: 0.9;
       margin: 0;
       font-weight: 500;
@@ -399,67 +424,81 @@
       background: rgba(255, 255, 255, 0.25);
       border: 1px solid rgba(255, 255, 255, 0.4);
       border-radius: 999px;
-      padding: 10px 20px;
-      font-size: 12.5px;
+      padding: 8px 16px;
+      font-size: 11.5px;
       font-weight: 700;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.5);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.5);
+      transition: all 0.25s ease;
       cursor: pointer;
       font-family: inherit;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .feature-button:active::after {
+      width: 200px;
+      height: 200px;
     }
 
     .feature-button:active {
       background: rgba(255, 255, 255, 0.4);
       transform: scale(0.94);
-      box-shadow: var(--shadow-pressed);
     }
 
     .feature-logo {
-      width: 52px;
-      height: 52px;
+      width: 44px;
+      height: 44px;
       flex-shrink: 0;
       display: grid;
       place-items: center;
       background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.8);
-      font-size: 28px;
+      border-radius: 16px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
       overflow: hidden;
     }
 
-    .feature-logo img {
-      width: 80%;
-      height: 80%;
-      object-fit: contain;
-    }
+    .feature-logo img { width: 80%; height: 80%; object-fit: contain; }
 
-    /* Shortcuts */
+    /* =========================================
+       Shortcuts - با انیمیشن شناور
+       ========================================= */
     .shortcuts {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 24px;
+      gap: 6px;
+      margin-top: 18px;
     }
 
     .shortcut {
       min-width: 0;
       text-align: center;
       padding: 0;
-      border-radius: 22px;
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 18px;
+      transition: transform 0.2s ease;
       cursor: pointer;
     }
 
-    .shortcut:active {
-      transform: scale(0.94);
-    }
+    .shortcut:active { transform: scale(0.94); }
 
     .shortcut-icon {
-      width: clamp(54px, 16vw, 70px);
-      height: clamp(54px, 16vw, 70px);
-      margin: 0 auto 8px;
+      width: clamp(46px, 14vw, 58px);
+      height: clamp(46px, 14vw, 58px);
+      margin: 0 auto 6px;
       border-radius: 50%;
       display: grid;
       place-items: center;
@@ -467,8 +506,13 @@
       overflow: hidden;
       border: 2px solid rgba(255,255,255,0.8);
       background: var(--shortcut-bg);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08), inset 0 2px 4px rgba(255,255,255,0.8);
-      transition: transform 0.25s ease;
+      box-shadow: 0 6px 15px rgba(15, 23, 42, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .shortcut:hover .shortcut-icon {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 25px rgba(15, 23, 42, 0.15);
     }
 
     .shortcut-icon img {
@@ -480,175 +524,279 @@
 
     .shortcut-name {
       display: block;
-      font-size: 10px;
-      line-height: 1.7;
+      font-size: 9.5px;
+      line-height: 1.6;
       color: #343a42;
       font-weight: 700;
-      overflow-wrap: anywhere;
     }
 
-    /* Recently Opened */
-    .recent-section {
-      margin-top: 30px;
-    }
+    /* =========================================
+       Recently Opened - گردتر، با سایه نرم و انیمیشن قوی
+       ========================================= */
+    .recent-section { margin-top: 22px; }
 
     .apps-row {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 15px 11px;
-      margin-top: 12px;
+      gap: 14px 10px;
+      margin-top: 10px;
     }
 
     .app-item {
       min-width: 0;
       padding: 0;
       text-align: center;
-      border-radius: 22px;
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 24px;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
+      animation: fadeInUp 0.5s ease both;
     }
 
-    .app-item:active {
-      transform: scale(0.94);
-    }
+    .app-item:nth-child(1) { animation-delay: 0.05s; }
+    .app-item:nth-child(2) { animation-delay: 0.1s; }
+    .app-item:nth-child(3) { animation-delay: 0.15s; }
+    .app-item:nth-child(4) { animation-delay: 0.2s; }
 
+    .app-item:active { transform: scale(0.94); }
+
+    /* آیکون‌های مربعی با گوشه‌های بسیار گرد و سایه نرم */
     .app-icon {
       width: 100%;
       aspect-ratio: 1;
-      max-width: 90px;
-      margin: 0 auto 8px;
-      border-radius: 50%;
+      max-width: 86px; /* بزرگ‌تر شد */
+      margin: 0 auto 10px;
+      border-radius: 28px; /* گردتر و زیباتر */
       display: grid;
       place-items: center;
-      font-size: 36px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12), inset 0 2px 5px rgba(255, 255, 255, 0.4);
+      box-shadow: 
+        0 12px 25px -5px rgba(15, 23, 42, 0.15),
+        0 6px 12px -3px rgba(15, 23, 42, 0.08),
+        0 2px 4px rgba(15, 23, 42, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
       border: 1px solid rgba(255,255,255,0.3);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease;
+      animation: float 4s ease-in-out infinite;
     }
 
-    .app-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
     }
 
-    .app-robot { background: linear-gradient(145deg, #a9f2eb, #55c7db); }
-    .app-chat { background: linear-gradient(145deg, #ffcf73, #ffa951); }
-    .app-eye { background: #08090d; }
-    .app-shop { background: #e91649; }
+    .app-item:nth-child(1) .app-icon { animation-delay: 0s; }
+    .app-item:nth-child(2) .app-icon { animation-delay: 0.5s; }
+    .app-item:nth-child(3) .app-icon { animation-delay: 1s; }
+    .app-item:nth-child(4) .app-icon { animation-delay: 1.5s; }
 
+    .app-item:hover .app-icon {
+      transform: translateY(-6px) scale(1.05);
+      box-shadow: 
+        0 20px 35px -8px rgba(15, 23, 42, 0.2),
+        0 10px 20px -5px rgba(15, 23, 42, 0.1),
+        0 4px 8px rgba(15, 23, 42, 0.05);
+    }
+
+    .app-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* نام و بیو ربات - زیباتر */
     .app-label {
       display: block;
-      color: #343a42;
-      font-size: 10px;
-      line-height: 1.8;
-      overflow-wrap: anywhere;
-      font-weight: 600;
+      color: #1f2937;
+      font-size: 10.5px; /* کمی بزرگ‌تر */
+      line-height: 1.5;
+      font-weight: 800; /* بولدتر */
+      margin-bottom: 2px;
+      letter-spacing: -0.2px;
     }
 
-    /* Popular Programs */
-    .popular-section {
-      margin-top: 30px;
+    .app-bio {
+      display: block;
+      color: #9ca3af;
+      font-size: 9px;
+      font-weight: 500;
+      line-height: 1.4;
+      opacity: 0.9;
     }
+
+    /* =========================================
+       ۳ کارت بزرگ - با انیمیشن
+       ========================================= */
+    .special-cards-section { margin-top: 22px; }
+
+    .special-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .special-card {
+      position: relative;
+      aspect-ratio: 1 / 1.1;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: var(--shadow-3d);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: fadeInUp 0.5s ease both;
+    }
+
+    .special-card:nth-child(1) { animation-delay: 0.05s; }
+    .special-card:nth-child(2) { animation-delay: 0.1s; }
+    .special-card:nth-child(3) { animation-delay: 0.15s; }
+
+    .special-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px -8px rgba(15, 23, 42, 0.15);
+    }
+
+    .special-card:active { transform: scale(0.96); }
+
+    .special-card:nth-child(1) { background: linear-gradient(145deg, #eff6ff, #dbeafe); }
+    .special-card:nth-child(2) { background: linear-gradient(145deg, #f5f3ff, #ede9fe); }
+    .special-card:nth-child(3) { background: linear-gradient(145deg, #fff7ed, #ffedd5); }
+
+    .special-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #ffffff;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .special-card:hover .special-icon {
+      transform: scale(1.1);
+    }
+
+    .special-icon img { width: 70%; height: 70%; object-fit: contain; }
+
+    .special-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #111827;
+      text-align: center;
+      padding: 0 6px;
+    }
+
+    .special-subtitle {
+      font-size: 9px;
+      color: var(--muted);
+      text-align: center;
+      padding: 0 6px;
+      font-weight: 500;
+    }
+
+    /* =========================================
+       Popular Programs
+       ========================================= */
+    .popular-section { margin-top: 22px; }
 
     .program-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 13px;
+      gap: 10px;
+      margin-top: 10px;
     }
 
     .program-card {
       min-width: 0;
-      border-radius: 24px;
+      border-radius: 20px;
       overflow: hidden;
       background: #ffffff;
       border: 1px solid rgba(226, 232, 240, 0.8);
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+      transition: all 0.25s ease;
       cursor: pointer;
+      animation: fadeInUp 0.5s ease both;
     }
 
-    .program-card:active {
-      transform: scale(0.97);
+    .program-card:nth-child(1) { animation-delay: 0.05s; }
+    .program-card:nth-child(2) { animation-delay: 0.1s; }
+    .program-card:nth-child(3) { animation-delay: 0.15s; }
+
+    .program-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1);
     }
+
+    .program-card:active { transform: scale(0.97); }
 
     .program-art {
       aspect-ratio: 1.04;
       display: grid;
       place-items: center;
-      font-size: 36px;
+      font-size: 30px;
       overflow: hidden;
-      background: #f4f7fa;
     }
 
-    .program-info {
-      padding: 9px 8px 11px;
-    }
+    .program-info { padding: 8px 6px 10px; }
 
     .program-name {
       margin: 0;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
-      line-height: 1.8;
+      line-height: 1.7;
     }
 
     .program-description {
       color: var(--muted);
       font-size: 9px;
-      margin: 4px 0 0;
-      line-height: 1.8;
-    }
-
-    .program-open {
-      display: inline-block;
-      margin-top: 8px;
-      color: #3b82f6;
-      font-size: 10px;
-      font-weight: 700;
+      margin: 3px 0 0;
+      line-height: 1.7;
     }
 
     /* Empty State */
     .empty-state {
       display: none;
-      padding: 28px 10px;
+      padding: 20px 10px;
       text-align: center;
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 500;
+      font-size: 11px;
     }
 
-    .empty-state.visible {
-      display: block;
-    }
+    .empty-state.visible { display: block; }
 
-    /* Bottom Navigation */
+    /* =========================================
+       Bottom Navigation - شناور و ظریف
+       ========================================= */
     .bottom-nav-wrap {
       position: fixed;
-      bottom: 0;
+      bottom: 16px;
       left: 0;
       right: 0;
       z-index: 50;
-      padding: 9px 14px calc(10px + env(safe-area-inset-bottom));
+      padding: 0 24px;
       pointer-events: none;
-      background: linear-gradient(to top, #ffffff 55%, rgba(255,255,255,0));
+      display: flex;
+      justify-content: center;
     }
 
     .bottom-nav {
       pointer-events: auto;
       width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-      min-height: 68px;
-      padding: 6px;
+      max-width: 340px;
+      min-height: 58px;
+      padding: 5px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       align-items: center;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.95);
       border: 1px solid rgba(226, 232, 240, 0.9);
-      box-shadow: 0 16px 35px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255,255,255,0.9);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
     }
@@ -659,26 +807,25 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      height: 56px;
+      gap: 2px;
+      height: 48px;
       border-radius: 999px;
       color: #64748b;
       font-weight: 600;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.25s ease;
       cursor: pointer;
     }
 
     .nav-item svg {
-      width: 23px;
-      height: 23px;
+      width: 19px;
+      height: 19px;
       stroke: currentColor;
       stroke-width: 2;
       transition: transform 0.25s ease;
     }
 
     .nav-item span {
-      font-size: 10px;
-      line-height: 1.5;
+      font-size: 9px;
       font-weight: 700;
     }
 
@@ -688,27 +835,25 @@
     }
 
     .nav-item.active svg {
-      transform: translateY(-1px);
+      transform: translateY(-1px) scale(1.1);
     }
 
-    .nav-item:active {
-      transform: scale(0.95);
-    }
+    .nav-item:active { transform: scale(0.95); }
 
     .nav-count {
       position: absolute;
-      top: 1px;
-      right: calc(50% - 27px);
-      min-width: 18px;
-      height: 18px;
+      top: 0px;
+      right: calc(50% - 22px);
+      min-width: 15px;
+      height: 15px;
       padding: 0 4px;
-      border-radius: 12px;
+      border-radius: 10px;
       background: #3b82f6;
       color: #fff;
       border: 2px solid white;
       display: grid;
       place-items: center;
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 700;
     }
 
@@ -719,7 +864,6 @@
       z-index: 100;
       background: rgba(15, 23, 42, 0.3);
       backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
       display: flex;
       align-items: flex-end;
       justify-content: center;
@@ -729,113 +873,86 @@
       padding: 15px;
     }
 
-    .modal-backdrop.open {
-      opacity: 1;
-      visibility: visible;
-    }
+    .modal-backdrop.open { opacity: 1; visibility: visible; }
 
     .modal {
       width: 100%;
-      max-width: 480px;
+      max-width: 460px;
       background: #ffffff;
-      border-radius: 36px 36px 28px 28px;
-      padding: 12px 24px 28px;
+      border-radius: 30px 30px 24px 24px;
+      padding: 10px 20px 24px;
       transform: translateY(30px);
       transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25), inset 0 1px 0 rgba(255,255,255,0.9);
-      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
     }
 
-    .modal-backdrop.open .modal {
-      transform: translateY(0);
-    }
+    .modal-backdrop.open .modal { transform: translateY(0); }
 
     .modal-handle {
-      width: 37px;
+      width: 32px;
       height: 4px;
       border-radius: 10px;
       background: #e1e5ea;
-      margin: 0 auto 22px;
+      margin: 0 auto 18px;
     }
 
     .modal-heading {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 15px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
     .modal-icon {
-      width: 58px;
-      height: 58px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
       display: grid;
       place-items: center;
-      font-size: 28px;
-      box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 4px 12px rgba(59, 130, 246, 0.15);
+      font-size: 24px;
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 4px 10px rgba(59, 130, 246, 0.1);
     }
 
-    .modal-title {
-      font-size: 17px;
-      font-weight: 800;
-      margin: 0;
-    }
-
-    .modal-subtitle {
-      font-size: 11px;
-      color: var(--muted);
-      margin: 4px 0 0;
-      font-weight: 500;
-    }
-
-    .modal-text {
-      font-size: 13px;
-      color: #4b5563;
-      line-height: 2;
-      font-weight: 500;
-    }
+    .modal-title { font-size: 15px; font-weight: 800; margin: 0; }
+    .modal-subtitle { font-size: 10px; color: var(--muted); margin: 2px 0 0; }
+    .modal-text { font-size: 12px; color: #4b5563; line-height: 1.9; }
 
     .modal-action {
       width: 100%;
-      height: 52px;
+      height: 46px;
       border-radius: 999px;
       color: white;
       background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      margin-top: 16px;
-      font-size: 14px;
+      margin-top: 14px;
+      font-size: 13px;
       font-weight: 700;
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35), inset 0 1px 0 rgba(255,255,255,0.4);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
       cursor: pointer;
       font-family: inherit;
     }
 
-    .modal-action:active {
-      transform: scale(0.98);
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-      box-shadow: var(--shadow-pressed);
-    }
+    .modal-action:active { transform: scale(0.98); }
 
     /* Toast */
     .toast {
       position: fixed;
       z-index: 150;
-      bottom: 96px;
+      bottom: 100px;
       left: 50%;
       transform: translate(-50%, 16px);
       background: #0f172a;
       color: #fff;
       border-radius: 999px;
-      padding: 12px 24px;
-      font-size: 12px;
+      padding: 10px 20px;
+      font-size: 11px;
       font-weight: 600;
       white-space: nowrap;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s ease;
       pointer-events: none;
-      box-shadow: 0 15px 30px rgba(15, 23, 42, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+      box-shadow: 0 15px 30px rgba(15, 23, 42, 0.3);
     }
 
     .toast.show {
@@ -846,20 +963,11 @@
 
     /* Animations */
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .animate-in {
-      animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-
+    .animate-in { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
     .delay-1 { animation-delay: 0.05s; }
     .delay-2 { animation-delay: 0.1s; }
     .delay-3 { animation-delay: 0.15s; }
@@ -867,16 +975,6 @@
     @media (min-width: 500px) {
       body { background: #e2e8f0; }
       .app { box-shadow: 0 25px 60px rgba(15, 23, 42, 0.1); }
-    }
-
-    @media (max-width: 360px) {
-      .app { padding-left: 13px; padding-right: 13px; }
-      .section-title { font-size: 15px; }
-      .feature-card { height: 195px; }
-      .category { padding: 0 12px; font-size: 11px; }
-      .shortcuts { gap: 5px; }
-      .shortcut-name { font-size: 9px; }
-      .apps-row { gap: 10px 8px; }
     }
   </style>
 </head>
@@ -893,7 +991,6 @@
           <div class="brand-caption">برنامه‌های کاربردی تو</div>
         </div>
       </div>
-
       <div class="header-actions">
         <button class="icon-button" aria-label="اعلان‌ها" onclick="showToast('فعلاً اعلان جدیدی نداری')">
           <svg viewBox="0 0 24 24" fill="none">
@@ -910,137 +1007,111 @@
         <circle cx="11" cy="11" r="7"/>
         <path d="m16 16 4 4"/>
       </svg>
-      <input
-        id="searchInput"
-        type="search"
-        placeholder="جستجوی بازی، هوش مصنوعی، ابزار..."
-        autocomplete="off"
-        aria-label="جستجوی برنامه‌ها"
-      />
+      <input id="searchInput" type="search" placeholder="جستجوی بازی، هوش مصنوعی، ابزار..." autocomplete="off" />
     </label>
 
     <!-- Categories -->
-    <nav class="categories animate-in delay-2" aria-label="دسته‌بندی">
+    <nav class="categories-box animate-in delay-2">
       <button class="category active" data-filter="all">همه</button>
-      <button class="category" data-filter="ai"><span class="category-icon">✨</span> هوش مصنوعی</button>
-      <button class="category" data-filter="shopping"><span class="category-icon">🛒</span> خرید و پرداخت</button>
-      <button class="category" data-filter="game"><span class="category-icon">🎮</span> بازی</button>
-      <button class="category" data-filter="utility"><span class="category-icon">🧰</span> ابزار</button>
+      <button class="category" data-filter="ai">✨ هوش مصنوعی</button>
+      <button class="category" data-filter="shopping">🛒 خرید</button>
+      <button class="category" data-filter="game">🎮 بازی</button>
+      <button class="category" data-filter="utility">🧰 ابزار</button>
     </nav>
 
     <!-- Featured -->
     <section class="section animate-in delay-2">
       <div class="section-heading">
         <h1 class="section-title">برنامه‌های پیشنهادی</h1>
-        <button class="see-all" onclick="showToast('در حال نمایش پیشنهادها')">مشاهده همه</button>
       </div>
-
       <p class="section-description">ابزارهای جذاب و هوشمند برای استفاده روزمره</p>
 
       <div class="featured-track">
-
         <article class="feature-card" data-category="ai" data-search="آشپزی تغذیه دستیار هوشمند غذا">
-          <img
-            class="feature-art"
-            src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1000&q=85"
-            alt="آشپزخانه گرم و روشن"
-          />
+          <img class="feature-art" src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1000&q=85" alt="آشپزخانه">
           <div class="feature-overlay"></div>
           <div class="feature-badge">معرفی برنامه</div>
-
           <div class="feature-content">
             <div class="feature-logo">
               <img src="https://img.icons8.com/color/96/chef-hat.png" alt="حس‌تازگی">
             </div>
-
             <div class="feature-info">
               <h2 class="feature-name">حس‌تازگی</h2>
               <p class="feature-subtitle">دستیار هوشمند آشپزی و تغذیه</p>
             </div>
-
-            <button class="feature-button" onclick="openModal('حس‌تازگی','👨🏻‍🍳','پیشنهاد غذا، آموزش مرحله‌به‌مرحله و ایده‌های تازه برای آشپزی.')">
-              باز کردن
-            </button>
+            <button class="feature-button" onclick="openModal('حس‌تازگی','👨🏻‍🍳','پیشنهاد غذا، آموزش مرحله‌به‌مرحله و ایده‌های تازه برای آشپزی.')">باز کردن</button>
           </div>
         </article>
 
         <article class="feature-card" data-category="ai" data-search="هوش مصنوعی دستیار هوشمند">
           <div class="feature-overlay"></div>
           <div class="feature-badge">پیشنهاد ویژه</div>
-
           <div class="feature-content">
             <div class="feature-logo">✨</div>
-
             <div class="feature-info">
               <h2 class="feature-name">دستیار هوشمند</h2>
               <p class="feature-subtitle">ایده‌پردازی، نوشتن و پاسخ به پرسش‌ها</p>
             </div>
-
-            <button class="feature-button" onclick="openModal('دستیار هوشمند','✨','یک همراه هوشمند برای کارهای روزمره و ایده‌های تازه.')">
-              باز کردن
-            </button>
+            <button class="feature-button" onclick="openModal('دستیار هوشمند','✨','یک همراه هوشمند برای کارهای روزمره و ایده‌های تازه.')">باز کردن</button>
           </div>
         </article>
-
       </div>
     </section>
 
     <!-- Shortcuts -->
-    <section class="shortcuts animate-in delay-3" aria-label="دسترسی سریع">
-
+    <section class="shortcuts animate-in delay-3">
       <button class="shortcut" data-category="utility" data-search="نظرسنجی رای گیری" onclick="openModal('نظرسنجی','🗳️','نظرسنجی بساز و نظر دیگران را جمع‌آوری کن.')">
-        <span class="shortcut-icon" style="--shortcut-color:#14b8a6;--shortcut-bg:#f0fdf4">
+        <span class="shortcut-icon" style="--shortcut-bg:#f0fdf4">
           <img src="https://img.icons8.com/color/96/checkmark--v1.png" alt="نظرسنجی">
         </span>
         <span class="shortcut-name">نظرسنجی</span>
       </button>
 
       <button class="shortcut" data-category="ai" data-search="ربات ساز هوشمند" onclick="openModal('ربات‌ساز هوشمند','🤖','ربات اختصاصی خودت را برای کارهای مختلف طراحی کن.')">
-        <span class="shortcut-icon" style="--shortcut-color:#0d9488;--shortcut-bg:#ecfdf5">
+        <span class="shortcut-icon" style="--shortcut-bg:#ecfdf5">
           <img src="https://img.icons8.com/color/96/bot.png" alt="ربات ساز">
         </span>
         <span class="shortcut-name">ربات‌ساز</span>
       </button>
 
       <button class="shortcut" data-category="ai" data-search="حس تازگی" onclick="openModal('حس تازگی','🌿','ایده‌های تازه و پیشنهادهای هوشمند برای روزمره.')">
-        <span class="shortcut-icon" style="--shortcut-color:#059669;--shortcut-bg:#f0fdfa">
+        <span class="shortcut-icon" style="--shortcut-bg:#f0fdfa">
           <img src="https://img.icons8.com/color/96/chef-hat.png" alt="حس تازگی">
         </span>
         <span class="shortcut-name">حس تازگی</span>
       </button>
 
       <button class="shortcut" data-category="game" data-search="لینکدونی بازی" onclick="openModal('لینکدونی','🪐','مجموعه‌ای از لینک‌ها و سرگرمی‌های پیشنهادی.')">
-        <span class="shortcut-icon" style="--shortcut-color:#d97706;--shortcut-bg:#fffbeb">
+        <span class="shortcut-icon" style="--shortcut-bg:#fffbeb">
           <img src="https://img.icons8.com/color/96/planet.png" alt="لینکدونی">
         </span>
         <span class="shortcut-name">لینکدونی</span>
       </button>
 
       <button class="shortcut" data-category="ai" data-search="هوشزی هوش مصنوعی" onclick="openModal('هوشزی','👓','ابزارهای هوشمند برای خلاقیت و بهره‌وری.')">
-        <span class="shortcut-icon" style="--shortcut-color:#0f172a;--shortcut-bg:#f8fafc">
+        <span class="shortcut-icon" style="--shortcut-bg:#f8fafc">
           <img src="https://img.icons8.com/color/96/glasses.png" alt="هوشزی">
         </span>
         <span class="shortcut-name">هوشزی</span>
       </button>
-
     </section>
 
-    <!-- Recently opened -->
+    <!-- =========================================
+         Recently Opened - مربعی، گردتر، آیکون بزرگ‌تر
+         ========================================= -->
     <section class="recent-section">
       <div class="section-heading">
         <h2 class="section-title">برنامه‌های باز شده</h2>
-        <button class="see-all" onclick="showToast('برنامه‌های اخیر شما')">بیشتر</button>
       </div>
-
       <p class="section-description">برنامه‌هایی که استفاده کردی، اینجا هستند</p>
 
       <div class="apps-row" id="recentApps">
-
         <button class="app-item" data-category="ai" data-search="دستیار هوشمند رانیو ربات" onclick="openModal('دستیار هوشمند رانیو','🦛','دستیار هوشمند برای پاسخ‌گویی و انجام کارهای روزمره.')">
           <span class="app-icon app-robot" style="background:#0a0a0c;">
             <img src="https://img.icons8.com/color/96/rhinoceros.png" alt="راینو">
           </span>
           <span class="app-label">دستیار هوشمند</span>
+          <span class="app-bio">پاسخ‌گوی روزمره</span>
         </button>
 
         <button class="app-item" data-category="utility" data-search="کامنت گفتگو پیام" onclick="openModal('کامنت','💬','فضایی برای گفت‌وگو و ثبت دیدگاه‌ها.')">
@@ -1048,6 +1119,7 @@
             <img src="https://img.icons8.com/color/96/chat-message.png" alt="کامنت" style="width:60%; height:60%; object-fit:contain;">
           </span>
           <span class="app-label">کامنت</span>
+          <span class="app-bio">گفت‌وگو و نظرات</span>
         </button>
 
         <button class="app-item" data-category="ai" data-search="هوشزی هوش مصنوعی" onclick="openModal('هوشزی','👓','ابزارهای هوشمند و دستیارهای دیجیتال.')">
@@ -1055,6 +1127,7 @@
             <img src="https://img.icons8.com/color/96/glasses.png" alt="هوشزی">
           </span>
           <span class="app-label">هوشزی</span>
+          <span class="app-bio">دستیار دیجیتال</span>
         </button>
 
         <button class="app-item" data-category="shopping" data-search="زمپی خرید پرداخت" onclick="openModal('زمپی','🛍️','دسترسی سریع به ابزارهای خرید و پرداخت.')">
@@ -1062,32 +1135,52 @@
             <img src="https://img.icons8.com/color/96/z.png" alt="زمپی">
           </span>
           <span class="app-label">زمپی</span>
+          <span class="app-bio">خرید و پرداخت</span>
         </button>
-
-      </div>
-
-      <div class="empty-state" id="recentEmpty">
-        برنامه‌ای با این مشخصات پیدا نشد.
       </div>
     </section>
 
-    <!-- Popular programs -->
+    <!-- ۳ کارت بزرگ -->
+    <section class="special-cards-section">
+      <div class="section-heading">
+        <h2 class="section-title">پیشنهادهای ویژه</h2>
+      </div>
+      <p class="section-description">برنامه‌های منتخب و کاربردی برای شما</p>
+
+      <div class="special-grid">
+        <button class="special-card" onclick="openModal('مدیریت مالی','💰','ابزارهای هوشمند برای مدیریت هزینه‌ها و پس‌انداز.')">
+          <div class="special-icon"><img src="https://img.icons8.com/color/96/money-bag.png" alt="مالی"></div>
+          <span class="special-title">مدیریت مالی</span>
+          <span class="special-subtitle">هوشمند و آسان</span>
+        </button>
+
+        <button class="special-card" onclick="openModal('سلامت و تندرستی','🧘','برنامه‌های ورزشی و تغذیه سالم برای سبک زندگی بهتر.')">
+          <div class="special-icon"><img src="https://img.icons8.com/color/96/yoga.png" alt="سلامت"></div>
+          <span class="special-title">سلامت و تندرستی</span>
+          <span class="special-subtitle">سبک زندگی سالم</span>
+        </button>
+
+        <button class="special-card" onclick="openModal('یادگیری و آموزش','📚','دوره‌ها و منابع آموزشی برای رشد شخصی و حرفه‌ای.')">
+          <div class="special-icon"><img src="https://img.icons8.com/color/96/books.png" alt="آموزش"></div>
+          <span class="special-title">یادگیری</span>
+          <span class="special-subtitle">رشد و پیشرفت</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Popular Programs -->
     <section class="popular-section">
       <div class="section-heading">
         <h2 class="section-title">ربات‌های انبار شده</h2>
-        <button class="see-all" onclick="showToast('همه ربات‌ها')">مشاهده همه</button>
       </div>
-
       <p class="section-description">ربات‌هایی که ذخیره کردی و دوباره به آن‌ها سر می‌زنی</p>
 
       <div class="program-grid" id="programGrid">
-
         <article class="program-card" data-category="ai" data-search="ربات هوشمند دستیار">
           <div class="program-art" style="background:#eff6ff">🤖</div>
           <div class="program-info">
             <h3 class="program-name">ربات هوشمند</h3>
             <p class="program-description">دستیار روزمره</p>
-            <span class="program-open">مشاهده ←</span>
           </div>
         </article>
 
@@ -1096,7 +1189,6 @@
           <div class="program-info">
             <h3 class="program-name">بازی فکری</h3>
             <p class="program-description">سرگرمی و تمرکز</p>
-            <span class="program-open">مشاهده ←</span>
           </div>
         </article>
 
@@ -1105,65 +1197,43 @@
           <div class="program-info">
             <h3 class="program-name">ابزار کاربردی</h3>
             <p class="program-description">ابزارهای روزانه</p>
-            <span class="program-open">مشاهده ←</span>
           </div>
         </article>
-
-      </div>
-
-      <div class="empty-state" id="programEmpty">
-        برنامه‌ای با این مشخصات پیدا نشد.
       </div>
     </section>
 
   </main>
 
-  <!-- Bottom navigation -->
+  <!-- Bottom Navigation -->
   <div class="bottom-nav-wrap">
-    <nav class="bottom-nav" aria-label="منوی اصلی">
-
+    <nav class="bottom-nav">
       <button class="nav-item" data-page="settings" onclick="selectTab(this,'تنظیمات')">
-        <svg viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span>تنظیمات</span>
       </button>
 
       <button class="nav-item" data-page="window" onclick="selectTab(this,'پنجره')">
-        <svg viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <path d="M3 9h18M9 21V9"/>
-        </svg>
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         <span>پنجره</span>
       </button>
 
       <button class="nav-item active" data-page="programs" onclick="selectTab(this,'برنامه‌ها')">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-          <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-          <rect x="3" y="14" width="7" height="7" rx="1.5"/>
-          <rect x="14" y="14" width="7" height="7" rx="1.5"/>
-        </svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
         <span>برنامه‌ها</span>
       </button>
 
       <button class="nav-item" data-page="chats" onclick="selectTab(this,'گفتگوها')">
         <span class="nav-count">۴۶۲</span>
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-        </svg>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         <span>گفتگوها</span>
       </button>
-
     </nav>
   </div>
 
   <!-- Modal -->
   <div class="modal-backdrop" id="modalBackdrop" onclick="backdropClose(event)">
-    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <section class="modal">
       <div class="modal-handle"></div>
-
       <div class="modal-heading">
         <div class="modal-icon" id="modalIcon">✨</div>
         <div>
@@ -1171,66 +1241,38 @@
           <p class="modal-subtitle">دنیای برنامه‌های هوشمند</p>
         </div>
       </div>
-
       <p class="modal-text" id="modalText"></p>
-
       <button class="modal-action" onclick="closeModal()">متوجه شدم</button>
     </section>
   </div>
 
-  <div class="toast" id="toast" role="status"></div>
+  <div class="toast" id="toast"></div>
 
   <script>
     const searchInput = document.getElementById("searchInput");
     const categories = document.querySelectorAll(".category");
-    const recentApps = document.getElementById("recentApps");
-    const recentEmpty = document.getElementById("recentEmpty");
-    const programGrid = document.getElementById("programGrid");
-    const programEmpty = document.getElementById("programEmpty");
-
     let currentFilter = "all";
     let toastTimer;
 
     function normalizeText(value) {
-      return value
-        .toLowerCase()
-        .replace(/ي/g, "ی")
-        .replace(/ك/g, "ک")
-        .replace(/\u200c/g, " ")
-        .trim();
+      return value.toLowerCase().replace(/ي/g, "ی").replace(/ك/g, "ک").replace(/\u200c/g, " ").trim();
     }
 
     function matchesElement(element, query, filter) {
       const category = element.dataset.category || "";
       const search = normalizeText(element.dataset.search || element.innerText || "");
       const text = normalizeText(query);
-
       const matchesCategory = filter === "all" || category === filter;
       const matchesSearch = !text || search.includes(text);
-
       return matchesCategory && matchesSearch;
     }
 
     function filterItems() {
       const query = searchInput.value;
-
-      document.querySelectorAll(
-        ".app-item, .shortcut, .program-card, .feature-card"
-      ).forEach(element => {
+      document.querySelectorAll(".app-item, .shortcut, .program-card, .feature-card, .special-card").forEach(element => {
         const matches = matchesElement(element, query, currentFilter);
         element.style.display = matches ? "" : "none";
       });
-
-      const visibleRecent = [...recentApps.children].filter(element => {
-        return element.style.display !== "none";
-      });
-
-      const visiblePrograms = [...programGrid.children].filter(element => {
-        return element.style.display !== "none";
-      });
-
-      recentEmpty.classList.toggle("visible", visibleRecent.length === 0);
-      programEmpty.classList.toggle("visible", visiblePrograms.length === 0);
     }
 
     searchInput.addEventListener("input", filterItems);
@@ -1239,7 +1281,6 @@
       button.addEventListener("click", () => {
         categories.forEach(item => item.classList.remove("active"));
         button.classList.add("active");
-
         currentFilter = button.dataset.filter;
         filterItems();
       });
@@ -1249,7 +1290,6 @@
       document.getElementById("modalTitle").textContent = title;
       document.getElementById("modalIcon").textContent = icon;
       document.getElementById("modalText").textContent = text;
-
       document.getElementById("modalBackdrop").classList.add("open");
       document.body.style.overflow = "hidden";
     }
@@ -1260,45 +1300,29 @@
     }
 
     function backdropClose(event) {
-      if (event.target.id === "modalBackdrop") {
-        closeModal();
-      }
+      if (event.target.id === "modalBackdrop") closeModal();
     }
 
     document.addEventListener("keydown", event => {
-      if (event.key === "Escape") {
-        closeModal();
-      }
+      if (event.key === "Escape") closeModal();
     });
 
     function selectTab(button, title) {
-      document.querySelectorAll(".nav-item").forEach(item => {
-        item.classList.remove("active");
-      });
-
+      document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
       button.classList.add("active");
-
       if (button.dataset.page !== "programs") {
         showToast(title);
       } else {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
 
     function showToast(message) {
       const toast = document.getElementById("toast");
-
       toast.textContent = message;
       toast.classList.add("show");
-
       clearTimeout(toastTimer);
-
-      toastTimer = setTimeout(() => {
-        toast.classList.remove("show");
-      }, 2200);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
     }
 
     document.querySelectorAll(".program-card").forEach(card => {
@@ -1306,7 +1330,6 @@
         const title = card.querySelector(".program-name").textContent;
         const description = card.querySelector(".program-description").textContent;
         const icon = card.querySelector(".program-art").textContent.trim();
-
         openModal(title, icon, description);
       });
     });
