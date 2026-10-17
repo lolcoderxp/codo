@@ -1,1865 +1,324 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#2563eb">
-<title>پست‌یار | سامانه جامع کدگذاری پستی</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<style>
-:root{
-  --font:"Vazirmatn",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Tahoma,sans-serif;
-  --primary:#2563eb;--primary-light:#dbeafe;--primary-grad:linear-gradient(135deg,#3b82f6 0%,#1d4ed8 100%);
-  --success:#10b981;--success-grad:linear-gradient(135deg,#34d399 0%,#059669 100%);
-  --warning:#f59e0b;--warning-grad:linear-gradient(135deg,#fbbf24 0%,#d97706 100%);
-  --danger:#ef4444;--danger-grad:linear-gradient(135deg,#f87171 0%,#dc2626 100%);
-  --purple-grad:linear-gradient(135deg,#a78bfa 0%,#7c3aed 100%);
-  --pink-grad:linear-gradient(135deg,#f472b6 0%,#db2777 100%);
-  --text:#0f172a;--text-2:#1e293b;--muted:#64748b;--muted-2:#94a3b8;
-  --bg:#f1f5f9;--surface:#fff;--surface-2:#f8fafc;
-  --border:#e2e8f0;--border-2:#cbd5e1;
-  --radius-sm:12px;--radius-md:18px;--radius-lg:22px;--radius-pill:999px;
-  --shadow-sm:0 2px 6px rgba(15,23,42,.05);
-  --shadow-md:0 8px 20px -6px rgba(15,23,42,.08),0 2px 6px rgba(15,23,42,.04);
-  --shadow-lg:0 18px 40px -12px rgba(15,23,42,.15);
-  --t-fast:.18s cubic-bezier(.4,0,.2,1);--t-base:.28s cubic-bezier(.4,0,.2,1);
-  --pad-x:clamp(14px,4.5vw,20px);--icon-size:clamp(18px,5vw,22px);
-  --title-size:clamp(13px,3.6vw,15px);--hero-pad:clamp(16px,5vw,22px);
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-html{font-family:var(--font);background:var(--surface);-webkit-text-size-adjust:100%}
-body{font-family:var(--font);background:var(--surface);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100dvh;overscroll-behavior-y:none}
-button,input,textarea,select{font-family:var(--font);font:inherit;color:inherit}
-button{border:0;background:transparent;cursor:pointer;user-select:none;-webkit-user-select:none}
-button:focus,input:focus,textarea:focus,select:focus,*:focus{outline:none!important}
-img{display:block;max-width:100%}
-.icn{display:inline-block;width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;vertical-align:middle}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>به زودی</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js CDN for 3D graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Google Font Vazirmatn -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow: hidden;
+            touch-action: none;
+        }
+        
+        /* Fullscreen 3D Canvas */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+        }
 
-.app{width:100%;max-width:520px;min-height:100dvh;margin:0 auto;padding:0 var(--pad-x) calc(140px + env(safe-area-inset-bottom,0px));position:relative;background:var(--surface);overflow-x:hidden}
+        /* Glassmorphism subtle card for mobile */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        }
 
-/* Login */
-.login-wrap{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#3b82f6 0%,#1d4ed8 100%);position:fixed;inset:0;z-index:999}
-.login-card{width:100%;max-width:400px;background:#fff;border-radius:24px;padding:32px 24px;box-shadow:0 30px 60px -20px rgba(15,23,42,.4)}
-.login-logo{width:72px;height:72px;border-radius:20px;background:var(--primary-grad);color:#fff;display:grid;place-items:center;font-size:34px;font-weight:900;margin:0 auto 18px;box-shadow:0 12px 24px -6px rgba(37,99,235,.5)}
-.login-card h1{text-align:center;font-size:20px;font-weight:800;margin-bottom:6px}
-.login-card p{text-align:center;font-size:12px;color:var(--muted);margin-bottom:24px}
-.login-tabs{display:flex;background:var(--surface-2);border-radius:var(--radius-pill);padding:4px;margin-bottom:18px;border:1px solid var(--border)}
-.login-tabs button{flex:1;padding:10px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;color:var(--muted)}
-.login-tabs button.active{background:#fff;color:var(--primary);box-shadow:var(--shadow-sm)}
-
-/* Topbar */
-.topbar{min-height:clamp(60px,16vw,72px);display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:max(8px,env(safe-area-inset-top,8px))}
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
-.brand-logo{width:clamp(38px,11vw,44px);height:clamp(38px,11vw,44px);border-radius:13px;background:var(--primary-grad);color:#fff;display:grid;place-items:center;font-size:clamp(17px,5vw,20px);font-weight:900;box-shadow:0 8px 18px -4px rgba(37,99,235,.5);flex-shrink:0}
-.brand-name{font-size:clamp(14px,4vw,16px);font-weight:800;color:var(--text)}
-.brand-caption{font-size:clamp(9.5px,2.7vw,10.5px);color:var(--muted);font-weight:500;margin-top:-2px}
-.icon-button{width:clamp(38px,10vw,42px);height:clamp(38px,10vw,42px);border-radius:50%;background:var(--surface-2);display:grid;place-items:center;transition:all var(--t-base);border:1px solid var(--border);flex-shrink:0}
-.icon-button:active{transform:scale(.9)}
-.icon-button svg{width:clamp(17px,5vw,20px);height:clamp(17px,5vw,20px);color:var(--text-2)}
-
-/* Hero */
-.hero{background:var(--primary-grad);color:#fff;border-radius:var(--radius-lg);padding:var(--hero-pad);margin-top:8px;position:relative;overflow:hidden;box-shadow:0 20px 40px -12px rgba(37,99,235,.45)}
-.hero::before{content:"";position:absolute;inset:0;border-radius:inherit;background-image:radial-gradient(rgba(255,255,255,.18) 1px,transparent 1px);background-size:14px 14px;opacity:.5;pointer-events:none}
-.hero h2{margin:0 0 4px;font-size:clamp(15px,4.4vw,18px);font-weight:800;position:relative;z-index:1}
-.hero p{margin:0;font-size:clamp(11px,3vw,12px);opacity:.92;position:relative;z-index:1;line-height:1.7}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);padding:5px 11px;border-radius:var(--radius-pill);font-size:clamp(10px,2.8vw,11px);font-weight:600;position:relative;z-index:1}
-
-/* Sections */
-.section{margin-top:22px}
-.section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-.section-title{font-size:var(--title-size);font-weight:800;margin:0;color:var(--text);display:flex;align-items:center;gap:8px}
-.section-title .icn{width:var(--icon-size);height:var(--icon-size);color:var(--primary)}
-
-/* Shortcuts */
-.shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,3vw,14px) clamp(6px,1.8vw,10px);margin-top:6px}
-.shortcut{min-width:0;text-align:center;padding:0;border-radius:18px;transition:transform var(--t-fast);cursor:pointer}
-.shortcut:active{transform:scale(.92)}
-.shortcut-icon{width:100%;aspect-ratio:1;margin:0 auto 6px;border-radius:clamp(16px,5vw,20px);display:grid;place-items:center;position:relative;overflow:hidden;border:1.5px solid rgba(255,255,255,.9);background:#fff;box-shadow:var(--shadow-md);transition:transform var(--t-base),box-shadow var(--t-base)}
-.shortcut-icon svg{width:clamp(20px,6vw,26px);height:clamp(20px,6vw,26px)}
-.shortcut-name{display:block;font-size:clamp(9px,2.6vw,10px);line-height:1.4;color:var(--text-2);font-weight:700;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
-.sc-blue{background:linear-gradient(145deg,#eff6ff,#dbeafe);color:#2563eb}
-.sc-green{background:linear-gradient(145deg,#ecfdf5,#d1fae5);color:#059669}
-.sc-orange{background:linear-gradient(145deg,#fff7ed,#ffedd5);color:#ea580c}
-.sc-purple{background:linear-gradient(145deg,#f5f3ff,#ede9fe);color:#7c3aed}
-.sc-pink{background:linear-gradient(145deg,#fdf2f8,#fce7f3);color:#db2777}
-.sc-teal{background:linear-gradient(145deg,#ecfeff,#cffafe);color:#0891b2}
-.sc-red{background:linear-gradient(145deg,#fef2f2,#fee2e2);color:#dc2626}
-.sc-yellow{background:linear-gradient(145deg,#fefce8,#fef9c3);color:#ca8a04}
-.sc-slate{background:linear-gradient(145deg,#f1f5f9,#e2e8f0);color:#475569}
-.sc-indigo{background:linear-gradient(145deg,#eef2ff,#e0e7ff);color:#4f46e5}
-
-/* Info Cards */
-.info-card{background:var(--surface);border-radius:var(--radius-md);padding:clamp(12px,3.4vw,14px);box-shadow:var(--shadow-md);border:1px solid var(--border);display:flex;align-items:center;gap:12px;margin-bottom:10px;cursor:pointer;transition:all var(--t-base)}
-.info-card:active{transform:scale(.98)}
-.info-card-icon{width:clamp(40px,11vw,46px);height:clamp(40px,11vw,46px);border-radius:13px;display:grid;place-items:center;flex-shrink:0;color:#fff}
-.info-card-icon svg{width:clamp(19px,5.2vw,22px);height:clamp(19px,5.2vw,22px)}
-.info-card-body{flex:1;min-width:0}
-.info-card-body strong{display:block;font-size:clamp(12.5px,3.6vw,13.5px);font-weight:700;margin-bottom:3px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.info-card-body small{display:block;font-size:clamp(10px,2.9vw,11px);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.info-card-arrow{color:var(--muted-2);flex-shrink:0}
-.info-card-arrow svg{width:18px;height:18px}
-
-/* Stats */
-.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}
-.stat-card{background:var(--surface);border-radius:var(--radius-md);padding:14px;border:1px solid var(--border);box-shadow:var(--shadow-md);position:relative;overflow:hidden}
-.stat-card::before{content:"";position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;background:var(--primary-light);opacity:.4}
-.stat-num{font-size:24px;font-weight:800;color:var(--text);position:relative}
-.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px;font-weight:500;position:relative}
-
-/* Forms */
-.field{margin-bottom:14px}
-.field label{display:block;font-size:clamp(11px,3.2vw,12px);font-weight:700;color:var(--text-2);margin-bottom:7px;padding-right:4px}
-.field input,.field select,.field textarea{width:100%;background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:clamp(10px,3vw,12px) clamp(12px,3.4vw,14px);color:var(--text);font-size:clamp(12.5px,3.6vw,13px);transition:var(--t-fast)}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
-.field textarea{min-height:80px;resize:vertical;line-height:1.7;font-family:var(--font)}
-.field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center;padding-left:36px}
-
-/* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:clamp(42px,12vw,46px);padding:0 clamp(16px,4.5vw,20px);border-radius:var(--radius-pill);font-weight:700;font-size:clamp(12px,3.4vw,13px);transition:all var(--t-fast);white-space:nowrap;cursor:pointer;font-family:var(--font)}
-.btn .icn{width:clamp(14px,4vw,16px);height:clamp(14px,4vw,16px)}
-.btn-primary{color:#fff;background:var(--primary-grad);box-shadow:0 8px 18px -4px rgba(37,99,235,.45)}
-.btn-primary:active{transform:scale(.97)}
-.btn-success{color:#fff;background:var(--success-grad);box-shadow:0 8px 18px -4px rgba(16,185,129,.4)}
-.btn-danger{color:#fff;background:var(--danger-grad);box-shadow:0 8px 18px -4px rgba(239,68,68,.4)}
-.btn-outline{color:var(--text);background:#fff;border:1.5px solid var(--border);box-shadow:var(--shadow-sm)}
-.btn-ghost{color:var(--primary);background:var(--primary-light)}
-.btn-block{width:100%}
-.btn-sm{height:36px;padding:0 14px;font-size:12px;border-radius:12px}
-.btn-sm .icn{width:14px;height:14px}
-.btn-row{display:flex;gap:8px;flex-wrap:wrap}
-
-/* Segment */
-.segment{display:flex;background:var(--surface-2);border-radius:var(--radius-pill);padding:4px;margin-bottom:14px;border:1px solid var(--border)}
-.segment button{flex:1;padding:10px;border-radius:var(--radius-pill);font-size:12px;font-weight:700;color:var(--muted);transition:var(--t-fast)}
-.segment button.active{background:#fff;color:var(--primary);box-shadow:var(--shadow-sm)}
-
-/* Empty */
-.empty{display:none;padding:40px 20px;text-align:center;color:var(--muted)}
-.empty.visible{display:block}
-.empty .icn{width:56px;height:56px;color:var(--muted-2);margin:0 auto 14px;display:block;opacity:.5}
-.empty h3{font-size:14px;color:var(--text-2);margin:0 0 6px;font-weight:700}
-.empty p{font-size:11.5px;margin:0 0 16px;line-height:1.7}
-
-/* Pages */
-.pages{position:relative}
-.page{display:none}
-.page.active{display:block;animation:pageEnter .5s cubic-bezier(.16,1,.3,1)}
-@keyframes pageEnter{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-/* Bottom Nav */
-.bottom-nav-wrap{position:fixed;bottom:calc(12px + env(safe-area-inset-bottom,0px));left:0;right:0;z-index:50;padding:0 var(--pad-x);pointer-events:none;display:flex;justify-content:center}
-.bottom-nav{pointer-events:auto;width:100%;max-width:440px;min-height:clamp(54px,15vw,62px);padding:5px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;border-radius:var(--radius-pill);background:rgba(255,255,255,.95);border:1px solid rgba(226,232,240,.9);box-shadow:0 15px 40px -8px rgba(15,23,42,.2);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
-.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:clamp(44px,12vw,50px);border-radius:var(--radius-pill);color:var(--muted);font-weight:600;transition:all var(--t-base);cursor:pointer;min-width:0}
-.nav-item svg{width:clamp(18px,5vw,20px);height:clamp(18px,5vw,20px);transition:transform var(--t-base)}
-.nav-item span{font-size:clamp(8px,2.4vw,9px);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.nav-item.active{background:var(--primary-light);color:var(--primary)}
-.nav-item.active svg{transform:translateY(-1px) scale(1.1)}
-.nav-item:active{transform:scale(.94)}
-
-/* Modal */
-.modal-backdrop{position:fixed;inset:0;z-index:100;background:rgba(15,23,42,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease;padding:15px}
-.modal-backdrop.open{opacity:1;visibility:visible}
-.modal{width:100%;max-width:480px;background:#fff;border-radius:30px 30px 24px 24px;padding:12px 20px 24px;transform:translateY(40px);transition:transform .45s cubic-bezier(.16,1,.3,1);box-shadow:0 -20px 50px -12px rgba(15,23,42,.25);max-height:88vh;overflow-y:auto}
-.modal-backdrop.open .modal{transform:translateY(0)}
-.modal-handle{width:36px;height:4px;border-radius:10px;background:var(--border-2);margin:0 auto 18px}
-.modal-heading{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.modal-icon{width:52px;height:52px;border-radius:16px;background:var(--primary-grad);display:grid;place-items:center;color:#fff;box-shadow:0 10px 20px -6px rgba(37,99,235,.4)}
-.modal-icon svg{width:24px;height:24px}
-.modal-title{font-size:15px;font-weight:800;margin:0;color:var(--text)}
-.modal-subtitle{font-size:10.5px;color:var(--muted);margin:2px 0 0}
-
-/* Toast */
-.toast{position:fixed;z-index:150;bottom:calc(110px + env(safe-area-inset-bottom,0px));left:50%;transform:translate(-50%,20px);background:#0f172a;color:#fff;border-radius:var(--radius-pill);padding:12px 22px;font-size:12px;font-weight:600;white-space:nowrap;opacity:0;visibility:hidden;transition:all .3s ease;pointer-events:none;box-shadow:0 20px 40px -8px rgba(15,23,42,.4);display:flex;align-items:center;gap:8px;max-width:92vw}
-.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
-.toast .icn{width:16px;height:16px}
-.toast.success{background:var(--success-grad)}
-.toast.error{background:var(--danger-grad)}
-
-/* Map */
-#map{width:100%;height:clamp(300px,58vh,440px);background:#f8fafc;border-radius:var(--radius-md);z-index:1;box-shadow:0 8px 24px -8px rgba(15,23,42,.12);overflow:hidden;border:1px solid var(--border);position:relative}
-.map-tools{display:flex;gap:6px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
-.map-tools::-webkit-scrollbar{display:none}
-.map-tool{padding:9px 13px;border-radius:12px;background:#fff;color:var(--muted);font-size:11.5px;font-weight:700;white-space:nowrap;flex-shrink:0;border:1.5px solid var(--border);display:inline-flex;align-items:center;gap:6px;box-shadow:var(--shadow-sm);transition:var(--t-fast)}
-.map-tool .icn{width:14px;height:14px}
-.map-tool.active{background:var(--primary-grad);color:#fff;border-color:transparent;box-shadow:0 8px 16px -4px rgba(37,99,235,.4)}
-
-/* Drop zone */
-.drop-zone{border:2px dashed var(--border-2);border-radius:var(--radius-md);padding:34px 20px;text-align:center;background:var(--surface-2);transition:var(--t-fast);cursor:pointer}
-.drop-zone.drag{border-color:var(--primary);background:var(--primary-light)}
-.drop-zone .icn{width:52px;height:52px;color:var(--muted-2);margin:0 auto 14px;display:block}
-.drop-zone h3{font-size:14px;margin:0 0 6px;color:var(--text);font-weight:700}
-.drop-zone p{font-size:11.5px;color:var(--muted);line-height:1.7;margin:0 0 16px}
-
-/* Progress */
-.progress{height:6px;background:var(--border);border-radius:20px;overflow:hidden;margin:14px 0}
-.progress span{height:100%;display:block;width:0;background:var(--primary-grad);transition:width .3s;border-radius:20px}
-
-/* Block Rotation Widget */
-.block-widget{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;border-radius:var(--radius-lg);padding:18px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 16px 32px -8px rgba(37,99,235,.4)}
-.block-widget::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.15) 1px,transparent 1px);background-size:12px 12px;opacity:.5}
-.block-widget .bw-row{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;margin-bottom:10px}
-.block-widget .bw-item{text-align:center;flex:1}
-.block-widget .bw-num{font-size:28px;font-weight:900;line-height:1;color:#fff}
-.block-widget .bw-lbl{font-size:10.5px;opacity:.85;margin-top:4px;font-weight:600}
-.block-widget .bw-sep{width:1px;height:40px;background:rgba(255,255,255,.3)}
-.block-widget .bw-progress{height:8px;background:rgba(255,255,255,.25);border-radius:20px;overflow:hidden;position:relative;z-index:1;margin-top:12px}
-.block-widget .bw-progress span{height:100%;background:#fbbf24;display:block;border-radius:20px;transition:width .4s ease}
-.block-widget .bw-hint{font-size:10.5px;opacity:.9;margin-top:8px;text-align:center;position:relative;z-index:1}
-
-/* Building Card */
-.building-card{background:#fff;border-radius:var(--radius-md);border:1px solid var(--border);box-shadow:var(--shadow-md);margin-bottom:12px;overflow:hidden}
-.building-head{padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background var(--t-fast)}
-.building-head:active{background:var(--surface-2)}
-.building-icon{width:44px;height:44px;border-radius:12px;background:var(--primary-grad);color:#fff;display:grid;place-items:center;flex-shrink:0}
-.building-icon svg{width:22px;height:22px}
-.building-info{flex:1;min-width:0}
-.building-info strong{display:block;font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:3px}
-.building-info small{display:block;font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.building-badge{background:var(--primary-light);color:var(--primary);padding:4px 10px;border-radius:var(--radius-pill);font-size:10.5px;font-weight:800;flex-shrink:0}
-.building-units{padding:0 14px 14px;border-top:1px solid var(--border);background:var(--surface-2)}
-.unit-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed var(--border-2)}
-.unit-row:last-child{border-bottom:0}
-.unit-num{width:36px;height:36px;border-radius:10px;background:#fff;border:1.5px solid var(--border);color:var(--text-2);display:grid;place-items:center;font-size:12px;font-weight:800;flex-shrink:0}
-.unit-info{flex:1;min-width:0}
-.unit-info strong{display:block;font-size:12px;font-weight:700;color:var(--text)}
-.unit-info small{display:block;font-size:10px;color:var(--muted);font-family:'Courier New',monospace;direction:ltr;text-align:right;margin-top:2px}
-.unit-actions{display:flex;gap:4px}
-.unit-btn{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#fff;border:1px solid var(--border);color:var(--muted)}
-.unit-btn svg{width:14px;height:14px}
-.unit-btn.danger{color:var(--danger);background:#fef2f2;border-color:#fecaca}
-
-/* Search */
-.search-box{position:relative;margin-bottom:14px}
-.search-box input{width:100%;padding:14px 44px 14px 14px;border-radius:var(--radius-pill);border:1.5px solid var(--border);background:#fff;font-size:13px;box-shadow:var(--shadow-sm)}
-.search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
-.search-box svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted-2)}
-
-/* Labels */
-.label-tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 0;scrollbar-width:none}
-.label-tabs::-webkit-scrollbar{display:none}
-.label-tab{padding:9px 15px;border-radius:12px;background:#fff;color:var(--muted);font-size:11.5px;font-weight:700;white-space:nowrap;flex-shrink:0;border:1.5px solid var(--border);display:inline-flex;align-items:center;gap:6px;box-shadow:var(--shadow-sm);transition:var(--t-fast)}
-.label-tab .icn{width:14px;height:14px}
-.label-tab.active{background:var(--primary-grad);color:#fff;border-color:transparent;box-shadow:0 8px 16px -4px rgba(37,99,235,.4)}
-.label-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
-.label-card{border:2px solid var(--border-2);border-radius:14px;padding:14px 10px;text-align:center;font-size:11px;background:#fff;min-height:110px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;box-shadow:var(--shadow-sm)}
-.label-card .code{font-family:'Courier New',monospace;font-size:15px;font-weight:900;letter-spacing:1px;word-break:break-all}
-.label-card .name{font-size:11px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.label-card .meta{font-size:9px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.label-card .barcode{font-family:'Courier New',monospace;font-size:18px;letter-spacing:2px;line-height:1}
-
-/* Edit Grid */
-.edit-grid-wrap{overflow:auto;border-radius:var(--radius-sm);background:#fff;border:1px solid var(--border);max-height:60vh;box-shadow:var(--shadow-md)}
-.edit-grid{width:100%;border-collapse:collapse;min-width:900px;font-size:11.5px}
-.edit-grid th{background:var(--surface-2);border:1px solid var(--border);padding:10px 6px;font-weight:700;color:var(--text-2);font-size:11px;position:sticky;top:0;z-index:5;text-align:center;white-space:nowrap}
-.edit-grid td{border:1px solid var(--border);padding:0;text-align:center;height:42px;background:#fff}
-.edit-grid td[contenteditable="true"]{padding:10px 8px;cursor:text;white-space:normal;word-wrap:break-word;min-width:60px}
-.edit-grid td[contenteditable="true"]:focus{background:var(--primary-light);box-shadow:inset 0 0 0 2px var(--primary)}
-.edit-grid .row-num{background:var(--surface-2)!important;font-weight:700;color:var(--muted);font-size:11px;min-width:36px}
-.edit-grid .actions-cell{background:var(--surface-2)!important;padding:4px}
-.edit-grid .mini-btn{padding:5px;border-radius:8px;background:#fef2f2;color:var(--danger);display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px}
-.edit-grid .mini-btn svg{width:14px;height:14px}
-
-/* User role badge */
-.role-badge{display:inline-block;padding:3px 8px;border-radius:6px;font-size:9.5px;font-weight:800}
-.role-admin{background:#fee2e2;color:#dc2626}
-.role-supervisor{background:#fef3c7;color:#d97706}
-.role-user{background:#dbeafe;color:#2563eb}
-
-/* Postal Form Print */
-.postal-form{background:#fff;color:#000;padding:16px;font-family:var(--font);direction:rtl}
-.postal-form .hdr{text-align:center;margin-bottom:12px;line-height:1.8}
-.postal-form .hdr h1{font-size:13px;font-weight:bold;margin:0 0 4px}
-.postal-form .hdr h2{font-size:11px;font-weight:normal;margin:0}
-.postal-form .info-tbl{width:100%;border-collapse:collapse;margin-bottom:10px}
-.postal-form .info-tbl td{border:1px solid #444;padding:5px 8px;font-size:10px;text-align:center}
-.postal-form .info-tbl td.lb{background:#f0f0f0;font-weight:bold;width:80px}
-.postal-form .main-tbl{width:100%;border-collapse:collapse;font-size:9px}
-.postal-form .main-tbl th{background:#d9d9d9;border:1px solid #444;padding:6px 4px;font-weight:bold;text-align:center}
-.postal-form .main-tbl td{border:1px solid #444;padding:6px 4px;text-align:center;height:30px}
-.postal-form .main-tbl tr:nth-child(even) td{background:#fafafa}
-.postal-form .sig{display:flex;justify-content:space-between;margin-top:24px;font-size:9px}
-.postal-form .sig div{text-align:center;width:45%}
-.postal-form .sig .ln{border-top:1px solid #333;margin-top:32px;padding-top:4px}
-
-.hidden{display:none!important}
-.text-red{color:var(--danger)}
-.bg-blue{background:var(--primary-grad)}
-.bg-green{background:var(--success-grad)}
-.bg-orange{background:var(--warning-grad)}
-.bg-pink{background:var(--pink-grad)}
-.bg-red{background:var(--danger-grad)}
-.bg-purple{background:var(--purple-grad)}
-.bg-yellow{background:linear-gradient(135deg,#eab308,#ca8a04)}
-.bg-slate{background:linear-gradient(135deg,#64748b,#334155)}
-
-@media (min-width:521px){
-  body{padding:24px 0;background:linear-gradient(135deg,#e2e8f0 0%,#f1f5f9 50%,#cbd5e1 100%);min-height:100vh;display:flex;align-items:flex-start;justify-content:center}
-  .app{max-width:520px;border-radius:28px;box-shadow:0 40px 80px -20px rgba(15,23,42,.25);margin:0;padding-bottom:140px;overflow-y:auto;max-height:calc(100vh - 48px)}
-  .app::-webkit-scrollbar{width:8px}
-  .app::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px}
-  .bottom-nav-wrap{position:sticky;bottom:16px;margin-top:-80px;padding:0 20px}
-}
-
-
-/* ===== Desktop / Windows workspace: separate layout, mobile remains untouched ===== */
-@media (min-width: 1000px) {
-  :root { --desk-bg:#f3f6fb; --desk-line:#e5eaf2; --desk-ink:#18243a; }
-  html, body { min-height:100%; background:var(--desk-bg); }
-  body { display:block !important; padding:0 !important; overflow-x:hidden; }
-  .app, .app.hidden { width:auto; max-width:none; min-height:100vh; max-height:none; height:auto; margin:0; padding:0 34px 48px 34px; padding-right:314px; border-radius:0; box-shadow:none; overflow:visible; background:transparent; }
-  .app.hidden { display:none !important; }
-  .desktop-sidebar { display:flex; position:fixed; z-index:100; inset:0 0 0 auto; width:270px; height:100vh; flex-direction:column; gap:5px; padding:24px 17px 18px; overflow-y:auto; background:#fff; border-left:1px solid var(--desk-line); box-shadow:-8px 0 30px rgba(25,45,80,.035); }
-  .ds-brand { display:flex; align-items:center; gap:12px; padding:5px 9px 24px; margin-bottom:10px; border-bottom:1px solid #eef2f7; }
-  .ds-logo { width:48px; height:48px; display:grid; place-items:center; border-radius:15px; color:#fff; font-size:24px; font-weight:900; background:linear-gradient(145deg,#3b82f6,#1d4ed8); box-shadow:0 8px 18px #2563eb30; }
-  .ds-brand strong { display:block; color:#17243a; font-size:17px; font-weight:900; }
-  .ds-brand small { display:block; margin-top:3px; color:#8a97aa; font-size:10px; }
-  .ds-caption { padding:16px 12px 7px; color:#9aa6b8; font-size:10px; font-weight:800; letter-spacing:.3px; }
-  .ds-link { display:flex; align-items:center; gap:12px; width:100%; min-height:44px; padding:0 13px; text-align:right; border-radius:12px; color:#66758b; font-size:12px; font-weight:700; transition:background .18s,color .18s,transform .18s; }
-  .ds-link .icn { width:19px; height:19px; color:#8795a9; }
-  .ds-link:hover { background:#f4f7fc; color:#245bd8; }
-  .ds-link.active { background:#eaf1ff; color:#245bd8; box-shadow:inset -3px 0 #2563eb; }
-  .ds-link.active .icn { color:#2563eb; }
-  .ds-bottom { display:flex; align-items:center; gap:10px; margin-top:auto; padding:15px 11px 5px; border-top:1px solid #eef2f7; }
-  .ds-status { width:9px; height:9px; border-radius:50%; background:#10b981; box-shadow:0 0 0 4px #d1fae5; flex-shrink:0; }
-  .ds-bottom strong { display:block; font-size:11px; color:#34445c; }
-  .ds-bottom small { display:block; margin-top:3px; font-size:10px; color:#98a4b5; }
-  .topbar { min-height:94px; padding:20px 0 18px; border-bottom:1px solid #e6ebf3; margin-bottom:26px; }
-  .brand { gap:13px; }
-  .brand-logo { width:48px; height:48px; border-radius:15px; font-size:22px; }
-  .brand-name { font-size:19px; }
-  .brand-caption { margin-top:2px; font-size:11px; }
-  .icon-button { width:44px; height:44px; border-radius:13px; background:#fff; box-shadow:0 2px 8px #20395f0a; }
-  .pages { width:100%; max-width:1500px; margin:0 auto; }
-  .page { width:100%; min-width:0; }
-  .hero { min-height:172px; margin-top:0; padding:30px 34px; border-radius:22px; display:flex; flex-direction:column; justify-content:center; box-shadow:0 12px 28px #2563eb1f; }
-  .hero h2 { font-size:24px; margin-bottom:8px; }
-  .hero p { max-width:740px; font-size:13px; line-height:2; }
-  .hero-badge { margin-top:16px; padding:7px 13px; font-size:11px; align-self:flex-start; }
-  .section { margin-top:28px; }
-  .section-heading { margin-bottom:16px; }
-  .section-title { font-size:16px; gap:10px; }
-  .section-title .icn { width:21px; height:21px; }
-  .stats-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
-  .stat-card { min-height:112px; padding:22px 22px; border-radius:17px; box-shadow:0 3px 14px #23395b08; border:1px solid #e8edf5; }
-  .stat-num { font-size:30px; line-height:1.3; }
-  .stat-lbl { font-size:12px; margin-top:6px; }
-  .shortcuts { grid-template-columns:repeat(6,minmax(0,1fr)); gap:18px; margin-top:8px; }
-  .shortcut { padding:10px 8px 12px; border-radius:16px; transition:background .18s,transform .18s; }
-  .shortcut:hover { background:#fff; transform:translateY(-2px); }
-  .shortcut-icon { width:72px; max-width:100%; aspect-ratio:1; border-radius:19px; margin-bottom:10px; box-shadow:0 4px 12px #2639570b; }
-  .shortcut-icon svg { width:26px; height:26px; }
-  .shortcut-name { font-size:11px; line-height:1.7; }
-  .info-card { min-height:84px; padding:17px 19px; margin-bottom:12px; border-radius:15px; box-shadow:0 3px 14px #23395b08; }
-  .info-card:hover { border-color:#c8d8f7; box-shadow:0 8px 22px #244a8c0c; }
-  .info-card-icon { width:46px; height:46px; border-radius:14px; }
-  .info-card-body strong { font-size:13px; }
-  .info-card-body small { font-size:11px; }
-  .btn { min-height:40px; border-radius:11px; }
-  .btn-sm { min-height:34px; }
-  .section, .card, .panel, .table-wrap { min-width:0; }
-  .form-grid, .fields-grid, .postal-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .field input, .field select, .field textarea, input, select, textarea { font-size:13px; }
-  .field input, .field select, .field textarea { min-height:43px; }
-  .bottom-nav-wrap { display:none !important; }
-  #page-projects #projectsList, #page-projects #companiesList, #page-postal #buildingsList { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:start; }
-  #page-projects #projectsList > *, #page-projects #companiesList > *, #page-postal #buildingsList > * { min-width:0; margin-bottom:0; }
-  .building-card { border-radius:16px; margin-bottom:0; }
-  .building-head { padding:17px 19px; }
-  .building-units { padding:0 19px 15px; }
-  .segment { max-width:max-content; padding:5px; border-radius:13px; }
-  .segment button { min-height:38px; padding:0 18px; border-radius:10px; }
-  #map { height:min(68vh,720px); min-height:520px; border-radius:18px; }
-  .map-tools { flex-wrap:wrap; overflow:visible; gap:9px; padding:14px 0; }
-  .map-tool { min-height:39px; padding:10px 14px; border-radius:11px; }
-  .search-box { max-width:900px; }
-  .search-box input { min-height:48px; padding:13px 48px 13px 15px; font-size:13px; }
-  .label-tabs { flex-wrap:wrap; overflow:visible; gap:9px; }
-  .label-tab { padding:10px 15px; }
-  .label-preview { grid-template-columns:repeat(4,minmax(0,1fr)); gap:15px; }
-  .edit-grid-wrap { max-height:70vh; border-radius:14px; }
-  .edit-grid { font-size:12px; }
-  .edit-grid th { position:sticky; top:0; z-index:2; }
-  .modal-backdrop { align-items:center; padding:28px; }
-  .modal { width:min(760px,calc(100vw - 360px)); max-width:760px; max-height:88vh; border-radius:20px; padding:24px 28px 28px; }
-  .toast { bottom:28px; }
-}
-@media (min-width: 1450px) {
-  .app { padding-left:48px; padding-right:330px; }
-  .desktop-sidebar { width:282px; padding-left:20px; padding-right:20px; }
-  .pages { max-width:1640px; }
-  .shortcuts { grid-template-columns:repeat(6,minmax(0,1fr)); gap:22px; }
-  .shortcut-icon { width:82px; }
-  #page-projects #projectsList, #page-projects #companiesList, #page-postal #buildingsList { grid-template-columns:repeat(3,minmax(0,1fr)); }
-}
-@media (min-width: 1000px) and (max-width: 1150px) {
-  .app { padding-left:24px; padding-right:294px; }
-  .desktop-sidebar { width:260px; }
-  .shortcuts { grid-template-columns:repeat(4,minmax(0,1fr)); }
-  .shortcut-icon { width:68px; }
-  .label-preview { grid-template-columns:repeat(3,minmax(0,1fr)); }
-}
-@media (max-width: 999px) { .desktop-sidebar { display:none !important; } }
-
-</style>
+        /* Typing cursor effect */
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 0.9s infinite;
+            font-weight: 300;
+            color: #020617;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
 </head>
-<body>
+<body class="relative h-screen w-screen flex flex-col items-center justify-between p-6 selection:bg-black selection:text-white">
 
-<!-- SVG Icons -->
-<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
-  <defs>
-    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2h-4v-7h-6v7H5a2 2 0 01-2-2V9z"/></symbol>
-    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></symbol>
-    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
-    <symbol id="i-map" viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><path d="M8 2v16M16 6v16"/></symbol>
-    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
-    <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
-    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
-    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></symbol>
-    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
-    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></symbol>
-    <symbol id="i-location" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
-    <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></symbol>
-    <symbol id="i-chart" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></symbol>
-    <symbol id="i-bolt" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
-    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
-    <symbol id="i-label" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></symbol>
-    <symbol id="i-note" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></symbol>
-    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></symbol>
-    <symbol id="i-send" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
-    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></symbol>
-    <symbol id="i-check-square" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></symbol>
-    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></symbol>
-    <symbol id="i-postal" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
-    <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
-    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></symbol>
-    <symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01M12 6h.01M12 10h.01M12 14h.01"/></symbol>
-    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
-    <symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
-    <symbol id="i-excel" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13l6 6M15 13l-6 6"/></symbol>
-    <symbol id="i-pdf" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 15h1.5a1.5 1.5 0 010 3H9v-3zM9 18v-3M15 15h-2v3h2M15 16.5h-1"/></symbol>
-    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></symbol>
-    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
-    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></symbol>
-    <symbol id="i-tasks" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></symbol>
-  </defs>
-</svg>
+    <!-- 3D Canvas Background -->
+    <div id="canvas-container"></div>
 
-<!-- LOGIN SCREEN -->
-<div class="login-wrap" id="loginScreen">
-  <div class="login-card">
-    <div class="login-logo">پ</div>
-    <h1>پست‌یار</h1>
-    <p>سامانه جامع کدگذاری پستی</p>
-    <div class="login-tabs">
-      <button class="active" onclick="switchLoginTab('login',this)">ورود</button>
-      <button onclick="switchLoginTab('signup',this)">ثبت‌نام</button>
-    </div>
-    <div id="loginForm">
-      <div class="field"><label>نام کاربری</label><input id="loginUser" placeholder="نام کاربری" value="admin"></div>
-      <div class="field"><label>رمز عبور</label><input id="loginPass" type="password" placeholder="رمز عبور" value="admin"></div>
-      <button class="btn btn-primary btn-block" onclick="doLogin()"><svg class="icn"><use href="#i-login"/></svg> ورود به سامانه</button>
-      <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--muted)">
-        نسخه نمایشی: admin / admin
-      </div>
-    </div>
-    <div id="signupForm" class="hidden">
-      <div class="field"><label>نام و نام خانوادگی</label><input id="suName" placeholder="نام کامل"></div>
-      <div class="field"><label>نام کاربری</label><input id="suUser" placeholder="نام کاربری"></div>
-      <div class="field"><label>رمز عبور</label><input id="suPass" type="password" placeholder="رمز عبور"></div>
-      <div class="field"><label>سطح دسترسی</label>
-        <select id="suRole">
-          <option value="user">کارشناس کدگذاری</option>
-          <option value="supervisor">سرپرست</option>
-          <option value="admin">مدیر سیستم</option>
-        </select>
-      </div>
-      <button class="btn btn-primary btn-block" onclick="doSignup()"><svg class="icn"><use href="#i-user"/></svg> ثبت‌نام</button>
-    </div>
-  </div>
-</div>
-
-<!-- MAIN APP -->
-<div class="app hidden" id="mainApp">
-  <aside class="desktop-sidebar" aria-label="منوی اصلی دسکتاپ">
-    <div class="ds-brand"><div class="ds-logo">پ</div><div><strong>پست‌یار</strong><small>سامانه کدگذاری پستی</small></div></div>
-    <div class="ds-caption">منوی اصلی</div>
-    <button class="ds-link active" data-nav="home" onclick="nav('home')"><svg class="icn"><use href="#i-home"/></svg><span>داشبورد</span></button>
-    <button class="ds-link" data-nav="projects" onclick="nav('projects')"><svg class="icn"><use href="#i-folder"/></svg><span>پروژه‌ها</span></button>
-    <button class="ds-link" data-nav="postal" onclick="nav('postal')"><svg class="icn"><use href="#i-postal"/></svg><span>کدگذاری پستی</span></button>
-    <button class="ds-link" data-nav="map" onclick="nav('map')"><svg class="icn"><use href="#i-map"/></svg><span>نقشه و پارسل</span></button>
-    <button class="ds-link" data-nav="import" onclick="nav('import')"><svg class="icn"><use href="#i-upload"/></svg><span>ورود و خروج اطلاعات</span></button>
-    <div class="ds-caption">مدیریت اطلاعات</div>
-    <button class="ds-link" data-nav="search" onclick="nav('search')"><svg class="icn"><use href="#i-search"/></svg><span>جستجو</span></button>
-    <button class="ds-link" data-nav="labels" onclick="nav('labels')"><svg class="icn"><use href="#i-label"/></svg><span>لیبل‌ها</span></button>
-    <button class="ds-link" data-nav="tasks" onclick="nav('tasks')"><svg class="icn"><use href="#i-tasks"/></svg><span>کنترل کارها</span></button>
-    <button class="ds-link" data-nav="notes" onclick="nav('notes')"><svg class="icn"><use href="#i-note"/></svg><span>یادداشت‌ها</span></button>
-    <button class="ds-link" data-nav="reports" onclick="nav('reports')"><svg class="icn"><use href="#i-chart"/></svg><span>گزارش‌گیری</span></button>
-    <div class="ds-caption">سیستم</div>
-    <button class="ds-link" data-nav="users" onclick="nav('users')"><svg class="icn"><use href="#i-user"/></svg><span>کاربران</span></button>
-    <button class="ds-link" data-nav="database" onclick="nav('database')"><svg class="icn"><use href="#i-database"/></svg><span>دیتابیس</span></button>
-    <button class="ds-link" data-nav="admin" onclick="nav('admin')"><svg class="icn"><use href="#i-chat"/></svg><span>پشتیبانی</span></button>
-    <div class="ds-bottom"><span class="ds-status"></span><div><strong>سامانه آماده است</strong><small>نسخه مدیریت پست‌یار</small></div></div>
-  </aside>
-
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-logo">پ</div>
-      <div>
-        <div class="brand-name" id="brandName">پست‌یار</div>
-        <div class="brand-caption" id="brandCaption">سامانه کدگذاری پستی</div>
-      </div>
-    </div>
-    <button class="icon-button" onclick="doLogout()" aria-label="خروج">
-      <svg class="icn"><use href="#i-logout"/></svg>
-    </button>
-  </header>
-
-  <div class="pages">
-    <!-- HOME -->
-    <section class="page active" id="page-home">
-      <div class="hero">
-        <h2>خوش آمدید، <span id="helloName">کاربر</span></h2>
-        <p>سامانه جامع کدگذاری پستی، نقشه‌برداری و مدیریت پروژه</p>
-        <div class="hero-badge"><svg class="icn"><use href="#i-bolt"/></svg><span id="heroRole">فاز اول</span></div>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num" id="sProjects">۰</div><div class="stat-lbl">پروژه فعال</div></div>
-        <div class="stat-card"><div class="stat-num" id="sBuildings">۰</div><div class="stat-lbl">ساختمان</div></div>
-        <div class="stat-card"><div class="stat-num" id="sUnits">۰</div><div class="stat-lbl">واحد ثبت‌شده</div></div>
-        <div class="stat-card"><div class="stat-num" id="sParcels">۰</div><div class="stat-lbl">پارسل ترسیم‌شده</div></div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-bolt"/></svg> دسترسی سریع</h2></div>
-        <div class="shortcuts">
-          <button class="shortcut" onclick="nav('projects')"><div class="shortcut-icon sc-yellow"><svg class="icn"><use href="#i-folder"/></svg></div><span class="shortcut-name">پروژه‌ها</span></button>
-          <button class="shortcut" onclick="nav('postal')"><div class="shortcut-icon sc-pink"><svg class="icn"><use href="#i-postal"/></svg></div><span class="shortcut-name">کدگذاری</span></button>
-          <button class="shortcut" onclick="nav('map')"><div class="shortcut-icon sc-green"><svg class="icn"><use href="#i-map"/></svg></div><span class="shortcut-name">نقشه و پارسل</span></button>
-          <button class="shortcut" onclick="nav('import')"><div class="shortcut-icon sc-orange"><svg class="icn"><use href="#i-upload"/></svg></div><span class="shortcut-name">Import/Export</span></button>
-          <button class="shortcut" onclick="nav('labels')"><div class="shortcut-icon sc-purple"><svg class="icn"><use href="#i-label"/></svg></div><span class="shortcut-name">۸ نوع لیبل</span></button>
-          <button class="shortcut" onclick="nav('search')"><div class="shortcut-icon sc-teal"><svg class="icn"><use href="#i-search"/></svg></div><span class="shortcut-name">جستجو</span></button>
-          <button class="shortcut" onclick="nav('tasks')"><div class="shortcut-icon sc-indigo"><svg class="icn"><use href="#i-tasks"/></svg></div><span class="shortcut-name">کنترل کارها</span></button>
-          <button class="shortcut" onclick="nav('notes')"><div class="shortcut-icon sc-blue"><svg class="icn"><use href="#i-note"/></svg></div><span class="shortcut-name">یادداشت</span></button>
-          <button class="shortcut" onclick="nav('users')"><div class="shortcut-icon sc-red"><svg class="icn"><use href="#i-user"/></svg></div><span class="shortcut-name">کاربران</span></button>
-          <button class="shortcut" onclick="nav('reports')"><div class="shortcut-icon sc-slate"><svg class="icn"><use href="#i-chart"/></svg></div><span class="shortcut-name">گزارش‌گیری</span></button>
-          <button class="shortcut" onclick="nav('admin')"><div class="shortcut-icon sc-pink"><svg class="icn"><use href="#i-chat"/></svg></div><span class="shortcut-name">پشتیبانی</span></button>
-          <button class="shortcut" onclick="nav('database')"><div class="shortcut-icon sc-blue"><svg class="icn"><use href="#i-database"/></svg></div><span class="shortcut-name">دیتابیس</span></button>
+    <!-- Top Badge -->
+    <header class="relative z-10 w-full flex justify-center pt-4">
+        <div class="glass-card px-4 py-2 rounded-full flex items-center gap-2 text-xs font-semibold text-slate-700 shadow-sm border border-white/80">
+            <!-- Spinner icon rotating -->
+            <svg class="animate-spin h-4 w-4 text-slate-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>نسخه جدید به زودی</span>
         </div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-folder"/></svg> پروژه‌های اخیر</h2><button class="btn btn-ghost btn-sm" onclick="nav('projects')">همه</button></div>
-        <div id="recentList"></div>
-      </div>
-    </section>
+    </header>
 
-    <!-- PROJECTS -->
-    <section class="page" id="page-projects">
-      <div class="segment" style="margin-top:14px">
-        <button class="active" onclick="switchProjTab('projects',this)">پروژه‌ها</button>
-        <button onclick="switchProjTab('companies',this)">شرکت‌ها</button>
-      </div>
-      <div id="projTab-projects">
-        <div id="projectsList"></div>
-        <div class="empty" id="projectsEmpty">
-          <svg class="icn"><use href="#i-folder"/></svg>
-          <h3>هنوز پروژه‌ای ندارید</h3>
-          <p>اولین پروژه خود را بسازید</p>
-        </div>
-      </div>
-      <div id="projTab-companies" class="hidden">
-        <div id="companiesList"></div>
-        <div class="empty" id="companiesEmpty">
-          <svg class="icn"><use href="#i-building"/></svg>
-          <h3>هنوز شرکتی ثبت نشده</h3>
-          <p>شرکت پیمانکاری خود را اضافه کنید</p>
-        </div>
-      </div>
-      <button class="fab" onclick="openProjectSheet()" aria-label="پروژه جدید"><svg class="icn"><use href="#i-plus"/></svg></button>
-    </section>
-
-    <!-- POSTAL CODING -->
-    <section class="page" id="page-postal">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-postal"/></svg> کدگذاری پستی</h2></div>
-        <div class="field"><label>پروژه</label><select id="postalProject" onchange="renderBlockWidget()"></select></div>
-        
-        <!-- Block Rotation Widget -->
-        <div id="blockWidget"></div>
-        
-        <div class="field"><label>محله</label><input id="postalDistrict" placeholder="نام محله" onchange="renderBlockWidget()"></div>
-        <div class="field"><label>شماره بلوک</label><input id="postalBlock" type="number" min="1" placeholder="شماره بلوک" onchange="renderBlockWidget()"></div>
-        
-        <div class="section-heading" style="margin-top:18px"><h2 class="section-title"><svg class="icn"><use href="#i-building"/></svg> ثبت ساختمان جدید</h2></div>
-        <div class="field"><label>شماره ساختمان (۱ تا ۱۰۰)</label><input id="postalBuildingNo" type="number" min="1" max="100" placeholder="شماره ساختمان"></div>
-        <div class="field"><label>نام ساختمان / مالک</label><input id="postalName" placeholder="نام ساختمان"></div>
-        <div class="field"><label>آدرس کامل</label><textarea id="postalAddress" placeholder="نشانی کامل..."></textarea></div>
-        <div class="field"><label>تعداد واحدها</label><input id="postalUnitCount" type="number" min="1" value="1" placeholder="تعداد واحد"></div>
-        <div class="btn-row">
-          <button class="btn btn-primary" style="flex:1" onclick="saveBuilding()"><svg class="icn"><use href="#i-save"/></svg> ذخیره ساختمان</button>
-          <button class="btn btn-outline" style="flex:1" onclick="autoNextBuilding()"><svg class="icn"><use href="#i-bolt"/></svg> خودکار بعدی</button>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-building"/></svg> ساختمان‌های ثبت‌شده</h2><span class="btn btn-sm btn-ghost" id="buildingsCount">۰</span></div>
-        <div id="buildingsList"></div>
-      </div>
-    </section>
-
-    <!-- MAP -->
-    <section class="page" id="page-map">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-map"/></svg> نقشه و ترسیم پارسل</h2></div>
-        <div class="field"><label>پروژه</label><select id="mapProject" onchange="renderDrawings()"></select></div>
-        <div class="map-tools">
-          <button class="map-tool active" data-tool="select"><svg class="icn"><use href="#i-location"/></svg> انتخاب</button>
-          <button class="map-tool" data-tool="marker"><svg class="icn"><use href="#i-location"/></svg> نقطه</button>
-          <button class="map-tool" data-tool="polygon"><svg class="icn"><use href="#i-square"/></svg> پارسل</button>
-          <button class="map-tool" onclick="finishDrawing()"><svg class="icn"><use href="#i-check"/></svg> پایان</button>
-          <button class="map-tool" onclick="undoDraw()"><svg class="icn"><use href="#i-undo"/></svg></button>
-          <button class="map-tool" onclick="clearDraw()"><svg class="icn"><use href="#i-close"/></svg></button>
-          <button class="map-tool" onclick="exportKML()"><svg class="icn"><use href="#i-download"/></svg> KML</button>
-        </div>
-        <div id="map"></div>
-        <div style="display:flex;justify-content:space-between;padding:10px 4px;font-size:11px;color:var(--muted)">
-          <span id="mapStatus">حالت انتخاب</span>
-          <span id="coordStatus">—</span>
-        </div>
-        <button class="btn btn-primary btn-block" style="margin-top:10px" onclick="finishDrawing()"><svg class="icn"><use href="#i-save"/></svg> ذخیره ترسیم</button>
-        <div class="section-heading" style="margin-top:18px"><h2 class="section-title">پارسل‌های ترسیم‌شده</h2></div>
-        <div id="parcelsList"></div>
-      </div>
-    </section>
-
-    <!-- IMPORT/EXPORT -->
-    <section class="page" id="page-import">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-upload"/></svg> مرحله ۱ — آپلود فایل</h2></div>
-        <div class="drop-zone" id="dropZone">
-          <svg class="icn"><use href="#i-upload"/></svg>
-          <h3>فایل را انتخاب کنید</h3>
-          <p>PDF · XLSX · XLS · CSV<br>یا فایل را اینجا رها کنید</p>
-          <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()"><svg class="icn"><use href="#i-file"/></svg> انتخاب فایل</button>
-          <input type="file" id="fileInput" accept=".pdf,.xlsx,.xls,.csv" hidden>
-        </div>
-        <div class="hidden" id="filePreview" style="margin-top:14px;padding:14px;background:#fff;border-radius:var(--radius-md);border:1px solid var(--border);box-shadow:var(--shadow-md)">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-            <div class="info-card-icon bg-blue"><svg class="icn"><use href="#i-file"/></svg></div>
-            <div style="flex:1;min-width:0">
-              <div id="fileName" style="font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
-              <div id="fileSize" style="color:var(--muted);font-size:11px"></div>
+    <!-- Center Interactive Mobile Typography -->
+    <main class="relative z-10 w-full max-w-sm my-auto text-center pointer-events-none">
+        <div class="glass-card p-6 sm:p-8 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-3">
+            
+            <!-- Animated Spinner Circle Icon -->
+            <div class="relative flex items-center justify-center w-14 h-14 mb-1">
+                <div class="absolute inset-0 rounded-full border-2 border-slate-200 border-t-slate-900 animate-spin"></div>
+                <div class="w-8 h-8 rounded-full bg-slate-900/5 backdrop-blur-sm flex items-center justify-center">
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-900 animate-ping"></span>
+                </div>
             </div>
-            <button class="icon-button" onclick="cancelFile()"><svg class="icn"><use href="#i-close"/></svg></button>
-          </div>
-          <div class="progress"><span id="progressBar"></span></div>
-          <div id="extractStatus" style="font-size:12px;color:var(--muted);margin-bottom:12px">آماده پردازش</div>
-          <button class="btn btn-primary btn-block" onclick="extractFile(event)"><svg class="icn"><use href="#i-bolt"/></svg> استخراج اطلاعات</button>
+
+            <!-- Main Heading: In Development -->
+            <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-snug">
+                در حال توسعه
+            </h1>
+
+            <p class="text-xs sm:text-sm text-slate-500 font-medium">
+                <span id="typed-text" class="typing-cursor"></span>
+            </p>
         </div>
-      </div>
-      <div id="editSection" class="hidden">
-        <div class="section">
-          <div class="section-heading"><h2 class="section-title">مرحله ۲ — ویرایش جدول</h2><span class="btn btn-sm btn-ghost" id="editCount">۰</span></div>
-          <div class="field"><label>پروژه مقصد</label><select id="importProject"></select></div>
-          <div class="edit-grid-wrap">
-            <table class="edit-grid">
-              <thead><tr><th>ردیف</th><th>کد پستی</th><th>شماره ساختمان</th><th>نام / محل</th><th>آدرس</th><th>واحد</th><th>وضعیت</th><th>—</th></tr></thead>
-              <tbody id="editBody"></tbody>
-            </table>
-          </div>
-          <div class="btn-row" style="margin-top:14px">
-            <button class="btn btn-outline btn-sm" onclick="addRow()"><svg class="icn"><use href="#i-plus"/></svg> ردیف</button>
-            <button class="btn btn-outline btn-sm" onclick="clearRows()"><svg class="icn"><use href="#i-trash"/></svg> پاک کردن</button>
-          </div>
-          <div class="section-heading" style="margin-top:18px"><h2 class="section-title">ذخیره و خروجی</h2></div>
-          <button class="btn btn-success btn-block" onclick="saveRowsToProject()"><svg class="icn"><use href="#i-save"/></svg> ذخیره در پروژه</button>
-          <div class="btn-row" style="margin-top:10px">
-            <button class="btn btn-outline btn-sm" style="flex:1" onclick="exportEditedExcel()"><svg class="icn"><use href="#i-excel"/></svg> Excel</button>
-            <button class="btn btn-outline btn-sm" style="flex:1" onclick="exportEditedPdf()"><svg class="icn"><use href="#i-pdf"/></svg> PDF</button>
-            <button class="btn btn-outline btn-sm" style="flex:1" onclick="printEdited()"><svg class="icn"><use href="#i-printer"/></svg> چاپ</button>
-          </div>
-        </div>
-      </div>
-    </section>
+    </main>
 
-    <!-- LABELS -->
-    <section class="page" id="page-labels">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-label"/></svg> ۸ نوع لیبل</h2><span class="btn btn-sm btn-ghost">بند ۱۶</span></div>
-        <div class="field"><label>پروژه</label><select id="labelProject" onchange="renderLabelPreview()"></select></div>
-        <div class="label-tabs" id="labelTabs"></div>
-        <div class="label-preview" id="labelPreview"></div>
-        <div class="btn-row" style="margin-top:14px">
-          <button class="btn btn-primary" style="flex:1" onclick="printLabels()"><svg class="icn"><use href="#i-printer"/></svg> چاپ لیبل</button>
-          <button class="btn btn-success" style="flex:1" onclick="pdfLabels()"><svg class="icn"><use href="#i-pdf"/></svg> PDF</button>
-        </div>
-      </div>
-    </section>
+    <!-- Bottom Minimalism Hint -->
+    <footer class="relative z-10 pb-4 text-center text-[11px] text-slate-400 font-medium">
+        <span>به زودی با تجربه‌ای متفاوت می‌آییم ✨</span>
+    </footer>
 
-    <!-- SEARCH -->
-    <section class="page" id="page-search">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-search"/></svg> جستجو</h2></div>
-        <div class="search-box">
-          <input id="searchInput" placeholder="کد پستی، نام ساختمان، آدرس..." oninput="doSearch()">
-          <svg class="icn"><use href="#i-search"/></svg>
-        </div>
-        <div class="field"><label>فیلتر پروژه</label><select id="searchProject" onchange="doSearch()"><option value="">همه پروژه‌ها</option></select></div>
-        <div id="searchResults"></div>
-      </div>
-    </section>
+    <script>
+        let scene, camera, renderer, particles, sphereGroup;
+        let mainSphere, wireSphere, innerGlowSphere;
+        let targetX = 0, targetY = 0;
+        let touchStartX = 0, touchStartY = 0;
 
-    <!-- USERS -->
-    <section class="page" id="page-users">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-user"/></svg> مدیریت کاربران</h2></div>
-        <div id="usersList"></div>
-        <div class="empty" id="usersEmpty">
-          <svg class="icn"><use href="#i-user"/></svg>
-          <h3>کاربری ثبت نشده</h3>
-          <p>اولین کاربر را اضافه کنید</p>
-        </div>
-      </div>
-      <button class="fab" onclick="openUserSheet()" aria-label="کاربر جدید"><svg class="icn"><use href="#i-plus"/></svg></button>
-    </section>
+        function init3D() {
+            const container = document.getElementById('canvas-container');
 
-    <!-- REPORTS -->
-    <section class="page" id="page-reports">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-chart"/></svg> گزارش‌گیری</h2></div>
-        <div class="field"><label>نوع گزارش</label>
-          <select id="reportType">
-            <option value="project">گزارش پروژه</option>
-            <option value="postal">گزارش کدگذاری پستی</option>
-            <option value="user">گزارش عملکرد کاربران</option>
-            <option value="daily">گزارش روزانه</option>
-          </select>
-        </div>
-        <div class="field"><label>از تاریخ</label><input id="reportFrom" placeholder="۱۴۰۳/۰۱/۰۱"></div>
-        <div class="field"><label>تا تاریخ</label><input id="reportTo" placeholder="۱۴۰۳/۱۲/۲۹"></div>
-        <button class="btn btn-primary btn-block" onclick="generateReport()"><svg class="icn"><use href="#i-chart"/></svg> تولید گزارش</button>
-        <div id="reportResult" style="margin-top:16px"></div>
-      </div>
-    </section>
+            // 1. Scene & Camera Setup
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0xf8fafc, 0.025);
 
-    <!-- NOTES -->
-    <section class="page" id="page-notes">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-note"/></svg> یادداشت جدید</h2></div>
-        <div class="field"><label>عنوان</label><input id="noteTitle" placeholder="عنوان یادداشت"></div>
-        <div class="field"><label>متن</label><textarea id="noteContent" placeholder="متن یادداشت..."></textarea></div>
-        <button class="btn btn-primary btn-block" onclick="addNote()"><svg class="icn"><use href="#i-plus"/></svg> افزودن یادداشت</button>
-      </div>
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title">یادداشت‌های من</h2></div>
-        <div id="notesList"></div>
-      </div>
-    </section>
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 18;
 
-    <!-- ADMIN / SUPPORT -->
-    <section class="page" id="page-admin">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-chat"/></svg> پشتیبانی و ادمین</h2></div>
-        <div class="field"><label>موضوع</label><input id="adminSubject" placeholder="موضوع درخواست"></div>
-        <div class="field"><label>متن پیام</label><textarea id="adminMessage" placeholder="توضیحات..."></textarea></div>
-        <div class="field"><label>اولویت</label><select id="adminPriority"><option value="عادی">عادی</option><option value="مهم">مهم</option><option value="فوری">فوری</option></select></div>
-        <button class="btn btn-primary btn-block" onclick="sendToAdmin()"><svg class="icn"><use href="#i-send"/></svg> ارسال پیام</button>
-      </div>
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title">پیام‌های من</h2></div>
-        <div id="adminChat"></div>
-      </div>
-    </section>
+            // 2. Renderer with High DPR for crisp look on Mobile screens
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
 
-    <!-- TASKS -->
-    <section class="page" id="page-tasks">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-tasks"/></svg> کنترل کارها</h2></div>
-        <div class="field"><label>کار جدید</label><input id="taskTitle" placeholder="عنوان کار"></div>
-        <div class="field"><label>توضیحات</label><input id="taskDesc" placeholder="توضیحات (اختیاری)"></div>
-        <button class="btn btn-primary btn-block" onclick="addTask()"><svg class="icn"><use href="#i-plus"/></svg> افزودن کار</button>
-      </div>
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title">لیست کارها</h2><span class="btn btn-sm btn-ghost" id="taskCount">۰</span></div>
-        <div id="taskList"></div>
-      </div>
-    </section>
+            // 3. Lighting (Soft white studio lighting)
+            const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+            scene.add(ambientLight);
 
-    <!-- DATABASE -->
-    <section class="page" id="page-database">
-      <div class="section">
-        <div class="section-heading"><h2 class="section-title"><svg class="icn"><use href="#i-database"/></svg> دیتابیس</h2></div>
-        <div id="dbStats"></div>
-        <div class="section-heading" style="margin-top:18px">
-          <h2 class="section-title">نمایش داده‌ها</h2>
-          <button class="btn btn-ghost btn-sm" onclick="refreshDb()"><svg class="icn"><use href="#i-undo"/></svg> بروزرسانی</button>
-        </div>
-        <pre class="db-json" id="dbView" style="background:#0f172a;color:#94a3b8;border-radius:12px;padding:14px;font-family:'Courier New',monospace;font-size:10.5px;line-height:1.7;max-height:300px;overflow:auto;white-space:pre-wrap;word-break:break-all;direction:ltr;text-align:left">—</pre>
-      </div>
-    </section>
-  </div>
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
+            dirLight1.position.set(10, 20, 15);
+            scene.add(dirLight1);
 
-  <div class="bottom-nav-wrap">
-    <nav class="bottom-nav">
-      <button class="nav-item active" data-nav="home"><svg class="icn"><use href="#i-home"/></svg><span>خانه</span></button>
-      <button class="nav-item" data-nav="postal"><svg class="icn"><use href="#i-postal"/></svg><span>کدگذاری</span></button>
-      <button class="nav-item" data-nav="map"><svg class="icn"><use href="#i-map"/></svg><span>نقشه</span></button>
-      <button class="nav-item" data-nav="projects"><svg class="icn"><use href="#i-folder"/></svg><span>پروژه</span></button>
-      <button class="nav-item" data-nav="import"><svg class="icn"><use href="#i-upload"/></svg><span>Import</span></button>
-    </nav>
-  </div>
-</div>
+            const dirLight2 = new THREE.DirectionalLight(0xe2e8f0, 0.8);
+            dirLight2.position.set(-10, -10, -10);
+            scene.add(dirLight2);
 
-<div class="toast" id="toast"></div>
+            // 4. Create Interactive Morphing 3D Sphere Group
+            sphereGroup = new THREE.Group();
 
-<div class="modal-backdrop" id="modalBackdrop" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-heading">
-      <div class="modal-icon" id="modalIcon"><svg class="icn"><use href="#i-folder"/></svg></div>
-      <div><h3 class="modal-title" id="modalTitle">—</h3><p class="modal-subtitle" id="modalSubtitle">—</p></div>
-    </div>
-    <div id="modalBody"></div>
-    <div id="modalActions"></div>
-  </div>
-</div>
+            // Core Glassy Geometric Sphere
+            const sphereGeo = new THREE.IcosahedronGeometry(5.2, 4);
+            const sphereMat = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                emissive: 0xf1f5f9,
+                shininess: 100,
+                flatShading: true,
+                transparent: true,
+                opacity: 0.9
+            });
+            mainSphere = new THREE.Mesh(sphereGeo, sphereMat);
+            sphereGroup.add(mainSphere);
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tokml@0.4.0/tokml.min.js"></script>
+            // Outer Wireframe Dynamic Sphere
+            const wireGeo = new THREE.IcosahedronGeometry(5.6, 2);
+            const wireMat = new THREE.MeshBasicMaterial({
+                color: 0xcbd5e1,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.45
+            });
+            wireSphere = new THREE.Mesh(wireGeo, wireMat);
+            sphereGroup.add(wireSphere);
 
-<script>
-(function(){
-'use strict';
+            // Inner Soft White Core
+            const innerGeo = new THREE.SphereGeometry(3.2, 32, 32);
+            const innerMat = new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.7
+            });
+            innerGlowSphere = new THREE.Mesh(innerGeo, innerMat);
+            sphereGroup.add(innerGlowSphere);
 
-var $=function(s){return document.querySelector(s)};
-var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
-var fa=function(n){return Number(n||0).toLocaleString('fa-IR')};
-var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
-var now=function(){return new Date().toLocaleDateString('fa-IR')};
-var nowFull=function(){return new Date().toLocaleString('fa-IR')};
-var todayJ=function(){var d=new Date();return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')};
-var uid=function(p){return p+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)};
+            scene.add(sphereGroup);
 
-var KEY='postyar_v4';
-var state={
-  auth:null,
-  users:[{id:'U-001',name:'مدیر سیستم',user:'admin',pass:'admin',role:'admin',created:now()}],
-  companies:[],
-  projects:[],
-  buildings:[],
-  units:[],
-  parcels:[],
-  drawings:[],
-  notes:[],
-  adminMsgs:[],
-  tasks:[],
-  nextCompany:1,nextP:1,nextB:1,nextU:1,nextParcel:1,nextUser:2
-};
+            // 5. Floating Dust Particles around the Ball
+            const particleCount = 400;
+            const particleGeo = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
 
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state));return true}catch(e){toast('حافظه پر است','error');return false}}
-function load(){try{var x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&Array.isArray(x.projects))state=Object.assign(state,x)}catch(e){}}
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 50;
+                positions[i + 1] = (Math.random() - 0.5) * 50;
+                positions[i + 2] = (Math.random() - 0.5) * 50;
+            }
 
-var toastTimer=null;
-function toast(msg,type){
-  type=type||'';
-  var el=$('#toast');
-  var icon=type==='success'?'#i-check':type==='error'?'#i-close':'#i-info';
-  el.innerHTML='<svg class="icn"><use href="'+icon+'"/></svg><span>'+esc(msg)+'</span>';
-  el.className='toast show '+type;
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(function(){el.className='toast '+type},3000);
-}
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-/* ===== LOGIN ===== */
-function switchLoginTab(tab,btn){
-  $$('.login-tabs button').forEach(function(b){b.classList.toggle('active',b===btn)});
-  $('#loginForm').classList.toggle('hidden',tab!=='login');
-  $('#signupForm').classList.toggle('hidden',tab!=='signup');
-}
-function doLogin(){
-  var u=$('#loginUser').value.trim();
-  var p=$('#loginPass').value.trim();
-  if(!u||!p)return toast('نام کاربری و رمز عبور را وارد کنید','error');
-  var user=state.users.find(function(x){return x.user===u&&x.pass===p});
-  if(!user)return toast('نام کاربری یا رمز عبور اشتباه است','error');
-  state.auth=user.id;
-  save();
-  showApp();
-  toast('خوش آمدید '+user.name,'success');
-}
-function doSignup(){
-  var name=$('#suName').value.trim();
-  var user=$('#suUser').value.trim();
-  var pass=$('#suPass').value.trim();
-  var role=$('#suRole').value;
-  if(!name||!user||!pass)return toast('همه فیلدها را پر کنید','error');
-  if(state.users.some(function(x){return x.user===user}))return toast('نام کاربری تکراری است','error');
-  var u={id:'U-'+String(state.nextUser++).padStart(3,'0'),name:name,user:user,pass:pass,role:role,created:now()};
-  state.users.push(u);
-  state.auth=u.id;
-  save();
-  showApp();
-  toast('ثبت‌نام با موفقیت انجام شد','success');
-}
-function doLogout(){
-  if(!confirm('از حساب خارج می‌شوید؟'))return;
-  state.auth=null;
-  save();
-  $('#mainApp').classList.add('hidden');
-  $('#loginScreen').style.display='flex';
-  toast('خارج شدید');
-}
-function currentUser(){return state.users.find(function(u){return u.id===state.auth})||state.users[0]}
-function showApp(){
-  $('#loginScreen').style.display='none';
-  $('#mainApp').classList.remove('hidden');
-  var u=currentUser();
-  $('#helloName').textContent=u.name;
-  var roles={admin:'مدیر سیستم',supervisor:'سرپرست',user:'کارشناس'};
-  $('#heroRole').textContent=roles[u.role]||'کاربر';
-  updateStats();
-  renderHome();
-}
+            // Soft White Particle Texture
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+            grad.addColorStop(0, 'rgba(255,255,255,1)');
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 32, 32);
 
-/* ===== NAV ===== */
-var pageTitles={
-  home:['پست‌یار','داشبورد'],
-  projects:['پروژه‌ها','مدیریت پروژه'],
-  postal:['کدگذاری پستی','ثبت ساختمان و واحد'],
-  map:['نقشه و پارسل','ترسیم محدوده'],
-  import:['Import / Export','ورود و خروج داده'],
-  labels:['۸ نوع لیبل','چاپ لیبل'],
-  search:['جستجو','جستجوی کد پستی'],
-  users:['کاربران','مدیریت کاربران'],
-  reports:['گزارش‌گیری','تولید گزارش'],
-  notes:['یادداشت','یادداشت روزانه'],
-  admin:['پشتیبانی','ارتباط با ادمین'],
-  tasks:['کنترل کارها','مدیریت وظایف'],
-  database:['دیتابیس','نمایش داده‌ها']
-};
-function nav(page){
-  if(!$('#page-'+page))return;
-  $$('.page').forEach(function(p){p.classList.toggle('active',p.id==='page-'+page)});
-  $$('.nav-item').forEach(function(b){b.classList.toggle('active',b.dataset.nav===page)});
-  $$('.ds-link').forEach(function(b){b.classList.toggle('active',b.dataset.nav===page)});
-  var t=pageTitles[page]||['پست‌یار','سامانه'];
-  $('#brandName').textContent=t[0];
-  $('#brandCaption').textContent=t[1];
-  if(page==='home')renderHome();
-  if(page==='projects')renderProjectsPage();
-  if(page==='postal'){fillProjectSelect('#postalProject');renderBlockWidget();renderBuildingsList()}
-  if(page==='map'){fillProjectSelect('#mapProject');setTimeout(initMap,150);renderDrawings()}
-  if(page==='import')fillProjectSelect('#importProject');
-  if(page==='labels'){fillProjectSelect('#labelProject');renderLabelTabs()}
-  if(page==='search')fillProjectSelect('#searchProject');
-  if(page==='users')renderUsers();
-  if(page==='notes')renderNotes();
-  if(page==='admin')renderAdminChat();
-  if(page==='tasks')renderTasks();
-  if(page==='database')refreshDb();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-$$('.nav-item').forEach(function(b){b.onclick=function(){nav(b.dataset.nav)}});
-$$('.ds-link').forEach(function(b){b.onclick=function(){nav(b.dataset.nav)}});
+            const pTexture = new THREE.CanvasTexture(canvas);
 
-function updateStats(){
-  $('#sProjects').textContent=fa(state.projects.length);
-  $('#sBuildings').textContent=fa(state.buildings.length);
-  $('#sUnits').textContent=fa(state.units.length);
-  $('#sParcels').textContent=fa(state.drawings.length);
-}
+            const particleMat = new THREE.PointsMaterial({
+                color: 0xcbd5e1,
+                size: 0.6,
+                map: pTexture,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
 
-/* ===== MODAL ===== */
-function openModal(title,subtitle,body,actions,iconId){
-  $('#modalTitle').textContent=title;
-  $('#modalSubtitle').textContent=subtitle||'';
-  $('#modalBody').innerHTML=body;
-  $('#modalActions').innerHTML=actions||'';
-  if(iconId)$('#modalIcon').innerHTML='<svg class="icn"><use href="#'+iconId+'"/></svg>';
-  $('#modalBackdrop').classList.add('open');
-}
-function closeModal(){$('#modalBackdrop').classList.remove('open')}
+            particles = new THREE.Points(particleGeo, particleMat);
+            scene.add(particles);
 
-/* ===== HOME ===== */
-function renderHome(){
-  var r=$('#recentList');
-  if(!state.projects.length){
-    r.innerHTML='<div class="empty visible"><svg class="icn"><use href="#i-folder"/></svg><h3>هنوز پروژه‌ای ندارید</h3><p>اولین پروژه خود را بسازید</p><button class="btn btn-primary" onclick="openProjectSheet()"><svg class="icn"><use href="#i-plus"/></svg> پروژه جدید</button></div>';
-    return;
-  }
-  r.innerHTML=state.projects.slice(0,4).map(function(p){
-    var cnt=state.buildings.filter(function(x){return x.projectId===p.id}).length;
-    return '<div class="info-card" onclick="openProject(\''+p.id+'\')"><div class="info-card-icon bg-yellow"><svg class="icn" style="color:#fff"><use href="#i-folder"/></svg></div><div class="info-card-body"><strong>'+esc(p.name)+'</strong><small>'+esc(p.area||'—')+' · '+fa(cnt)+' ساختمان</small></div><div class="info-card-arrow"><svg class="icn"><use href="#i-chevron"/></svg></div></div>';
-  }).join('');
-}
+            // 6. Mobile & Desktop Interaction Listeners
+            window.addEventListener('resize', onWindowResize, false);
+            
+            // Touch control for Mobile
+            window.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 0) {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }
+            }, { passive: true });
 
-/* ===== PROJECTS ===== */
-function switchProjTab(tab,btn){
-  $$('#page-projects .segment button').forEach(function(b){b.classList.toggle('active',b===btn)});
-  $('#projTab-projects').classList.toggle('hidden',tab!=='projects');
-  $('#projTab-companies').classList.toggle('hidden',tab!=='companies');
-  if(tab==='companies')renderCompanies();
-}
-function renderProjectsPage(){renderProjectsList();renderCompanies();}
-function renderProjectsList(){
-  var list=$('#projectsList');
-  if(!state.projects.length){list.innerHTML='';$('#projectsEmpty').classList.add('visible')}
-  else{
-    $('#projectsEmpty').classList.remove('visible');
-    list.innerHTML=state.projects.map(function(p){
-      var cnt=state.buildings.filter(function(x){return x.projectId===p.id}).length;
-      var comp=state.companies.find(function(c){return c.id===p.companyId});
-      return '<div class="info-card" onclick="openProject(\''+p.id+'\')"><div class="info-card-icon bg-yellow"><svg class="icn" style="color:#fff"><use href="#i-folder"/></svg></div><div class="info-card-body"><strong>'+esc(p.name)+'</strong><small>'+esc(p.area||'—')+' · '+fa(cnt)+' ساختمان'+(comp?' · '+esc(comp.name):'')+'</small></div><div class="info-card-arrow"><svg class="icn"><use href="#i-chevron"/></svg></div></div>';
-    }).join('');
-  }
-}
-function renderCompanies(){
-  var list=$('#companiesList');
-  if(!state.companies.length){list.innerHTML='';$('#companiesEmpty').classList.add('visible');return}
-  $('#companiesEmpty').classList.remove('visible');
-  list.innerHTML=state.companies.map(function(c){
-    var pcount=state.projects.filter(function(p){return p.companyId===c.id}).length;
-    return '<div class="info-card" onclick="openCompany(\''+c.id+'\')"><div class="info-card-icon bg-purple"><svg class="icn" style="color:#fff"><use href="#i-building"/></svg></div><div class="info-card-body"><strong>'+esc(c.name)+'</strong><small>'+esc(c.manager||'—')+' · '+fa(pcount)+' پروژه</small></div><div class="info-card-arrow"><svg class="icn"><use href="#i-chevron"/></svg></div></div>';
-  }).join('');
-}
-function openProjectSheet(project){
-  var p=project||{};
-  var companiesOpts=state.companies.map(function(c){return '<option value="'+c.id+'" '+(p.companyId===c.id?'selected':'')+'>'+esc(c.name)+'</option>'}).join('')||'<option value="">— شرکتی ثبت نشده —</option>';
-  openModal(
-    project?'ویرایش پروژه':'پروژه جدید',
-    'اطلاعات پروژه',
-    '<div class="field"><label>نام پروژه *</label><input id="pName" value="'+esc(p.name||'')+'" placeholder="نام پروژه"></div>'+
-    '<div class="field"><label>شرکت پیمانکاری</label><select id="pCompany">'+companiesOpts+'</select></div>'+
-    '<div class="field"><label>منطقه / شهر</label><input id="pArea" value="'+esc(p.area||'')+'" placeholder="منطقه"></div>'+
-    '<div class="field"><label>شماره فرم</label><input id="pFormNo" value="'+esc(p.formNo||'')+'" placeholder="۳۲۷۳"></div>'+
-    '<div class="field"><label>تاریخ</label><input id="pDate" value="'+esc(p.date||todayJ())+'"></div>',
-    '<button class="btn btn-primary btn-block" onclick="saveProject('+(project?"'"+project.id+"'":'null')+')"><svg class="icn"><use href="#i-save"/></svg> ذخیره</button>',
-    'i-folder'
-  );
-  setTimeout(function(){var el=$('#pName');if(el)el.focus()},300);
-}
-function saveProject(id){
-  var name=$('#pName').value.trim();
-  if(!name)return toast('نام پروژه را وارد کنید','error');
-  var obj={name:name,companyId:$('#pCompany').value,area:$('#pArea').value.trim(),formNo:$('#pFormNo').value.trim(),date:$('#pDate').value.trim()||todayJ(),updated:now()};
-  if(id){var p=state.projects.find(function(x){return x.id===id});if(p)Object.assign(p,obj)}
-  else{obj.id='PRJ-'+String(state.nextP++).padStart(3,'0');obj.created=now();state.projects.unshift(obj)}
-  save();closeModal();renderProjectsPage();renderHome();updateStats();
-  toast('ذخیره شد','success');
-}
-function openProject(id){
-  var p=state.projects.find(function(x){return x.id===id});
-  if(!p)return;
-  var bc=state.buildings.filter(function(x){return x.projectId===id}).length;
-  var uc=state.units.filter(function(u){var b=state.buildings.find(function(x){return x.id===u.buildingId});return b&&b.projectId===id}).length;
-  openModal(p.name,'مدیریت پروژه',
-    '<div class="stats-grid" style="padding:0;margin-bottom:14px">'+
-      '<div class="stat-card"><div class="stat-num">'+fa(bc)+'</div><div class="stat-lbl">ساختمان</div></div>'+
-      '<div class="stat-card"><div class="stat-num">'+fa(uc)+'</div><div class="stat-lbl">واحد</div></div>'+
-    '</div>'+
-    '<div class="info-card" onclick="closeModal();setTimeout(function(){openProjectSheet(state.projects.find(function(x){return x.id===\''+id+'\'}))},200)"><div class="info-card-icon bg-orange"><svg class="icn" style="color:#fff"><use href="#i-edit"/></svg></div><div class="info-card-body"><strong>ویرایش پروژه</strong></div></div>'+
-    '<div class="info-card" style="background:#fef2f2;border-color:#fecaca" onclick="deleteProject(\''+id+'\')"><div class="info-card-icon bg-red"><svg class="icn" style="color:#fff"><use href="#i-trash"/></svg></div><div class="info-card-body"><strong class="text-red">حذف پروژه</strong></div></div>','','i-folder');
-}
-function deleteProject(id){
-  var p=state.projects.find(function(x){return x.id===id});
-  if(!p)return;
-  if(!confirm('پروژه «'+p.name+'» حذف شود؟'))return;
-  state.projects=state.projects.filter(function(x){return x.id!==id});
-  state.buildings=state.buildings.filter(function(x){return x.projectId!==id});
-  state.drawings=state.drawings.filter(function(x){return x.projectId!==id});
-  save();closeModal();renderProjectsPage();renderHome();updateStats();
-  toast('حذف شد','success');
-}
-function openCompany(id){
-  var c=state.companies.find(function(x){return x.id===id});
-  if(!c)return;
-  var pc=state.projects.filter(function(p){return p.companyId===id}).length;
-  openModal(c.name,'شرکت پیمانکاری',
-    '<div class="stats-grid" style="padding:0;margin-bottom:14px">'+
-      '<div class="stat-card"><div class="stat-num">'+fa(pc)+'</div><div class="stat-lbl">پروژه</div></div>'+
-    '</div>'+
-    '<div class="info-card" onclick="closeModal();setTimeout(function(){openCompanySheet(state.companies.find(function(x){return x.id===\''+id+'\'}))},200)"><div class="info-card-icon bg-orange"><svg class="icn" style="color:#fff"><use href="#i-edit"/></svg></div><div class="info-card-body"><strong>ویرایش شرکت</strong></div></div>'+
-    '<div class="info-card" style="background:#fef2f2;border-color:#fecaca" onclick="deleteCompany(\''+id+'\')"><div class="info-card-icon bg-red"><svg class="icn" style="color:#fff"><use href="#i-trash"/></svg></div><div class="info-card-body"><strong class="text-red">حذف شرکت</strong></div></div>','','i-building');
-}
-function openCompanySheet(c){
-  c=c||{};
-  openModal(c.id?'ویرایش شرکت':'شرکت جدید','اطلاعات شرکت پیمانکاری',
-    '<div class="field"><label>نام شرکت *</label><input id="cName" value="'+esc(c.name||'')+'" placeholder="نام شرکت"></div>'+
-    '<div class="field"><label>نام مدیر</label><input id="cManager" value="'+esc(c.manager||'')+'" placeholder="نام مدیر"></div>'+
-    '<div class="field"><label>شماره تماس</label><input id="cPhone" value="'+esc(c.phone||'')+'" placeholder="۰۲۱..."></div>'+
-    '<div class="field"><label>آدرس</label><textarea id="cAddress">'+esc(c.address||'')+'</textarea></div>',
-    '<button class="btn btn-primary btn-block" onclick="saveCompany('+(c.id?"'"+c.id+"'":'null')+')"><svg class="icn"><use href="#i-save"/></svg> ذخیره</button>',
-    'i-building'
-  );
-}
-function saveCompany(id){
-  var name=$('#cName').value.trim();
-  if(!name)return toast('نام شرکت را وارد کنید','error');
-  var obj={name:name,manager:$('#cManager').value.trim(),phone:$('#cPhone').value.trim(),address:$('#cAddress').value.trim(),updated:now()};
-  if(id){var c=state.companies.find(function(x){return x.id===id});if(c)Object.assign(c,obj)}
-  else{obj.id='CMP-'+String(state.nextCompany++).padStart(3,'0');obj.created=now();state.companies.unshift(obj)}
-  save();closeModal();renderCompanies();
-  toast('ذخیره شد','success');
-}
-function deleteCompany(id){
-  if(!confirm('شرکت حذف شود؟'))return;
-  state.companies=state.companies.filter(function(c){return c.id!==id});
-  save();closeModal();renderCompanies();
-  toast('حذف شد','success');
-}
-function fillProjectSelect(selector){
-  var el=$(selector);if(!el)return;
-  var cur=el.value;
-  var opts='<option value="">همه پروژه‌ها</option>';
-  if(selector==='#postalProject'||selector==='#importProject'||selector==='#labelProject')opts='';
-  opts+=state.projects.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+'</option>'}).join('');
-  if(!state.projects.length)opts='<option value="">— پروژه‌ای نیست —</option>';
-  el.innerHTML=opts;
-  if(cur&&Array.prototype.some.call(el.options,function(o){return o.value===cur}))el.value=cur;
-}
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    const deltaX = (e.touches[0].clientX - touchStartX) * 0.005;
+                    const deltaY = (e.touches[0].clientY - touchStartY) * 0.005;
+                    targetX += deltaX;
+                    targetY += deltaY;
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }
+            }, { passive: true });
 
-/* ===== BLOCK ROTATION LOGIC (1-100) ===== */
-function renderBlockWidget(){
-  var projectId=$('#postalProject').value;
-  var district=$('#postalDistrict').value.trim();
-  var blockNo=$('#postalBlock').value;
-  var w=$('#blockWidget');
-  if(!projectId||!district||!blockNo){w.innerHTML='';return}
-  var buildings=state.buildings.filter(function(b){return b.projectId===projectId&&b.district===district&&String(b.blockNo)===String(blockNo)});
-  var usedNumbers=buildings.map(function(b){return Number(b.buildingNo)});
-  var next=1;
-  for(var i=1;i<=100;i++){if(usedNumbers.indexOf(i)===-1){next=i;break}}
-  var count=buildings.length;
-  var progress=Math.round(count/100*100);
-  var isComplete=count>=100;
-  w.innerHTML='<div class="block-widget">'+
-    '<div class="bw-row">'+
-      '<div class="bw-item"><div class="bw-num">'+fa(blockNo)+'</div><div class="bw-lbl">شماره بلوک</div></div>'+
-      '<div class="bw-sep"></div>'+
-      '<div class="bw-item"><div class="bw-num">'+fa(count)+'</div><div class="bw-lbl">ثبت‌شده</div></div>'+
-      '<div class="bw-sep"></div>'+
-      '<div class="bw-item"><div class="bw-num">'+(isComplete?'✓':fa(next))+'</div><div class="bw-lbl">'+(isComplete?'کامل':'شماره بعدی')+'</div></div>'+
-    '</div>'+
-    '<div class="bw-progress"><span style="width:'+progress+'%"></span></div>'+
-    '<div class="bw-hint">'+(isComplete?'⚠️ بلوک کامل شد. بلوک بعدی را شروع کنید.':'محله: '+esc(district)+' — پیشرفت: '+fa(count)+' از ۱۰۰')+'</div>'+
-  '</div>';
-}
+            // Mouse control for Desktop/Testing
+            window.addEventListener('mousemove', (e) => {
+                targetX = (e.clientX - window.innerWidth / 2) * 0.002;
+                targetY = (e.clientY - window.innerHeight / 2) * 0.002;
+            }, false);
+        }
 
-function saveBuilding(){
-  var projectId=$('#postalProject').value;
-  var district=$('#postalDistrict').value.trim();
-  var blockNo=$('#postalBlock').value;
-  var buildingNo=$('#postalBuildingNo').value;
-  var name=$('#postalName').value.trim();
-  var address=$('#postalAddress').value.trim();
-  var unitCount=parseInt($('#postalUnitCount').value)||1;
-  
-  if(!projectId)return toast('پروژه را انتخاب کنید','error');
-  if(!district)return toast('نام محله را وارد کنید','error');
-  if(!blockNo)return toast('شماره بلوک را وارد کنید','error');
-  if(!buildingNo)return toast('شماره ساختمان را وارد کنید','error');
-  if(Number(buildingNo)<1||Number(buildingNo)>100)return toast('شماره ساختمان باید بین ۱ تا ۱۰۰ باشد','error');
-  if(!name)return toast('نام ساختمان را وارد کنید','error');
-  
-  // Check duplicate building number in same block
-  var dup=state.buildings.find(function(b){return b.projectId===projectId&&b.district===district&&String(b.blockNo)===String(blockNo)&&Number(b.buildingNo)===Number(buildingNo)});
-  if(dup)return toast('این شماره ساختمان در این بلوک قبلاً ثبت شده','error');
-  
-  var building={
-    id:'BLD-'+String(state.nextB++).padStart(4,'0'),
-    projectId:projectId,district:district,blockNo:String(blockNo),
-    buildingNo:Number(buildingNo),name:name,address:address,
-    unitCount:unitCount,created:now(),createdBy:currentUser().name
-  };
-  state.buildings.unshift(building);
-  
-  // Create units with postal codes
-  var basePostal=String(1000000000+Number(blockNo)*1000000+Number(buildingNo)*1000);
-  for(var i=1;i<=unitCount;i++){
-    state.units.push({
-      id:'UNT-'+String(state.nextU++).padStart(5,'0'),
-      buildingId:building.id,
-      unitNo:i,
-      postalCode:String(Number(basePostal)+i).padStart(10,'0'),
-      status:'ردیف اصلی',
-      created:now()
-    });
-  }
-  
-  save();
-  renderBlockWidget();
-  renderBuildingsList();
-  updateStats();
-  
-  // Reset fields
-  $('#postalBuildingNo').value='';
-  $('#postalName').value='';
-  $('#postalAddress').value='';
-  $('#postalUnitCount').value='1';
-  
-  toast('ساختمان و '+fa(unitCount)+' واحد ثبت شد','success');
-}
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
 
-function autoNextBuilding(){
-  var projectId=$('#postalProject').value;
-  var district=$('#postalDistrict').value.trim();
-  var blockNo=$('#postalBlock').value;
-  if(!projectId||!district||!blockNo)return toast('ابتدا محله و بلوک را کامل کنید','error');
-  var buildings=state.buildings.filter(function(b){return b.projectId===projectId&&b.district===district&&String(b.blockNo)===String(blockNo)});
-  var usedNumbers=buildings.map(function(b){return Number(b.buildingNo)});
-  var next=1;
-  for(var i=1;i<=100;i++){if(usedNumbers.indexOf(i)===-1){next=i;break}}
-  if(next===101||buildings.length>=100)return toast('⚠️ بلوک کامل است. بلوک بعدی را شروع کنید','error');
-  $('#postalBuildingNo').value=next;
-  toast('شماره بعدی: '+fa(next));
-}
+        let clock = new THREE.Clock();
 
-function renderBuildingsList(){
-  var list=$('#buildingsList');
-  var projectId=$('#postalProject').value;
-  var buildings=state.buildings.filter(function(b){return !projectId||b.projectId===projectId});
-  if($('#buildingsCount'))$('#buildingsCount').textContent=fa(buildings.length);
-  if(!buildings.length){list.innerHTML='<div class="empty visible"><svg class="icn"><use href="#i-building"/></svg><h3>ساختمانی ثبت نشده</h3><p>اولین ساختمان را اضافه کنید</p></div>';return}
-  list.innerHTML=buildings.slice(0,30).map(function(b){
-    var units=state.units.filter(function(u){return u.buildingId===b.id});
-    var expanded=window['__exp_'+b.id];
-    var unitsHtml=expanded?'<div class="building-units">'+(units.map(function(u){
-      return '<div class="unit-row"><div class="unit-num">'+fa(u.unitNo)+'</div><div class="unit-info"><strong>واحد '+fa(u.unitNo)+'</strong><small>'+esc(u.postalCode)+'</small></div><div class="unit-actions"><button class="unit-btn" onclick="editUnit(\''+u.id+'\')"><svg class="icn"><use href="#i-edit"/></svg></button><button class="unit-btn danger" onclick="delUnit(\''+u.id+'\')"><svg class="icn"><use href="#i-trash"/></svg></button></div></div>';
-    }).join('')||'<div style="text-align:center;padding:10px;font-size:11px;color:var(--muted)">واحدی ثبت نشده</div>')+'<button class="btn btn-ghost btn-sm btn-block" style="margin-top:10px" onclick="addUnitToBuilding(\''+b.id+'\')"><svg class="icn"><use href="#i-plus"/></svg> افزودن واحد</button></div>':'';
-    return '<div class="building-card"><div class="building-head" onclick="toggleBuilding(\''+b.id+'\')"><div class="building-icon"><svg class="icn"><use href="#i-building"/></svg></div><div class="building-info"><strong>'+esc(b.name)+'</strong><small>محله '+esc(b.district)+' · بلوک '+fa(b.blockNo)+' · ساختمان '+fa(b.buildingNo)+'</small></div><div class="building-badge">'+fa(units.length)+' واحد</div></div>'+unitsHtml+'</div>';
-  }).join('');
-}
-function toggleBuilding(id){window['__exp_'+id]=!window['__exp_'+id];renderBuildingsList()}
-function addUnitToBuilding(buildingId){
-  var units=state.units.filter(function(u){return u.buildingId===buildingId});
-  var maxNo=units.reduce(function(m,u){return Math.max(m,u.unitNo)},0);
-  var b=state.buildings.find(function(x){return x.id===buildingId});
-  var basePostal=String(1000000000+Number(b.blockNo)*1000000+Number(b.buildingNo)*1000);
-  state.units.push({id:'UNT-'+String(state.nextU++).padStart(5,'0'),buildingId:buildingId,unitNo:maxNo+1,postalCode:String(Number(basePostal)+maxNo+1).padStart(10,'0'),status:'ردیف اصلی',created:now()});
-  save();renderBuildingsList();updateStats();
-  toast('واحد اضافه شد','success');
-}
-function editUnit(id){
-  var u=state.units.find(function(x){return x.id===id});
-  if(!u)return;
-  openModal('ویرایش واحد','واحد '+fa(u.unitNo),
-    '<div class="field"><label>شماره واحد</label><input id="euNo" type="number" value="'+u.unitNo+'"></div>'+
-    '<div class="field"><label>کد پستی</label><input id="euCode" value="'+esc(u.postalCode)+'" maxlength="10"></div>'+
-    '<div class="field"><label>وضعیت</label><select id="euStatus"><option '+(u.status==='ردیف اصلی'?'selected':'')+'>ردیف اصلی</option><option '+(u.status==='ردیف فرعی'?'selected':'')+'>ردیف فرعی</option><option '+(u.status==='در انتظار'?'selected':'')+'>در انتظار</option><option '+(u.status==='تکمیل شده'?'selected':'')+'>تکمیل شده</option></select></div>',
-    '<button class="btn btn-primary btn-block" onclick="saveUnit(\''+id+'\')"><svg class="icn"><use href="#i-save"/></svg> ذخیره</button>','i-edit');
-}
-function saveUnit(id){
-  var u=state.units.find(function(x){return x.id===id});
-  if(!u)return;
-  u.unitNo=parseInt($('#euNo').value)||u.unitNo;
-  u.postalCode=$('#euCode').value.trim();
-  u.status=$('#euStatus').value;
-  save();closeModal();renderBuildingsList();
-  toast('ذخیره شد','success');
-}
-function delUnit(id){
-  if(!confirm('واحد حذف شود؟'))return;
-  state.units=state.units.filter(function(u){return u.id!==id});
-  save();renderBuildingsList();updateStats();
-  toast('حذف شد','success');
-}
+        function animate() {
+            requestAnimationFrame(animate);
 
-/* ===== MAP ===== */
-var map=null,mapReady=false;
-var drawLayer,savedLayer;
-var tool='select',draftPoints=[],draftLayer=null;
+            const elapsedTime = clock.getElapsedTime();
 
-function initMap(){
-  if(mapReady){if(map)setTimeout(function(){map.invalidateSize()},100);return}
-  if(!window.L)return;
-  var mapEl=document.getElementById('map');
-  if(!mapEl)return;
-  if(mapEl.offsetHeight<50){setTimeout(initMap,200);return}
-  try{
-    map=L.map('map',{zoomControl:false}).setView([35.700,51.400],12);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
-    L.control.zoom({position:'topleft'}).addTo(map);
-    drawLayer=L.featureGroup().addTo(map);
-    savedLayer=L.featureGroup().addTo(map);
-    map.on('click',onMapClick);
-    map.on('mousemove',function(e){var el=$('#coordStatus');if(el)el.textContent=e.latlng.lat.toFixed(5)+', '+e.latlng.lng.toFixed(5)});
-    renderDrawings();
-    mapReady=true;
-    setTimeout(function(){if(map)map.invalidateSize()},200);
-  }catch(e){console.warn(e);mapReady=false}
-}
-$$('.map-tool[data-tool]').forEach(function(b){
-  b.onclick=function(){
-    tool=b.dataset.tool;draftPoints=[];
-    if(draftLayer){drawLayer.removeLayer(draftLayer);draftLayer=null}
-    $$('.map-tool[data-tool]').forEach(function(x){x.classList.toggle('active',x.dataset.tool===tool)});
-    var el=$('#mapStatus');if(el)el.textContent=tool==='select'?'حالت انتخاب':'ابزار فعال';
-  };
-});
-function onMapClick(e){
-  if(!map||tool==='select')return;
-  if(tool==='marker'){
-    var projectId=$('#mapProject').value;
-    if(!projectId&&!state.projects.length){toast('اول پروژه بسازید','error');return}
-    state.drawings.push({id:uid('DRW'),projectId:projectId||state.projects[0].id,kind:'marker',name:'نقطه '+(state.drawings.length+1),coords:[[e.latlng.lat,e.latlng.lng]],created:now()});
-    save();renderDrawings();updateStats();toast('ثبت شد','success');return;
-  }
-  draftPoints.push([e.latlng.lat,e.latlng.lng]);
-  drawDraft();
-}
-function drawDraft(){
-  if(draftLayer)drawLayer.removeLayer(draftLayer);
-  if(!draftPoints.length)return;
-  if(draftPoints.length===1)draftLayer=L.circleMarker(draftPoints[0],{radius:7,color:'#2563eb',fillColor:'#3b82f6',fillOpacity:1,weight:2});
-  else draftLayer=L.polygon(draftPoints,{color:'#2563eb',fillColor:'#3b82f6',fillOpacity:.25,weight:2});
-  if(draftLayer)draftLayer.addTo(drawLayer);
-  var el=$('#mapStatus');if(el)el.textContent=fa(draftPoints.length)+' نقطه';
-}
-function finishDrawing(){
-  if(!draftPoints.length){toast('اول نقطه بگذارید','error');return}
-  if(tool==='polygon'&&draftPoints.length<3){toast('حداقل ۳ نقطه','error');return}
-  var projectId=$('#mapProject').value;
-  if(!projectId&&!state.projects.length){toast('اول پروژه بسازید','error');return}
-  state.drawings.push({id:uid('DRW'),projectId:projectId||state.projects[0].id,kind:'polygon',name:'پارسل '+(state.drawings.length+1),coords:draftPoints.map(function(p){return [p[0],p[1]]}),created:now()});
-  draftPoints=[];
-  if(draftLayer){drawLayer.removeLayer(draftLayer);draftLayer=null}
-  tool='select';
-  $$('.map-tool[data-tool]').forEach(function(x){x.classList.toggle('active',x.dataset.tool==='select')});
-  save();renderDrawings();updateStats();toast('ذخیره شد','success');
-}
-function undoDraw(){if(draftPoints.length){draftPoints.pop();drawDraft()}}
-function clearDraw(){draftPoints=[];if(draftLayer){drawLayer.removeLayer(draftLayer);draftLayer=null}tool='select';$$('.map-tool[data-tool]').forEach(function(x){x.classList.toggle('active',x.dataset.tool==='select')})}
-function renderDrawings(){
-  if(!mapReady||!savedLayer)return;
-  savedLayer.clearLayers();
-  var projectId=$('#mapProject')?$('#mapProject').value:'';
-  var drawings=state.drawings.filter(function(d){return !projectId||d.projectId===projectId});
-  drawings.forEach(function(d){
-    if(!d.coords||!d.coords.length)return;
-    try{
-      var layer=d.kind==='marker'?L.marker(d.coords[0]):L.polygon(d.coords,{color:'#2563eb',fillColor:'#3b82f6',fillOpacity:.25,weight:2});
-      layer.bindPopup('<b>'+esc(d.name)+'</b><br><button onclick="window.__delDraw(\''+d.id+'\')" style="margin-top:6px;padding:5px 10px;border-radius:6px;background:#dc2626;color:#fff;border:none;font-family:Vazirmatn;cursor:pointer">حذف</button>');
-      layer.addTo(savedLayer);
-    }catch(e){}
-  });
-  renderParcelsList(drawings);
-}
-function renderParcelsList(drawings){
-  var list=$('#parcelsList');if(!list)return;
-  if(!drawings)drawings=state.drawings;
-  if(!drawings.length){list.innerHTML='<div class="empty visible" style="padding:20px"><svg class="icn"><use href="#i-map"/></svg><h3>پارسلی ترسیم نشده</h3><p>از دکمه «پارسل» بالای نقشه استفاده کنید</p></div>';return}
-  list.innerHTML=drawings.slice(0,30).map(function(d){
-    return '<div class="info-card"><div class="info-card-icon bg-blue"><svg class="icn" style="color:#fff"><use href="#i-map"/></svg></div><div class="info-card-body"><strong>'+esc(d.name)+'</strong><small>'+d.coords.length+' نقطه · '+esc(d.created)+'</small></div><button class="icon-button" onclick="window.__delDraw(\''+d.id+'\')"><svg class="icn"><use href="#i-trash"/></svg></button></div>';
-  }).join('');
-}
-window.__delDraw=function(id){
-  if(!confirm('حذف شود؟'))return;
-  state.drawings=state.drawings.filter(function(d){return d.id!==id});
-  save();renderDrawings();updateStats();
-};
-function exportKML(){
-  if(!state.drawings.length)return toast('پارسانی برای خروجی نیست','error');
-  if(!window.toKML)return toast('کتابخانه KML بارگذاری نشد','error');
-  var features=state.drawings.filter(function(d){return d.kind==='polygon'}).map(function(d){
-    return {type:'Feature',properties:{name:d.name,created:d.created},geometry:{type:'Polygon',coordinates:[d.coords.map(function(c){return [c[1],c[0]]})]}};
-  });
-  if(!features.length)return toast('پارسل چندضلعی وجود ندارد','error');
-  var fc={type:'FeatureCollection',features:features};
-  var kml=toKML(fc,{name:'PostYar-Parcels'});
-  var blob=new Blob([kml],{type:'application/vnd.google-earth.kml+xml'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;a.download='postyar-parcels-'+Date.now()+'.kml';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  toast('فایل KML برای گوگل ارث دانلود شد','success');
-}
+            // Smooth ball rotation
+            if (sphereGroup) {
+                sphereGroup.rotation.y += 0.005;
+                sphereGroup.rotation.x += 0.003;
 
-/* ===== IMPORT / EXPORT ===== */
-var selectedFile=null;
-var editingRows=[];
-var dropZone=$('#dropZone');
-var fileInput=$('#fileInput');
-if(dropZone){
-  ['dragenter','dragover'].forEach(function(ev){dropZone.addEventListener(ev,function(e){e.preventDefault();dropZone.classList.add('drag')})});
-  ['dragleave','drop'].forEach(function(ev){dropZone.addEventListener(ev,function(e){e.preventDefault();dropZone.classList.remove('drag')})});
-  dropZone.addEventListener('drop',function(e){var f=e.dataTransfer.files[0];if(f)selectFile(f)});
-}
-if(fileInput)fileInput.onchange=function(){if(fileInput.files[0])selectFile(fileInput.files[0])};
+                // Respond smoothly to user Touch/Mouse move
+                sphereGroup.rotation.y += (targetX - sphereGroup.rotation.y) * 0.05;
+                sphereGroup.rotation.x += (targetY - sphereGroup.rotation.x) * 0.05;
 
-function selectFile(f){
-  var ext=f.name.split('.').pop().toLowerCase();
-  if(['pdf','xlsx','xls','csv'].indexOf(ext)===-1){toast('فرمت پشتیبانی نمی‌شود','error');return}
-  selectedFile=f;
-  $('#filePreview').classList.remove('hidden');
-  $('#fileName').textContent=f.name;
-  $('#fileSize').textContent=(f.size/1024).toFixed(1)+' KB';
-  $('#progressBar').style.width='0';
-  $('#extractStatus').textContent='آماده پردازش';
-  $('#editSection').classList.add('hidden');
-}
-function cancelFile(){selectedFile=null;fileInput.value='';$('#filePreview').classList.add('hidden');$('#editSection').classList.add('hidden')}
+                // Subtle floating up & down breathing animation
+                sphereGroup.position.y = Math.sin(elapsedTime * 1.5) * 0.4;
+            }
 
-async function extractFile(event){
-  if(!selectedFile)return;
-  var ext=selectedFile.name.split('.').pop().toLowerCase();
-  var btn=event&&event.target?event.target.closest('button'):null;
-  if(btn)btn.disabled=true;
-  $('#extractStatus').textContent='در حال خواندن…';
-  $('#progressBar').style.width='20%';
-  try{
-    var rawRows=[],rawHeaders=[];
-    if(ext==='csv'){
-      var txt=await selectedFile.text();
-      var lines=txt.replace(/^\uFEFF/,'').split(/\r?\n/).filter(function(x){return x.trim()});
-      var parse=function(line){return line.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(function(x){return x.replace(/^"|"$/g,'').replace(/""/g,'"').trim()})};
-      rawHeaders=parse(lines.shift()||'');
-      rawRows=lines.map(parse);
-    }else if(ext==='xlsx'||ext==='xls'){
-      if(!window.XLSX)throw new Error('کتابخانه اکسل بارگذاری نشد');
-      var buf=await selectedFile.arrayBuffer();
-      var wb=XLSX.read(buf,{type:'array'});
-      var ws=wb.Sheets[wb.SheetNames[0]];
-      var aoa=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-      rawHeaders=(aoa.shift()||[]).map(String);
-      rawRows=aoa.filter(function(r){return r.some(function(v){return String(v).trim()})}).map(function(r){return r.map(String)});
-    }else{
-      if(!window.pdfjsLib)throw new Error('کتابخانه PDF بارگذاری نشد');
-      pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      var buf2=await selectedFile.arrayBuffer();
-      var pdf=await pdfjsLib.getDocument({data:buf2}).promise;
-      var text='';
-      for(var i=1;i<=pdf.numPages;i++){
-        var pg=await pdf.getPage(i);
-        var tc=await pg.getTextContent();
-        text+=tc.items.map(function(x){return x.str}).join(' ')+'\n';
-        $('#progressBar').style.width=Math.round(i/pdf.numPages*75+20)+'%';
-      }
-      if(!text.trim())throw new Error('متن پیدا نشد');
-      var lines2=text.split(/\n+/).map(function(x){return x.trim()}).filter(function(x){return x.length>2});
-      rawHeaders=['کد پستی','شماره ساختمان','نام / محل','آدرس','واحد','وضعیت'];
-      rawRows=lines2.map(function(line,i){
-        var parts=line.split(/\s{2,}|\t/).map(function(x){return x.trim()}).filter(Boolean);
-        var row=new Array(7).fill('');
-        row[0]=String(i+1);
-        row[1]=parts.find(function(p){return /^\d{10}$/.test(p)})||'';
-        row[3]=parts[0]||line;
-        if(parts[1])row[2]=parts[1];
-        row[6]='ردیف اصلی';
-        return row;
-      });
-    }
-    if(!rawHeaders.length)throw new Error('ستون پیدا نشد');
-    var standard=['ردیف','کد پستی','شماره ساختمان','نام / محل','آدرس','واحد','وضعیت'];
-    var allStd=standard.every(function(s){return rawHeaders.indexOf(s)>=0});
-    if(allStd){editingRows=rawRows}
-    else{
-      var norm=function(s){return String(s||'').toLowerCase().replace(/[\s_ـ-]/g,'')};
-      var fi=function(keys){return rawHeaders.findIndex(function(h){return keys.some(function(k){return norm(h).indexOf(norm(k))>=0})})};
-      var ci=fi(['کدپستی','postal','postcode','zip']);
-      var bi=fi(['شماره ساختمان','building','ساختمان']);
-      var ni=fi(['نام','عنوان','ساختمان','قطعه','پلاک','محل','name']);
-      var ai=fi(['آدرس','نشانی','address']);
-      var ui=fi(['واحد','unit']);
-      var sti=fi(['وضعیت','status']);
-      editingRows=rawRows.map(function(r,i){
-        var row=new Array(7).fill('');
-        row[0]=String(i+1);
-        if(ci>=0)row[1]=r[ci]||'';
-        if(bi>=0)row[2]=r[bi]||'';
-        row[3]=ni>=0?(r[ni]||''):(r[0]||'');
-        if(ai>=0)row[4]=r[ai]||'';
-        if(ui>=0)row[5]=r[ui]||'1';
-        row[6]=sti>=0?(r[sti]||'ردیف اصلی'):'ردیف اصلی';
-        return row;
-      });
-    }
-    $('#progressBar').style.width='100%';
-    $('#extractStatus').textContent=fa(editingRows.length)+' ردیف استخراج شد';
-    toast(fa(editingRows.length)+' ردیف استخراج شد','success');
-    renderEditGrid();
-    $('#editSection').classList.remove('hidden');
-    fillProjectSelect('#importProject');
-    setTimeout(function(){$('#editSection').scrollIntoView({behavior:'smooth'})},200);
-  }catch(err){
-    $('#extractStatus').textContent='خطا: '+(err.message||'');
-    toast(err.message||'ناموفق','error');
-  }finally{if(btn)btn.disabled=false}
-}
-function renderEditGrid(){
-  var body=$('#editBody');
-  if(!editingRows.length){body.innerHTML='<tr><td colspan="8" style="padding:30px;color:var(--muted);text-align:center">ردیفی نیست</td></tr>';$('#editCount').textContent='۰';return}
-  body.innerHTML=editingRows.map(function(row,ri){
-    return '<tr><td class="row-num">'+esc(row[0]||fa(ri+1))+'</td>'+
-      [1,2,3,4,5,6].map(function(ci){return '<td contenteditable="true" data-ri="'+ri+'" data-ci="'+ci+'">'+esc(row[ci]||'')+'</td>'}).join('')+
-      '<td class="actions-cell"><button class="mini-btn" onclick="delRow('+ri+')"><svg class="icn"><use href="#i-close"/></svg></button></td></tr>';
-  }).join('');
-  $('#editCount').textContent=fa(editingRows.length);
-  $$('#editBody td[contenteditable="true"]').forEach(function(td){
-    td.onblur=function(){editingRows[+td.dataset.ri][+td.dataset.ci]=td.textContent.trim()};
-    td.onkeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();var next=td.parentElement.nextElementSibling;if(next){var nt=next.querySelector('td[contenteditable="true"]');if(nt)nt.focus()}}};
-  });
-}
-function delRow(ri){if(!confirm('حذف شود؟'))return;editingRows.splice(ri,1);renderEditGrid()}
-function addRow(){editingRows.push([fa(editingRows.length+1),'','','','','1','ردیف اصلی']);renderEditGrid()}
-function clearRows(){if(!editingRows.length)return;if(!confirm('همه پاک شوند؟'))return;editingRows=[];renderEditGrid()}
+            if (wireSphere) {
+                wireSphere.rotation.y -= 0.007;
+                wireSphere.rotation.z += 0.003;
+            }
 
-function saveRowsToProject(){
-  var projectId=$('#importProject').value;
-  if(!projectId)return toast('پروژه را انتخاب کنید','error');
-  if(!editingRows.length)return toast('ردیفی نیست','error');
-  var count=0;
-  editingRows.forEach(function(row,i){
-    if(!row.some(function(v){return String(v).trim()}))return;
-    var b={
-      id:'BLD-'+String(state.nextB++).padStart(4,'0'),
-      projectId:projectId,district:'نامشخص',blockNo:'0',
-      buildingNo:Number(row[2])||(i+1),name:row[3]||'بدون عنوان',address:row[4]||'',
-      unitCount:parseInt(row[5])||1,created:now(),createdBy:currentUser().name
-    };
-    state.buildings.unshift(b);
-    for(var j=1;j<=b.unitCount;j++){
-      state.units.push({id:'UNT-'+String(state.nextU++).padStart(5,'0'),buildingId:b.id,unitNo:j,postalCode:(row[1]||'').padStart(10,'0'),status:row[6]||'ردیف اصلی',created:now()});
-    }
-    count++;
-  });
-  if(!count)return toast('ردیف معتبری نیست','error');
-  save();updateStats();
-  toast(fa(count)+' ساختمان ذخیره شد','success');
-  setTimeout(function(){nav('postal')},600);
-}
-function exportEditedExcel(){
-  if(!editingRows.length)return toast('ردیفی نیست','error');
-  var headers=['ردیف','کد پستی','شماره ساختمان','نام / محل','آدرس','واحد','وضعیت'];
-  var ws=XLSX.utils.aoa_to_sheet([headers].concat(editingRows));
-  ws['!cols']=[{wch:8},{wch:14},{wch:14},{wch:30},{wch:40},{wch:8},{wch:15}];
-  var wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'اطلاعات پستی');
-  XLSX.writeFile(wb,'postal-'+Date.now()+'.xlsx');
-  toast('Excel آماده شد','success');
-}
-function buildFormHtml(rows){
-  var projectId=($('#importProject')&&$('#importProject').value)||'';
-  var project=state.projects.find(function(p){return p.id===projectId})||state.projects[0]||{name:'—',area:'—',formNo:'—',date:todayJ()};
-  return '<div class="postal-form">'+
-    '<div class="hdr"><h1>شرکت ملی پست جمهوری اسلامی ایران - اداره کل جغرافیایی و اطلاعات مکانی کشور</h1><h2>فرم اطلاعات مکانی / فهرست نشانی‌ها</h2></div>'+
-    '<table class="info-tbl"><tr>'+
-      '<td class="lb">پروژه</td><td>'+esc(project.name)+'</td>'+
-      '<td class="lb">منطقه</td><td>'+esc(project.area||'—')+'</td>'+
-      '<td class="lb">شماره فرم</td><td>'+esc(project.formNo||'—')+'</td>'+
-      '<td class="lb">تاریخ</td><td>'+esc(project.date||todayJ())+'</td>'+
-    '</tr></table>'+
-    '<table class="main-tbl"><thead><tr><th>ردیف</th><th>کد پستی</th><th>شماره ساختمان</th><th>نام / محل</th><th>آدرس</th><th>واحد</th><th>وضعیت</th></tr></thead><tbody>'+
-    rows.map(function(r,i){
-      return '<tr><td>'+esc(r[0]||fa(i+1))+'</td><td style="font-family:monospace">'+esc(r[1]||'—')+'</td><td>'+esc(r[2]||'—')+'</td><td style="text-align:right;font-weight:600">'+esc(r[3]||'—')+'</td><td style="text-align:right">'+esc(r[4]||'—')+'</td><td>'+esc(r[5]||'—')+'</td><td>'+esc(r[6]||'—')+'</td></tr>';
-    }).join('')+'</tbody></table>'+
-    '<div class="sig"><div><div class="ln"></div>مهر و امضاء مدیر</div><div><div class="ln"></div>مهر و امضاء تنظیم‌کننده</div></div>'+
-  '</div>';
-}
-function printStyles(){
-  return '@page{size:A4 landscape;margin:10mm}body{font-family:Vazirmatn,Tahoma;direction:rtl;padding:10px}.postal-form .hdr{text-align:center;margin-bottom:12px;line-height:1.8}.postal-form .hdr h1{font-size:13px;font-weight:bold;margin:0 0 4px}.postal-form .hdr h2{font-size:11px;font-weight:normal;margin:0}.postal-form .info-tbl{width:100%;border-collapse:collapse;margin-bottom:10px}.postal-form .info-tbl td{border:1px solid #444;padding:5px 8px;font-size:10px;text-align:center}.postal-form .info-tbl td.lb{background:#f0f0f0;font-weight:bold}.postal-form .main-tbl{width:100%;border-collapse:collapse;font-size:9px}.postal-form .main-tbl th{background:#d9d9d9;border:1px solid #444;padding:6px 4px;font-weight:bold;text-align:center}.postal-form .main-tbl td{border:1px solid #444;padding:6px 4px;text-align:center;height:30px}.postal-form .main-tbl tr:nth-child(even) td{background:#fafafa}.postal-form .sig{display:flex;justify-content:space-between;margin-top:24px;font-size:9px}.postal-form .sig div{text-align:center;width:45%}.postal-form .sig .ln{border-top:1px solid #333;margin-top:32px;padding-top:4px}';
-}
-function exportEditedPdf(){
-  if(!editingRows.length)return toast('ردیفی نیست','error');
-  var wrap=document.createElement('div');
-  wrap.innerHTML=buildFormHtml(editingRows);
-  wrap.style.fontFamily='Vazirmatn,Tahoma';wrap.style.direction='rtl';wrap.style.padding='10px';
-  document.body.appendChild(wrap);
-  html2pdf().set({margin:[8,8,8,8],filename:'postal-'+Date.now()+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'}})
-    .from(wrap).save().then(function(){wrap.remove();toast('PDF آماده شد','success')}).catch(function(){wrap.remove();toast('خطا','error')});
-}
-function printEdited(){
-  if(!editingRows.length)return toast('ردیفی نیست','error');
-  var html=buildFormHtml(editingRows);
-  var win=window.open('','','width=1000,height=700');
-  win.document.write('<html dir="rtl"><head><title>چاپ</title><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet"><style>'+printStyles()+'</style></head><body>'+html+'</body></html>');
-  win.document.close();setTimeout(function(){win.print()},500);
-  toast('پنجره چاپ باز شد');
-}
+            if (particles) {
+                particles.rotation.y = elapsedTime * 0.02;
+            }
 
-/* ===== LABELS ===== */
-var LABEL_TYPES=[
-  {id:1,name:'استاندارد',color:'#2563eb'},
-  {id:2,name:'کوچک',color:'#10b981'},
-  {id:3,name:'بزرگ',color:'#ec4899'},
-  {id:4,name:'بارکد',color:'#f59e0b'},
-  {id:5,name:'QR کد',color:'#8b5cf6'},
-  {id:6,name:'آدرس کامل',color:'#06b6d4'},
-  {id:7,name:'پستی ویژه',color:'#db2777'},
-  {id:8,name:'بین‌المللی',color:'#475569'}
-];
-var selectedLabelType=1;
-function renderLabelTabs(){
-  var tabs=$('#labelTabs');if(!tabs)return;
-  tabs.innerHTML=LABEL_TYPES.map(function(t){
-    return '<button class="label-tab '+(t.id===selectedLabelType?'active':'')+'" onclick="selectLabelType('+t.id+')"><svg class="icn"><use href="#i-label"/></svg>'+t.name+'</button>';
-  }).join('');
-  renderLabelPreview();
-}
-function selectLabelType(id){selectedLabelType=id;renderLabelTabs()}
-function renderLabelPreview(){
-  var c=$('#labelPreview');if(!c)return;
-  var type=LABEL_TYPES.find(function(t){return t.id===selectedLabelType});
-  var projectId=($('#labelProject')&&$('#labelProject').value)||'';
-  var buildings=state.buildings.filter(function(b){return !projectId||b.projectId===projectId}).slice(0,12);
-  if(!buildings.length){c.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px;font-size:12px">ابتدا ساختمان ثبت کنید</div>';return}
-  c.innerHTML=buildings.map(function(b){
-    var units=state.units.filter(function(u){return u.buildingId===b.id});
-    var code=(units[0]&&units[0].postalCode)||'—';
-    var extra='';
-    if(selectedLabelType===4)extra='<div class="barcode">|||| ||| ||||</div>';
-    else if(selectedLabelType===5)extra='<div style="font-size:32px">▣</div>';
-    else if(selectedLabelType===6)extra='<div class="meta">'+esc(b.address||'')+'</div>';
-    else if(selectedLabelType===7)extra='<div class="meta">ویژه · '+fa(units.length)+' واحد</div>';
-    else if(selectedLabelType===8)extra='<div class="meta">IR · '+esc(b.blockNo)+'</div>';
-    return '<div class="label-card" style="border-color:'+type.color+'"><div class="code" style="color:'+type.color+'">'+esc(code)+'</div><div class="name">'+esc(b.name)+'</div>'+extra+'</div>';
-  }).join('');
-}
-function printLabels(){
-  var content=$('#labelPreview').innerHTML;
-  if(!content.trim())return toast('لیبلی نیست','error');
-  var win=window.open('','','width=800,height=600');
-  win.document.write('<html dir="rtl"><head><title>چاپ لیبل</title><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet"><style>body{font-family:Vazirmatn,Tahoma;padding:15px}.label-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.label-card{border:2px solid #333;border-radius:8px;padding:10px;text-align:center;font-size:11px;min-height:90px}.code{font-family:monospace;font-size:14px;font-weight:800;word-break:break-all}.name{font-size:11px;font-weight:600}.meta{font-size:9px;color:#666}.barcode{font-family:monospace;font-size:16px}</style></head><body><div class="label-preview">'+content+'</div></body></html>');
-  win.document.close();setTimeout(function(){win.print()},500);
-  toast('پنجره چاپ باز شد','success');
-}
-function pdfLabels(){
-  var content=$('#labelPreview').innerHTML;
-  if(!content.trim())return toast('لیبلی نیست','error');
-  var wrap=document.createElement('div');
-  wrap.innerHTML='<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet"><style>body{font-family:Vazirmatn,Tahoma;direction:rtl;padding:10px}h2{text-align:center;margin-bottom:14px}.label-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.label-card{border:2px solid #333;border-radius:8px;padding:10px;text-align:center;font-size:11px;min-height:90px}.code{font-family:monospace;font-size:14px;font-weight:800;word-break:break-all}.name{font-size:11px;font-weight:600}.meta{font-size:9px;color:#666}</style><h2>لیبل نوع '+selectedLabelType+' - '+(LABEL_TYPES.find(function(t){return t.id===selectedLabelType})).name+'</h2><div class="label-preview">'+content+'</div>';
-  document.body.appendChild(wrap);
-  html2pdf().set({margin:8,filename:'labels-'+selectedLabelType+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}})
-    .from(wrap).save().then(function(){wrap.remove();toast('PDF آماده شد','success')}).catch(function(){wrap.remove();toast('خطا','error')});
-}
+            renderer.render(scene, camera);
+        }
 
-/* ===== SEARCH ===== */
-function doSearch(){
-  var q=($('#searchInput').value||'').trim().toLowerCase();
-  var projectId=$('#searchProject').value;
-  var results=$('#searchResults');
-  if(!q){results.innerHTML='<div class="empty visible"><svg class="icn"><use href="#i-search"/></svg><h3>جستجو کنید</h3><p>کد پستی، نام ساختمان یا آدرس</p></div>';return}
-  var buildings=state.buildings.filter(function(b){
-    if(projectId&&b.projectId!==projectId)return false;
-    var units=state.units.filter(function(u){return u.buildingId===b.id});
-    var codes=units.map(function(u){return u.postalCode}).join(' ');
-    return (b.name+' '+b.address+' '+b.district+' '+codes).toLowerCase().indexOf(q)>=0;
-  });
-  if(!buildings.length){results.innerHTML='<div class="empty visible"><svg class="icn"><use href="#i-search"/></svg><h3>نتیجه‌ای یافت نشد</h3><p>عبارت دیگری را امتحان کنید</p></div>';return}
-  results.innerHTML='<div class="section-heading" style="margin-bottom:8px"><h2 class="section-title">'+fa(buildings.length)+' نتیجه</h2></div>'+buildings.map(function(b){
-    var units=state.units.filter(function(u){return u.buildingId===b.id});
-    return '<div class="building-card"><div class="building-head"><div class="building-icon"><svg class="icn"><use href="#i-building"/></svg></div><div class="building-info"><strong>'+esc(b.name)+'</strong><small>'+esc(b.district)+' · بلوک '+fa(b.blockNo)+' · ساختمان '+fa(b.buildingNo)+'</small></div><div class="building-badge">'+fa(units.length)+' واحد</div></div><div class="building-units">'+units.map(function(u){return '<div class="unit-row"><div class="unit-num">'+fa(u.unitNo)+'</div><div class="unit-info"><strong>واحد '+fa(u.unitNo)+'</strong><small>'+esc(u.postalCode)+'</small></div></div>'}).join('')+'</div></div>';
-  }).join('');
-}
+        const phrases = [
+            "چیزی فوق‌العاده در راه است...",
+            "طراحی مدرن، ساده و زیبا.",
+            "به زودی رونمایی می‌شود."
+        ];
+        let phraseIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+        const typedTextElement = document.getElementById('typed-text');
 
-/* ===== USERS ===== */
-function renderUsers(){
-  var list=$('#usersList');
-  if(!state.users.length){list.innerHTML='';$('#usersEmpty').classList.add('visible');return}
-  $('#usersEmpty').classList.remove('visible');
-  var roles={admin:'مدیر سیستم',supervisor:'سرپرست',user:'کارشناس'};
-  list.innerHTML=state.users.map(function(u){
-    return '<div class="info-card"><div class="info-card-icon '+(u.role==='admin'?'bg-red':u.role==='supervisor'?'bg-orange':'bg-blue')+'"><svg class="icn" style="color:#fff"><use href="#i-user"/></svg></div><div class="info-card-body"><strong>'+esc(u.name)+'</strong><small>'+esc(u.user)+' · <span class="role-badge role-'+u.role+'">'+roles[u.role]+'</span></small></div><button class="icon-button" onclick="delUser(\''+u.id+'\')"><svg class="icn"><use href="#i-trash"/></svg></button></div>';
-  }).join('');
-}
-function openUserSheet(){
-  openModal('کاربر جدید','اطلاعات کاربر',
-    '<div class="field"><label>نام کامل *</label><input id="uName" placeholder="نام"></div>'+
-    '<div class="field"><label>نام کاربری *</label><input id="uUser" placeholder="username"></div>'+
-    '<div class="field"><label>رمز عبور *</label><input id="uPass" type="password" placeholder="رمز"></div>'+
-    '<div class="field"><label>سطح دسترسی</label><select id="uRole"><option value="user">کارشناس</option><option value="supervisor">سرپرست</option><option value="admin">مدیر سیستم</option></select></div>',
-    '<button class="btn btn-primary btn-block" onclick="saveUser()"><svg class="icn"><use href="#i-save"/></svg> ذخیره</button>','i-user');
-}
-function saveUser(){
-  var name=$('#uName').value.trim();
-  var user=$('#uUser').value.trim();
-  var pass=$('#uPass').value.trim();
-  var role=$('#uRole').value;
-  if(!name||!user||!pass)return toast('همه فیلدها الزامی است','error');
-  if(state.users.some(function(x){return x.user===user}))return toast('نام کاربری تکراری','error');
-  state.users.push({id:'U-'+String(state.nextUser++).padStart(3,'0'),name:name,user:user,pass:pass,role:role,created:now()});
-  save();closeModal();renderUsers();
-  toast('کاربر اضافه شد','success');
-}
-function delUser(id){
-  if(id===state.auth)return toast('نمی‌توانید خودتان را حذف کنید','error');
-  if(!confirm('کاربر حذف شود؟'))return;
-  state.users=state.users.filter(function(u){return u.id!==id});
-  save();renderUsers();
-  toast('حذف شد','success');
-}
+        function typeEffect() {
+            const currentPhrase = phrases[phraseIdx];
 
-/* ===== REPORTS ===== */
-function generateReport(){
-  var type=$('#reportType').value;
-  var from=$('#reportFrom').value.trim();
-  var to=$('#reportTo').value.trim();
-  var r=$('#reportResult');
-  var html='<div class="info-card" style="display:block;padding:16px"><h3 style="font-size:14px;margin-bottom:12px;color:var(--text)">گزارش: '+esc(type)+'</h3>';
-  if(type==='project'){
-    html+='<div style="font-size:12px;line-height:2">';
-    state.projects.forEach(function(p){
-      var bc=state.buildings.filter(function(b){return b.projectId===p.id}).length;
-      html+='• <strong>'+esc(p.name)+'</strong>: '+fa(bc)+' ساختمان<br>';
-    });
-    html+='</div>';
-  }else if(type==='postal'){
-    var totalCodes=state.units.length;
-    var byStatus={};
-    state.units.forEach(function(u){byStatus[u.status]=(byStatus[u.status]||0)+1});
-    html+='<div style="font-size:12px;line-height:2">کل کدهای پستی: <strong>'+fa(totalCodes)+'</strong><br>';
-    Object.keys(byStatus).forEach(function(s){html+='• '+esc(s)+': '+fa(byStatus[s])+'<br>'});
-    html+='</div>';
-  }else if(type==='user'){
-    html+='<div style="font-size:12px;line-height:2">';
-    state.users.forEach(function(u){
-      var c=state.buildings.filter(function(b){return b.createdBy===u.name}).length;
-      html+='• <strong>'+esc(u.name)+'</strong>: '+fa(c)+' ساختمان ثبت‌شده<br>';
-    });
-    html+='</div>';
-  }else{
-    var today=now();
-    var todayBuildings=state.buildings.filter(function(b){return b.created===today}).length;
-    html+='<div style="font-size:12px;line-height:2">گزارش امروز ('+today+'):<br>• '+fa(todayBuildings)+' ساختمان ثبت‌شده<br></div>';
-  }
-  html+='<div style="margin-top:14px" class="btn-row"><button class="btn btn-outline btn-sm" onclick="window.print()"><svg class="icn"><use href="#i-printer"/></svg> چاپ</button></div></div>';
-  r.innerHTML=html;
-  toast('گزارش آماده شد','success');
-}
+            if (isDeleting) {
+                typedTextElement.textContent = currentPhrase.substring(0, charIdx - 1);
+                charIdx--;
+            } else {
+                typedTextElement.textContent = currentPhrase.substring(0, charIdx + 1);
+                charIdx++;
+            }
 
-/* ===== NOTES / ADMIN / TASKS ===== */
-function addNote(){
-  var title=$('#noteTitle').value.trim();
-  var content=$('#noteContent').value.trim();
-  if(!title)return toast('عنوان را وارد کنید','error');
-  state.notes.unshift({id:uid('N'),title:title,content:content,date:nowFull()});
-  save();$('#noteTitle').value='';$('#noteContent').value='';
-  renderNotes();toast('ذخیره شد','success');
-}
-function renderNotes(){
-  var list=$('#notesList');if(!list)return;
-  if(!state.notes.length){list.innerHTML='<div class="empty visible"><svg class="icn"><use href="#i-note"/></svg><h3>یادداشتی نیست</h3><p>اولین یادداشت را بنویسید</p></div>';return}
-  list.innerHTML=state.notes.map(function(n){
-    return '<div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);color:#3a2e00;border-radius:12px;padding:14px;margin-bottom:10px;border-right:4px solid var(--warning);box-shadow:var(--shadow-md)"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px"><strong style="font-size:13.5px">'+esc(n.title)+'</strong><button style="background:rgba(220,38,38,.15);color:var(--danger);width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center" onclick="delNote(\''+n.id+'\')"><svg class="icn" style="width:13px;height:13px"><use href="#i-close"/></svg></button></div><div style="font-size:12.5px;line-height:1.7;color:#5a4a10;white-space:pre-wrap">'+esc(n.content||'')+'</div><div style="font-size:10px;color:#8a7b3a;margin-top:8px">'+esc(n.date)+'</div></div>';
-  }).join('');
-}
-function delNote(id){if(!confirm('حذف شود؟'))return;state.notes=state.notes.filter(function(x){return x.id!==id});save();renderNotes();toast('حذف شد')}
-function sendToAdmin(){
-  var subject=$('#adminSubject').value.trim();
-  var message=$('#adminMessage').value.trim();
-  var priority=$('#adminPriority').value;
-  if(!message)return toast('متن را وارد کنید','error');
-  state.adminMsgs.unshift({id:uid('M'),name:currentUser().name,subject:subject,message:message,priority:priority,date:nowFull(),status:'در انتظار بررسی'});
-  save();$('#adminMessage').value='';$('#adminSubject').value='';
-  renderAdminChat();toast('ارسال شد','success');
-}
-function renderAdminChat(){
-  var box=$('#adminChat');if(!box)return;
-  if(!state.adminMsgs.length){box.innerHTML='<div class="empty visible" style="padding:20px"><svg class="icn"><use href="#i-chat"/></svg><h3>پیامی نیست</h3></div>';return}
-  box.innerHTML=state.adminMsgs.map(function(m){
-    return '<div style="background:var(--primary-light);padding:12px;border-radius:14px;margin-bottom:10px;font-size:12.5px;border:1px solid #bfdbfe;border-right:3px solid var(--primary)"><div style="font-weight:700;color:var(--primary);margin-bottom:5px;font-size:11.5px">'+esc(m.name)+(m.subject?' · '+esc(m.subject):'')+' · <span style="color:var(--warning)">'+esc(m.priority)+'</span></div><div>'+esc(m.message)+'</div><div style="font-size:10px;color:var(--muted);margin-top:6px">'+esc(m.date)+' · '+esc(m.status)+'</div></div>';
-  }).join('');
-}
-function addTask(){
-  var title=$('#taskTitle').value.trim();
-  if(!title)return toast('عنوان کار را وارد کنید','error');
-  var desc=$('#taskDesc').value.trim();
-  state.tasks.unshift({id:uid('T'),title:title,desc:desc,done:false,date:now()});
-  save();$('#taskTitle').value='';$('#taskDesc').value='';
-  renderTasks();toast('اضافه شد','success');
-}
-function renderTasks(){
-  var list=$('#taskList');if(!list)return;
-  if($('#taskCount'))$('#taskCount').textContent=fa(state.tasks.filter(function(t){return !t.done}).length);
-  if(!state.tasks.length){list.innerHTML='<div class="empty visible"><svg class="icn"><use href="#i-tasks"/></svg><h3>کاری ثبت نشده</h3><p>اولین کار را اضافه کنید</p></div>';return}
-  list.innerHTML=state.tasks.map(function(t){
-    return '<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border-radius:12px;margin-bottom:8px;border:1px solid var(--border);'+(t.done?'opacity:.6':'')+'"><div style="width:24px;height:24px;border-radius:8px;border:2px solid '+(t.done?'var(--success)':'var(--border-2)')+';background:'+(t.done?'var(--success)':'transparent')+';display:grid;place-items:center;flex-shrink:0;cursor:pointer;color:#fff" onclick="toggleTask(\''+t.id+'\')">'+(t.done?'<svg class="icn" style="width:14px;height:14px"><use href="#i-check"/></svg>':'')+'</div><div style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:700;'+(t.done?'text-decoration:line-through':'')+'">'+esc(t.title)+'</span><div style="font-size:10.5px;color:var(--muted);margin-top:2px">'+esc(t.desc||'—')+' · '+esc(t.date)+'</div></div><button class="icon-button" onclick="delTask(\''+t.id+'\')"><svg class="icn"><use href="#i-trash"/></svg></button></div>';
-  }).join('');
-}
-function toggleTask(id){var t=state.tasks.find(function(x){return x.id===id});if(!t)return;t.done=!t.done;save();renderTasks()}
-function delTask(id){if(!confirm('حذف شود؟'))return;state.tasks=state.tasks.filter(function(t){return t.id!==id});save();renderTasks();toast('حذف شد')}
+            let typeSpeed = isDeleting ? 40 : 90;
 
-/* ===== DATABASE ===== */
-function refreshDb(){
-  var stats=$('#dbStats');
-  if(stats){
-    stats.innerHTML=
-      '<div class="db-stat"><span class="lbl">پروژه‌ها</span><span class="val">'+fa(state.projects.length)+'</span></div>'+
-      '<div class="db-stat"><span class="lbl">شرکت‌ها</span><span class="val">'+fa(state.companies.length)+'</span></div>'+
-      '<div class="db-stat"><span class="lbl">ساختمان‌ها</span><span class="val">'+fa(state.buildings.length)+'</span></div>'+
-      '<div class="db-stat"><span class="lbl">واحدها</span><span class="val">'+fa(state.units.length)+'</span></div>'+
-      '<div class="db-stat"><span class="lbl">پارسل‌ها</span><span class="val">'+fa(state.drawings.length)+'</span></div>'+
-      '<div class="db-stat"><span class="lbl">کاربران</span><span class="val">'+fa(state.users.length)+'</span></div>';
-  }
-  var view=$('#dbView');
-  if(view)view.textContent=JSON.stringify({projects:state.projects.length,companies:state.companies.length,buildings:state.buildings.length,units:state.units.length,drawings:state.drawings.length,users:state.users.length,sample:{buildings:state.buildings.slice(0,2),units:state.units.slice(0,3)}},null,2);
-}
+            if (!isDeleting && charIdx === currentPhrase.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false;
+                phraseIdx = (phraseIdx + 1) % phrases.length;
+                typeSpeed = 400;
+            }
 
-/* ===== INIT ===== */
-load();
-if(state.auth){showApp()}else{$('#loginScreen').style.display='flex'}
+            setTimeout(typeEffect, typeSpeed);
+        }
 
-window.nav=nav;
-window.doLogin=doLogin;
-window.doLogout=doLogout;
-window.doSignup=doSignup;
-window.switchLoginTab=switchLoginTab;
-window.openProjectSheet=openProjectSheet;
-window.saveProject=saveProject;
-window.openProject=openProject;
-window.deleteProject=deleteProject;
-window.openCompany=openCompany;
-window.openCompanySheet=openCompanySheet;
-window.saveCompany=saveCompany;
-window.deleteCompany=deleteCompany;
-window.switchProjTab=switchProjTab;
-window.closeModal=closeModal;
-window.delRow=delRow;
-window.addRow=addRow;
-window.clearRows=clearRows;
-window.saveRowsToProject=saveRowsToProject;
-window.exportEditedExcel=exportEditedExcel;
-window.exportEditedPdf=exportEditedPdf;
-window.printEdited=printEdited;
-window.selectLabelType=selectLabelType;
-window.printLabels=printLabels;
-window.pdfLabels=pdfLabels;
-window.addNote=addNote;
-window.delNote=delNote;
-window.sendToAdmin=sendToAdmin;
-window.finishDrawing=finishDrawing;
-window.undoDraw=undoDraw;
-window.clearDraw=clearDraw;
-window.extractFile=extractFile;
-window.cancelFile=cancelFile;
-window.addTask=addTask;
-window.toggleTask=toggleTask;
-window.delTask=delTask;
-window.refreshDb=refreshDb;
-window.saveBuilding=saveBuilding;
-window.autoNextBuilding=autoNextBuilding;
-window.toggleBuilding=toggleBuilding;
-window.addUnitToBuilding=addUnitToBuilding;
-window.editUnit=editUnit;
-window.saveUnit=saveUnit;
-window.delUnit=delUnit;
-window.renderBlockWidget=renderBlockWidget;
-window.renderLabelPreview=renderLabelPreview;
-window.exportKML=exportKML;
-window.doSearch=doSearch;
-window.openUserSheet=openUserSheet;
-window.saveUser=saveUser;
-window.delUser=delUser;
-window.generateReport=generateReport;
-
-window.addEventListener('resize',function(){if(map)setTimeout(function(){map.invalidateSize()},200)});
-
-})();
-</script>
+        window.onload = function() {
+            init3D();
+            animate();
+            typeEffect();
+        };
+    </script>
 </body>
 </html>
