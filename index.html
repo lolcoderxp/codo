@@ -480,7 +480,6 @@ img{display:block;max-width:100%}
   .app{max-width:520px;border-radius:28px;box-shadow:0 40px 80px -20px rgba(15,23,42,.25);margin:0;padding-bottom:140px;overflow-y:auto;max-height:calc(100vh - 48px)}
   .app::-webkit-scrollbar{width:8px}
   .app::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px}
-  .bottom-nav-wrap{position:sticky;bottom:16px;margin-top:-80px;padding:0 20px}
 }
 
 
@@ -2383,7 +2382,7 @@ async function renderFaithfulPdfPage(pageNo){
       var sourceLooksNumeric=/^[0-9۰-۹٠-٩]+$/.test(it.text.trim());
       var sourceLooksDecimal=/^[0-9۰-۹٠-٩\s.,،/\-]+$/.test(it.text.trim());
       field.inputMode=it.locationTypeColumn?'decimal':((numericColumn&&numericColumn.type!=='block')?'numeric':(numericColumn&&numericColumn.type==='block'?'decimal':(sourceLooksNumeric?'numeric':(sourceLooksDecimal?'decimal':'text'))));
-      if(it.locationTypeColumn)field.dataset.locationTypeColumn='1';
+      if(it.locationTypeColumn){field.dataset.locationTypeColumn='1';field.style.direction='ltr';field.style.unicodeBidi='isolate';field.style.fontVariantNumeric='tabular-nums';field.style.letterSpacing='0';}
       if(numericColumn&&numericColumn.maxLength)field.maxLength=numericColumn.maxLength;
       if(field.inputMode==='numeric'){
         field.setAttribute('pattern','[0-9۰-۹٠-٩]*');
@@ -2397,11 +2396,11 @@ async function renderFaithfulPdfPage(pageNo){
       // Prevent non-numeric text from entering numeric PDF cells, including paste and mobile keyboard input.
       if(field.inputMode==='numeric'||field.inputMode==='decimal'){
         field.addEventListener('beforeinput',function(ev){
-          if(ev.inputType==='insertText' && ev.data && !(field.inputMode==='numeric'?/^[0-9۰-۹٠-٩]+$/:/^[0-9۰-۹٠-٩.,،/\-]+$/).test(ev.data)) ev.preventDefault();
+          if(ev.inputType==='insertText' && ev.data && !(field.inputMode==='numeric'?/^[0-9۰-۹٠-٩]+$/:/^[0-9۰-۹٠-٩.,،/\-−–]+$/).test(ev.data)) ev.preventDefault();
         });
         field.addEventListener('paste',function(ev){
           var pasted=(ev.clipboardData||window.clipboardData).getData('text');
-          var allowed=field.inputMode==='numeric'?/^[0-9۰-۹٠-٩]+$/:/^[0-9۰-۹٠-٩.,،/\-]+$/;
+          var allowed=field.inputMode==='numeric'?/^[0-9۰-۹٠-٩]+$/:/^[0-9۰-۹٠-٩.,،/\-−–]+$/;
           if(pasted&&!allowed.test(pasted))ev.preventDefault();
         });
       }
@@ -2413,7 +2412,7 @@ async function renderFaithfulPdfPage(pageNo){
           return '۰۱۲۳۴۵۶۷۸۹'.charAt('٠١٢٣٤٥٦٧٨٩'.indexOf(d));
         });
         if(field.inputMode==='numeric')converted=converted.replace(/[^۰-۹]/g,'');
-        else if(field.inputMode==='decimal')converted=converted.replace(/[^۰-۹.,،/\-]/g,'');
+        else if(field.inputMode==='decimal')converted=converted.replace(/[^۰-۹.,،/\-−–]/g,'');
         if(field.maxLength>0)converted=converted.slice(0,field.maxLength);
         if(converted!==old){field.value=converted;try{field.setSelectionRange(Math.min(start,converted.length),Math.min(end,converted.length))}catch(e){}}
       });
@@ -2483,12 +2482,22 @@ async function renderFaithfulPdfPage(pageNo){
               fitCtx.font='600 '+originalSize+'px '+family;
               var needed=Math.ceil(fitCtx.measureText(next).width+14);
               var baseWidth=Number(field.dataset.baseWidth)||needed;
-              var displayWidth=Math.min(Math.max(baseWidth,needed),Math.max(baseWidth,window.innerWidth-16));
               var baseLeft=Number(field.dataset.baseLeft)||0;
-              var center=baseLeft+baseWidth/2;
-              field.style.left=Math.max(0,center-displayWidth/2)+'px';
-              field.style.width=displayWidth+'px';
-              field.style.fontSize=originalSize+'px';field.title=next;
+              if(field.dataset.locationTypeColumn==='1'){
+                // Keep the PDF cell geometry unchanged. Shrink only the glyphs enough
+                // for the full signed code to fit; never paint a white rectangle over neighbours.
+                var measure=fitCtx.measureText(next).width||1;
+                var fitted=Math.min(originalSize,Math.max(5,originalSize*(Math.max(4,baseWidth-4)/measure)));
+                field.style.left=baseLeft+'px';field.style.width=baseWidth+'px';field.style.fontSize=fitted+'px';
+                field.style.direction='ltr';field.style.unicodeBidi='isolate';field.style.textAlign='center';
+              }else{
+                var displayWidth=Math.min(Math.max(baseWidth,needed),Math.max(baseWidth,window.innerWidth-16));
+                var center=baseLeft+baseWidth/2;
+                field.style.left=Math.max(0,center-displayWidth/2)+'px';
+                field.style.width=displayWidth+'px';
+                field.style.fontSize=originalSize+'px';
+              }
+              field.title=next;
             }catch(_){field.title=next;}
           }
           field.style.whiteSpace='pre';
@@ -2498,6 +2507,7 @@ async function renderFaithfulPdfPage(pageNo){
           field.style.boxShadow='none';
           field.style.zIndex='';
           field.style.textAlign='center';
+          if(field.dataset.locationTypeColumn==='1'){field.style.direction='ltr';field.style.unicodeBidi='isolate';field.style.fontVariantNumeric='tabular-nums';field.style.letterSpacing='0';}
           field.style.color=changed?'#2563eb':'transparent';
           field.style.background=changed?'#fff':'transparent';
           field.style.borderColor='transparent';
@@ -2506,7 +2516,7 @@ async function renderFaithfulPdfPage(pageNo){
         });
       }
       overlay.appendChild(field);
-      if(Object.prototype.hasOwnProperty.call(faithfulPdfEdits,it.key)&&cleanPdfText(faithfulPdfEdits[it.key])!==cleanPdfText(it.text)&&!it.locked){field.style.color='#2563eb';field.style.background='#fff';}
+      if(Object.prototype.hasOwnProperty.call(faithfulPdfEdits,it.key)&&cleanPdfText(faithfulPdfEdits[it.key])!==cleanPdfText(it.text)&&!it.locked){field.style.color='#2563eb';field.style.background='#fff';if(field.dataset.locationTypeColumn==='1'){field.style.direction='ltr';field.style.unicodeBidi='isolate';field.style.fontVariantNumeric='tabular-nums';}}
       it.displayScale=scale;
     });
     addPdfSectionMenus(overlay,pageNo,items,scale);
@@ -3259,6 +3269,12 @@ function open(field,kind){
 function commit(value){
  if(!activeField)return;
  var f=activeField,val=String(value||'').trim();
+ // Numeric type-of-location codes use an isolated LTR run so the minus sign
+ // always stays before the Persian digits and is never reordered by RTL layout.
+ if(activeListType==='location'){
+  val=val.replace(/-/g,'−').replace(/[0-9٠-٩]/g,function(d){var fa='۰۱۲۳۴۵۶۷۸۹',ar='٠١٢٣٤٥٦٧٨٩';var i=fa.indexOf(d);return fa.charAt(i>=0?i:ar.indexOf(d));});
+  f.style.direction='ltr';f.style.unicodeBidi='isolate';f.style.textAlign='center';f.style.fontVariantNumeric='tabular-nums';f.style.letterSpacing='0';
+ }
  if('value' in f)f.value=val;else f.textContent=val;
  f.dispatchEvent(new Event('input',{bubbles:true}));f.dispatchEvent(new Event('change',{bubbles:true}));
  f.blur();backdrop.classList.remove('open');activeField=null;
@@ -3276,7 +3292,7 @@ function render(){
  matches.forEach(function(a){var b=document.createElement('button');b.type='button';b.className='activity-picker-option';
   if(activeListType==='location'){b.textContent=locationTypeLabels[a]||a;b.dataset.code=a;}
   else b.textContent=a;
-  b.addEventListener('click',function(){var chosen=activeListType==='location'?String(a).replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[Number(d)]}):a;commit(chosen)});list.appendChild(b)
+  b.addEventListener('click',function(){var chosen=activeListType==='location'?String(a).replace(/-/g,'−').replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[Number(d)]}):a;commit(chosen)});list.appendChild(b)
  })
 }
 function sameVisualRow(a,b){
@@ -3378,39 +3394,37 @@ document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&backdrop.
   .pdf-section-pop button{min-height:42px!important;font-size:12px!important;padding:9px 10px!important;}
 }
 </style>
-<script id="postyar-pdf-contained-pinch-zoom">
-(function(){
- 'use strict';
- var host=document.getElementById('pdfFaithfulPages');if(!host)return;
- var gesture=null;
- function distance(a,b){var x=a.clientX-b.clientX,y=a.clientY-b.clientY;return Math.sqrt(x*x+y*y)}
- function pageAt(t){var p=t&&t.closest?t.closest('.pdf-original-page'):null;return p&&host.contains(p)?p:null}
- function applyScale(page,scale){
-  var baseW=Number(page.dataset.zoomBaseW)||page.offsetWidth,baseH=Number(page.dataset.zoomBaseH)||page.offsetHeight;
-  if(!baseW||!baseH)return;
-  page.dataset.zoomBaseW=String(baseW);page.dataset.zoomBaseH=String(baseH);page.dataset.zoomScale=String(scale);
-  page.style.transformOrigin='top left';page.style.transform=scale===1?'none':'scale('+scale+')';
-  page.style.width=baseW+'px';page.style.height=baseH+'px';
-  var inner=page.parentElement;if(inner){inner.style.minHeight=(baseH*scale)+'px';inner.style.minWidth='0';}
-  var section=page.closest('.pdf-faithful-page');if(section){section.style.minHeight=(baseH*scale)+'px';}
-  page.style.marginBottom=((scale-1)*baseH)+'px';page.style.marginRight=((scale-1)*baseW)+'px';
- }
- host.addEventListener('touchstart',function(ev){
-  if(ev.touches.length!==2)return;var page=pageAt(ev.target);if(!page)return;
-  gesture={page:page,startDistance:distance(ev.touches[0],ev.touches[1]),startScale:Number(page.dataset.zoomScale)||1};
- },{passive:true});
- host.addEventListener('touchmove',function(ev){
-  if(!gesture||ev.touches.length!==2)return;ev.preventDefault();
-  var ratio=distance(ev.touches[0],ev.touches[1])/Math.max(1,gesture.startDistance);
-  var next=Math.max(1,Math.min(3.25,gesture.startScale*ratio));applyScale(gesture.page,Math.round(next*100)/100);
- },{passive:false});
- function end(ev){if(gesture&&(!ev.touches||ev.touches.length<2))gesture=null}
- host.addEventListener('touchend',end,{passive:true});host.addEventListener('touchcancel',end,{passive:true});
- document.addEventListener('gesturestart',function(ev){if(!pageAt(ev.target))ev.preventDefault()},{passive:false});
- document.addEventListener('gesturechange',function(ev){if(!pageAt(ev.target))ev.preventDefault()},{passive:false});
- document.addEventListener('gestureend',function(ev){if(!pageAt(ev.target))ev.preventDefault()},{passive:false});
-})();
-</script>
+
+
+<style id="postyar-only-bottom-nav-fixed">
+/* رفتار طبیعی مرورگر: اسکرول و زوم روی تمام محتوا و PDF */
+html, body, .app, .pages, .page, #pdfFaithfulEditor,
+#pdfFaithfulPages, .pdf-faithful-page, .pdf-faithful-page-inner {
+  touch-action: pan-x pan-y pinch-zoom;
+}
+html, body {
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-x: auto;
+}
+#pdfFaithfulPages, .pdf-faithful-page-inner {
+  overflow: visible !important;
+  transform: none;
+}
+/* فقط نوار پایین در موبایل و تبلت ثابت بماند */
+@media (max-width: 999px) {
+  .bottom-nav-wrap {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    top: auto !important;
+    z-index: 1000 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+}
+</style>
+
 </body>
 </html>
 <style id="postyar-new-form-placeholder-fix">
