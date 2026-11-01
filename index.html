@@ -343,8 +343,8 @@ img{display:block;max-width:100%}
 :is(#page-import,#page-postal) .pdf-faithful-page-label{position:relative;top:auto;background:#f8fafc;padding:10px 13px;font-size:11px}
 :is(#page-import,#page-postal) .pdf-faithful-page-inner{display:flex;justify-content:center;align-items:flex-start;background:#e9edf4;padding:12px!important;overflow-x:auto;overflow-y:hidden}
 :is(#page-import,#page-postal) .pdf-original-page{flex:0 0 auto;background:#fff;box-shadow:0 2px 8px rgba(15,23,42,.15)}
-:is(#page-import,#page-postal) .pdf-original-field:focus{outline:0!important;background:rgba(239,246,255,.98);border:1px solid #2563eb;box-shadow:none!important;border-radius:4px}
-:is(#page-import,#page-postal) .pdf-original-field.edited{background:rgba(239,246,255,.94);border-color:rgba(37,99,235,.34);color:#2563eb!important}
+:is(#page-import,#page-postal) .pdf-original-field:focus{outline:0!important;background:#fff!important;border:1px solid #2563eb;box-shadow:none!important;border-radius:2px}
+:is(#page-import,#page-postal) .pdf-original-field.edited{background:#fff!important;border-color:transparent!important;color:#2563eb!important;-webkit-text-stroke:0!important;paint-order:normal!important;text-shadow:none!important}
 :is(#page-import,#page-postal) .pdf-faithful-toolbar{padding:10px;background:#f8fafc;border:1px solid #e5eaf2;border-radius:16px}
 @media (min-width:641px) and (max-width:999px){
   :is(#page-import,#page-postal) .drop-zone{padding:22px 18px;border-radius:19px}
@@ -384,7 +384,7 @@ img{display:block;max-width:100%}
 .pdf-faithful-page{position:relative;width:100%;background:#fff;border:0;border-radius:0;overflow:visible;box-shadow:none;direction:rtl;break-after:page}
 .pdf-faithful-page-label{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#f5f7fb;color:#24334b;border-bottom:1px solid #e6ebf3;font:800 12px var(--font);padding:12px 15px;direction:rtl;text-align:right}
 .pdf-faithful-page-label small{font-weight:500;color:#78869b}
-.pdf-faithful-page-inner{padding:0;background:#fff;direction:ltr;line-height:1.4;overflow:visible;overflow-anchor:none;position:relative;max-width:100%;touch-action:auto;overscroll-behavior:auto}.pdf-original-page{position:relative;margin:0;background:#fff;box-shadow:0 2px 14px rgba(15,23,42,.12);line-height:0;max-width:none;}.pdf-original-page canvas{display:block;width:100%;height:100%;max-width:none}.pdf-original-overlay{position:absolute;inset:0;pointer-events:none}.pdf-original-field{position:absolute;display:block;box-sizing:border-box;margin:0;padding:0 2px;border:1px solid transparent;border-radius:3px;background:transparent;color:transparent;caret-color:#2563eb;outline:0!important;box-shadow:none!important;min-width:2px;max-width:none;min-height:2px;line-height:1.15;white-space:nowrap;overflow:hidden;direction:rtl;text-align:center;pointer-events:auto;font-family:Arial,Tahoma,sans-serif;resize:none;appearance:none;-webkit-appearance:none;touch-action:manipulation;font-variant-numeric:normal}.pdf-original-field:focus{background:rgba(239,246,255,.42);color:#2563eb;border-color:#3b82f6;box-shadow:none!important;z-index:4}.pdf-original-field.is-editing{white-space:nowrap;overflow:hidden;border-radius:3px;line-height:1.1;text-overflow:clip}.pdf-original-field.edited{background:rgba(239,246,255,.97);border-color:rgba(37,99,235,.34);color:#2563eb}.pdf-original-field.locked{pointer-events:none;caret-color:transparent}.pdf-original-field.locked:focus{background:transparent;box-shadow:none!important}
+.pdf-faithful-page-inner{padding:0;background:#fff;direction:ltr;line-height:1.4;overflow:visible;overflow-anchor:none;position:relative;max-width:100%;touch-action:auto;overscroll-behavior:auto}.pdf-original-page{position:relative;margin:0;background:#fff;box-shadow:0 2px 14px rgba(15,23,42,.12);line-height:0;max-width:none;}.pdf-original-page canvas{display:block;width:100%;height:100%;max-width:none}.pdf-original-overlay{position:absolute;inset:0;pointer-events:none}.pdf-original-field{position:absolute;display:block;box-sizing:border-box;margin:0;padding:0 2px;border:1px solid transparent;border-radius:3px;background:transparent;color:transparent;caret-color:#2563eb;outline:0!important;box-shadow:none!important;min-width:2px;max-width:none;min-height:2px;line-height:1.15;white-space:nowrap;overflow:hidden;direction:rtl;text-align:center;pointer-events:auto;font-family:Arial,Tahoma,sans-serif;resize:none;appearance:none;-webkit-appearance:none;touch-action:manipulation;font-variant-numeric:normal}.pdf-original-field:focus{background:transparent!important;color:#2563eb;border-color:#3b82f6;box-shadow:none!important;z-index:4}.pdf-original-field{white-space:nowrap!important;overflow:hidden!important;text-overflow:clip}.pdf-original-field.is-editing{white-space:nowrap!important;overflow:hidden!important;border-radius:3px;line-height:1!important;text-overflow:clip;overflow-wrap:normal;word-break:keep-all;font-size:calc(var(--pdf-edit-font-size, 1em) * .78)}.pdf-original-field.edited{background:#fff!important;border-color:transparent!important;color:#2563eb!important;-webkit-text-stroke:0!important;paint-order:normal!important;text-shadow:none!important}.pdf-original-field.locked{pointer-events:none;caret-color:transparent}.pdf-original-field.locked:focus{background:transparent;box-shadow:none!important}
 
 /* Section deletion controls, anchored to the original PDF page */
 
@@ -583,6 +583,26 @@ img{display:block;max-width:100%}
 }
 @media (max-width: 999px) { .desktop-sidebar { display:none !important; } }
 
+
+/* Elegant in-place business-activity picker */
+.activity-picker-backdrop{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(15,23,42,.42);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.activity-picker-backdrop.open{display:flex}.activity-picker{width:min(460px,100%);max-height:min(82dvh,720px);display:flex;flex-direction:column;overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.8);border-radius:24px;box-shadow:0 24px 80px rgba(15,23,42,.24);direction:rtl;color:#172033;font-family:Tahoma,Arial,sans-serif}
+.activity-picker-head{padding:20px 20px 14px;background:linear-gradient(135deg,#fff9e9,#fff 72%);border-bottom:1px solid #f0f0f0}.activity-picker-title{font-size:17px;font-weight:900;display:flex;align-items:center;gap:10px}.activity-picker-title span{width:36px;height:36px;display:grid;place-items:center;background:#ffedb5;border-radius:13px;font-size:19px}.activity-picker-subtitle{font-size:11px;color:#7b8494;margin-top:7px}.activity-picker-search{margin-top:14px;position:relative}.activity-picker-search input{width:100%;box-sizing:border-box;border:1px solid #e4e7ec;background:#f8fafc;border-radius:14px;padding:13px 40px 13px 12px;font:13px Tahoma,Arial;outline:none;color:#111827}.activity-picker-search input:focus{border-color:#eab308;box-shadow:0 0 0 3px rgba(234,179,8,.14)}.activity-picker-search:before{content:'⌕';position:absolute;right:14px;top:7px;font-size:24px;color:#8a94a6}.activity-picker-list{overflow:auto;padding:9px;overscroll-behavior:contain}.activity-picker-option{width:100%;display:flex;align-items:center;gap:10px;text-align:right;border:1px solid transparent;background:#fff;border-radius:13px;padding:12px 11px;margin:2px 0;color:#263244;font:12px/1.8 Tahoma,Arial;cursor:pointer}.activity-picker-option:before{content:'›';width:26px;height:26px;flex:0 0 26px;display:grid;place-items:center;border-radius:9px;background:#f4f6f8;color:#7c8798;font-size:19px}.activity-picker-option:hover,.activity-picker-option:focus{background:#fff9e8;border-color:#f6df8a;outline:0}.activity-picker-option:hover:before{background:#ffedb5;color:#854d0e}.activity-picker-empty{padding:24px 12px;text-align:center;color:#8992a2;font-size:12px}.activity-picker-foot{padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;color:#7b8494;font-size:10px}.activity-picker-close{border:0;border-radius:11px;background:#f1f3f6;color:#374151;font:12px Tahoma;padding:10px 15px;cursor:pointer}
+.activity-picker-choice-view,.activity-picker-text-view,.activity-picker-category-view{padding:16px;min-height:120px}
+.activity-picker-mode{width:100%;display:flex;align-items:center;gap:12px;text-align:right;padding:15px;margin:0 0 10px;border:1px solid #e8ebf0;border-radius:17px;background:linear-gradient(135deg,#fff,#fbfcfe);cursor:pointer;color:#172033;transition:.16s}
+.activity-picker-mode:hover,.activity-picker-mode:focus{outline:0;border-color:#f0cc48;background:#fffaf0;transform:translateY(-1px)}
+.activity-picker-mode>span:nth-child(2){display:flex;flex-direction:column;gap:5px;flex:1}.activity-picker-mode b{font:900 14px Tahoma,Arial}.activity-picker-mode small{font:11px/1.8 Tahoma,Arial;color:#7b8494}.activity-picker-mode i{font:normal 27px Tahoma;color:#9aa3b2}
+.activity-mode-icon{width:43px;height:43px;border-radius:14px;background:#eef2ff;color:#4338ca;display:grid;place-items:center;font:bold 20px Arial;flex-shrink:0}.activity-mode-icon.category{background:#fff1bd;color:#8a5b00}
+.activity-picker-text-view label{display:block;font:800 12px Tahoma;color:#475569;margin-bottom:9px}
+.activity-picker-text-view textarea{box-sizing:border-box;width:100%;resize:vertical;min-height:100px;border:1px solid #dbe1e8;border-radius:14px;background:#f8fafc;padding:13px;font:14px/1.9 Tahoma,Arial;color:#172033;outline:none}
+.activity-picker-text-view textarea:focus{border-color:#eab308;box-shadow:0 0 0 3px #eab30820;background:white}
+.activity-picker-actions{display:flex;gap:9px;justify-content:space-between;margin-top:12px}.activity-picker-actions button{border:0;border-radius:12px;padding:11px 16px;font:800 12px Tahoma;cursor:pointer}
+.activity-picker-back{background:#f1f5f9;color:#475569}.activity-picker-apply{background:#eab308;color:#422006;margin-right:auto}
+.activity-picker-category-view{display:flex;flex-direction:column;min-height:0}.activity-picker-category-view .activity-picker-list{max-height:min(48dvh,420px);overflow:auto}
+.activity-picker-choice-view[hidden],.activity-picker-text-view[hidden],.activity-picker-category-view[hidden]{display:none!important}
+@media(max-width:560px){.activity-picker{border-radius:20px}.activity-picker-mode{padding:13px}.activity-picker-choice-view,.activity-picker-text-view,.activity-picker-category-view{padding:12px}}
+
+
 </style>
 <style>
 /* PostYar — polished create-row interaction. The added record is a single blank row,
@@ -595,24 +615,46 @@ img{display:block;max-width:100%}
 .pdf-added-table-cell[contenteditable="true"]{cursor:text;caret-color:#16834b}
 .pdf-added-table-cell[contenteditable="true"]:focus{background:#f4fff7;box-shadow:inset 0 0 0 1px rgba(22,131,75,.45);position:relative;z-index:1}
 .pdf-added-table-cell.has-value{color:#16834b}
-.pdf-section-menu{width:28px;height:28px;border:1px solid #e7d58a;border-radius:10px;background:rgba(255,255,255,.98);color:#66500a;box-shadow:0 5px 15px rgba(15,23,42,.12);font-size:19px;line-height:1;transition:transform .16s,box-shadow .16s,border-color .16s}
+.pdf-section-menu{width:22px;height:22px;border:1px solid #e7d58a;border-radius:7px;background:rgba(255,255,255,.98);color:#66500a;box-shadow:0 3px 9px rgba(15,23,42,.10);font-size:15px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;transition:transform .16s,box-shadow .16s,border-color .16s}
 .pdf-section-menu:hover{transform:translateY(-1px);border-color:#d4a400;box-shadow:0 7px 18px rgba(15,23,42,.16)}
 .pdf-section-pop{min-width:174px;padding:6px;border:1px solid #e7eaf0;border-radius:14px;background:rgba(255,255,255,.98);box-shadow:0 16px 38px rgba(15,23,42,.17);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .pdf-section-pop button{display:flex;align-items:center;gap:8px;width:100%;border:0;border-radius:9px;background:transparent;padding:10px 11px;text-align:right;font:700 12px/1.5 Tahoma,sans-serif;transition:background .15s}
 .pdf-section-pop button:hover{background:#f8fafc}
 .pdf-section-pop button[style*="21, 128, 61"],.pdf-section-pop button[style*="15803d"]{color:#16834b!important}
-@media(max-width:640px){.pdf-section-menu{width:27px;height:27px}.pdf-section-pop{min-width:158px}.pdf-added-table-cell{padding:0 1px}}
+@media(max-width:640px){.pdf-section-menu{width:20px;height:20px;min-width:20px;min-height:20px;border-radius:6px;font-size:14px}.pdf-section-pop{min-width:0;width:min(220px,calc(100vw - 76px));max-width:220px;padding:7px;border-radius:13px;max-height:42vh;overflow:auto;box-shadow:0 12px 30px rgba(15,23,42,.2)}.pdf-section-pop button{font-size:12px;line-height:1.5;padding:10px;border-radius:9px;white-space:normal}.pdf-added-table-cell{padding:0 1px}}
+.pdf-delete-picker{display:grid;gap:8px;padding:5px}
+.pdf-delete-picker label{font-size:11px;font-weight:800;color:#475569}
+.pdf-delete-picker select{width:100%;min-width:0;height:42px;border:1px solid #dbe3ee;border-radius:10px;background:#f8fafc;padding:0 10px;font:12px var(--font);color:#1e293b}
+.pdf-delete-picker .pdf-delete-confirm{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;text-align:center;justify-content:center;font-weight:800}
+.pdf-delete-picker .pdf-delete-cancel{background:#f1f5f9;color:#475569;text-align:center;justify-content:center}
+
+</style>
+
+<style id="pdf-native-delete-picker-style">
+.pdf-section-menu{width:17px!important;height:17px!important;min-width:17px!important;min-height:17px!important;padding:0!important;border-radius:4px!important;font-size:12px!important;line-height:15px!important;box-shadow:0 1px 4px rgba(15,23,42,.12)!important;opacity:.92}
+.pdf-native-delete-select{position:fixed!important;z-index:2147483000!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(88vw,340px)!important;height:46px!important;min-width:220px!important;max-width:88vw!important;opacity:1!important;visibility:visible!important;padding:8px 12px!important;border:1px solid #cbd5e1!important;border-radius:10px!important;background:#fff!important;color:#111827!important;pointer-events:auto!important;font-size:16px!important;box-shadow:0 8px 28px rgba(0,0,0,.2)!important;direction:rtl!important}
+@media(max-width:640px){.pdf-section-menu{width:15px!important;height:15px!important;min-width:15px!important;min-height:15px!important;font-size:11px!important;border-radius:4px!important}.pdf-native-delete-select{font-size:16px!important;min-width:88vw!important;height:48px!important}}
+</style>
+
+<style id="postyar-numeric-input-polish">
+.pdf-original-field.is-editing{font-variant-numeric:tabular-nums!important;-webkit-text-size-adjust:100%;}
+.pdf-original-field[inputmode="numeric"],.pdf-original-field[inputmode="decimal"]{font-variant-numeric:tabular-nums!important;}
 </style>
 </head>
 <body>
-<div id="postyarFormDialog" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="pyFormTitle">
- <div class="py-form-panel">
-  <div class="py-form-head"><div><h3 id="pyFormTitle">ثبت فرم جدید پستی</h3><p>اطلاعات را وارد کنید؛ پیش‌نمایش نهایی با قالب جدول پستی ساخته می‌شود.</p></div><button type="button" class="py-form-close" id="pyFormClose" aria-label="بستن">×</button></div>
-  <form id="postyarFormEntryForm"><div class="py-form-body"><div class="py-form-note"><span>ⓘ</span><span>فیلدهای ثابت و قفل‌شده قابل تغییر نیستند. برای ثبت چند ردیف مرتبط، «افزودن ردیف زیرمجموعه» را بزنید؛ همه ردیف‌ها با همان اندازه و خطوط جدول اصلی ساخته می‌شوند.</span></div><div id="pyFormRows"></div></div>
-   <div class="py-form-actions"><div class="left"><button class="py-form-btn subtle-green" type="button" id="pyAddSubrow">＋ افزودن ردیف زیرمجموعه</button></div><div class="right"><button class="py-form-btn" type="button" id="pyFormCancel">انصراف</button><button class="py-form-btn primary" type="submit">✓ ثبت فرم و ساخت جدول</button></div></div>
-  </form>
+<div class="activity-picker-backdrop" id="activityPickerBackdrop" role="dialog" aria-modal="true" aria-labelledby="activityPickerTitle">
+ <div class="activity-picker">
+  <div class="activity-picker-head"><div class="activity-picker-title" id="activityPickerTitle"><span>✦</span>ویرایش نوع فعالیت</div><div class="activity-picker-subtitle" id="activityPickerSubtitle">روش وارد کردن مقدار این خانه را انتخاب کن.</div></div>
+  <div class="activity-picker-choice-view" id="activityPickerChoiceView">
+   <button type="button" class="activity-picker-mode" id="activityPickerTextMode"><span class="activity-mode-icon">T</span><span><b>Text</b><small>نوشتن متن دلخواه در همین خانه</small></span><i>‹</i></button>
+   <button type="button" class="activity-picker-mode" id="activityPickerCategoryMode"><span class="activity-mode-icon category">⌕</span><span><b>Search</b><small>جست‌وجو و انتخاب فعالیت از فهرست</small></span><i>‹</i></button>
+  </div>
+  <div class="activity-picker-text-view" id="activityPickerTextView" hidden><label for="activityPickerTextInput">متن فعالیت</label><textarea id="activityPickerTextInput" rows="3" placeholder="متن دلخواه را بنویسید…"></textarea><div class="activity-picker-actions"><button type="button" class="activity-picker-back" id="activityPickerBackFromText">بازگشت</button><button type="button" class="activity-picker-apply" id="activityPickerApplyText">ثبت متن</button></div></div>
+  <div class="activity-picker-category-view" id="activityPickerCategoryView" hidden><div class="activity-picker-search"><input id="activityPickerSearch" type="search" placeholder="جست‌وجوی فعالیت…" autocomplete="off"></div><div class="activity-picker-list" id="activityPickerList"></div><div class="activity-picker-actions"><button type="button" class="activity-picker-back" id="activityPickerBackFromCategories">بازگشت</button></div></div>
+  <div class="activity-picker-foot"><span>تغییر فقط روی همین خانه اعمال می‌شود.</span><button class="activity-picker-close" type="button" id="activityPickerClose">بستن</button></div>
  </div>
 </div>
+
 
 <!-- SVG Icons -->
 <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
@@ -1953,29 +1995,85 @@ function saveFaithfulPdfEdits(){
 }
 
 function pdfDeletionGroups(items){
-  // Build visual text rows using PDF coordinates. An address row starts a logical building section;
-  // all record rows below it belong to that section until the next address row.
+  // Read the printed row labels and unit numbers from the source PDF text layer.
+  // A row is identified by "ردیف اصلی" plus the four-digit "ردیف واحد" value
+  // (e.g. 1111, 1113, 1115); five-digit identification codes are ignored.
+  function norm(t){
+    return cleanPdfText(String(t||''))
+      .replace(/[۰-۹]/g,function(d){return String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d));})
+      .replace(/[٠-٩]/g,function(d){return String('٠١٢٣٤٥٦٧٨٩'.indexOf(d));})
+      .replace(/[يى]/g,'ی').replace(/ك/g,'ک')
+      .replace(/[\u200B-\u200F\uFEFF]/g,'').replace(/\s+/g,'').replace(/[：:،,؛;]/g,'');
+  }
+  var sorted=(items||[]).slice().sort(function(a,b){return (Number(a.top)||0)-(Number(b.top)||0);});
   var rows=[];
-  items.forEach(function(it){
-    var row=rows.find(function(r){return Math.abs(r.top-it.top)<=Math.max(3,Math.min(6,it.height*.55));});
-    if(!row){row={top:it.top,items:[]};rows.push(row);}row.items.push(it);
+  sorted.forEach(function(it){
+    var top=Number(it.top)||0;
+    // PDF.js may split a printed line into many text items with slightly
+    // different top coordinates. Use a tight but tolerant baseline grouping.
+    var row=rows.find(function(r){return Math.abs(r.top-top)<=3.5;});
+    if(!row){row={top:top,items:[]};rows.push(row);}
+    row.items.push(it);
+    row.top=row.items.reduce(function(sum,x){return sum+(Number(x.top)||0);},0)/row.items.length;
   });
   rows.sort(function(a,b){return a.top-b.top;});
-  function norm(t){return String(t||'').replace(/[\u200B-\u200F\uFEFF]/g,'').replace(/[يى]/g,'ی').replace(/ك/g,'ک').replace(/\s+/g,'').replace(/[：:،,؛;]/g,'');}
-  rows.forEach(function(r){r.text=r.items.map(function(i){return i.text;}).join(' ');r.isAddress=/آدرس/.test(r.text)&&(/محله|بلوک|ساختمان/.test(r.text)||r.items.length>=3);r.isPrimary=/ردیف\s*اصلی/.test(norm(r.text));});
-  var addressRows=rows.filter(function(r){return r.isAddress;});
-  var starts=addressRows.length?addressRows:rows.filter(function(r){return r.isPrimary;});
-  if(!starts.length)return [];
-  var groups=[];
-  starts.forEach(function(start,idx){
-    var end=idx+1<starts.length?starts[idx+1].top:Infinity;
-    var chosen=items.filter(function(it){return it.top>=start.top-2&&it.top<end;});
-    if(!chosen.length)return;
-    var statusItem=chosen.find(function(it){return /ردیف\s*اصلی/.test(norm(it.text));});
-    groups.push({id:String(chosen[0].index),start:start.top,items:chosen,statusKey:statusItem?statusItem.key:''});
+  rows.forEach(function(r){
+    r.text=r.items.map(function(i){return i.text||'';}).join(' ');
+    var n=norm(r.text);
+    r.isAddress=n.indexOf('آدرس')!==-1 && (n.indexOf('محله')!==-1 || n.indexOf('بلوک')!==-1 || n.indexOf('ساختمان')!==-1);
+    r.isPrimaryLabel=n.indexOf('ردیفاصلی')!==-1 || (n.indexOf('ردیف')!==-1 && n.indexOf('اصلی')!==-1);
+    r.recordNo='';
+    // The unit row is four digits. Ignore five-digit code fields and report year.
+    r.items.forEach(function(it){
+      var raw=norm(it.text||'');
+      (raw.match(/\d+/g)||[]).forEach(function(v){
+        if(!r.recordNo && v.length===4 && v!=='1405' && Number(v)>=1000)r.recordNo=v;
+      });
+    });
   });
-  // On continuation pages without a repeated address line, each primary row becomes a section.
-  return groups;
+  // Pair label and unit number even when PDF.js places them in separate
+  // neighboring text fragments/lines. Prefer the closest unique 4-digit value.
+  var recordRows=[];
+  rows.forEach(function(labelRow){
+    if(!labelRow.isPrimaryLabel)return;
+    var candidates=rows.filter(function(r){
+      return !!r.recordNo && Math.abs(r.top-labelRow.top)<=22;
+    }).sort(function(a,b){
+      return Math.abs(a.top-labelRow.top)-Math.abs(b.top-labelRow.top);
+    });
+    var numberRow=(labelRow.recordNo?labelRow:candidates[0]);
+    if(!numberRow)return;
+    var no=numberRow.recordNo;
+    if(!no || no==='1405')return;
+    if(recordRows.some(function(x){return x.label===no && Math.abs(x.top-labelRow.top)<5;}))return;
+    var recItems=labelRow===numberRow?labelRow.items:labelRow.items.concat(numberRow.items);
+    var recTop=(labelRow.top+numberRow.top)/2;
+    recordRows.push({top:recTop,items:recItems,label:no,
+      id:String(Math.round(recTop*100))+'-'+no,
+      statusKey:(recItems.find(function(it){return /ردیف\s*اصلی/.test(cleanPdfText(it.text));})||{}).key||''});
+  });
+  recordRows.sort(function(a,b){return a.top-b.top;});
+  if(!recordRows.length)return [];
+  // Keep whole-table deletion, and expose every printed record as an individual
+  // native mobile select option. Address headers are not required for detection.
+  var addressRows=rows.filter(function(r){return r.isAddress;});
+  var sections=[];
+  if(addressRows.length){
+    addressRows.forEach(function(a,idx){
+      var next=idx+1<addressRows.length?addressRows[idx+1].top:Infinity;
+      var sectionRecords=recordRows.filter(function(r){return r.top>a.top-4 && r.top<next;});
+      if(sectionRecords.length){
+        var sectionItems=items.filter(function(it){return Number(it.top)>=a.top-4 && Number(it.top)<next;});
+        sections.push({id:String((sectionItems[0]||a.items[0]).index),start:a.top,items:sectionItems,rows:sectionRecords});
+      }
+    });
+  }
+  // Some pages have no repeated address header (continuation pages).
+  if(!sections.length){
+    sections.push({id:String((items[0]||{}).index||0),start:recordRows[0].top,
+      items:(items||[]).slice(),rows:recordRows});
+  }
+  return sections;
 }
 function toggleDeletedPdfSection(pageNo,group,items){
   var key=pageNo+':'+group.id;
@@ -2033,7 +2131,6 @@ function renderAddedPdfTables(overlay,pageNo,scale,items){
       ev.preventDefault();ev.stopPropagation();
       var old=overlay.querySelector('.pdf-section-pop');if(old)old.remove();
       var pop=document.createElement('div');pop.className='pdf-section-pop';pop.style.position='relative';pop.style.left='0';pop.style.top='0';pop.style.zIndex='20';
-      var add=document.createElement('button');add.type='button';add.textContent='＋ افزودن زیرردیف';add.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();pop.remove();createSubrowForAddedTable(pageNo,table,overlay,items,scale);});pop.appendChild(add);
       var del=document.createElement('button');del.type='button';del.textContent='حذف این ردیف';del.style.color='#b91c1c';del.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(confirm('این ردیف جدید حذف شود؟')){addedPdfTables[pageNo]=(addedPdfTables[pageNo]||[]).filter(function(t){return t.id!==table.id});faithfulPdfRendered[pageNo]=false;renderFaithfulPdfPage(pageNo).then(markPdfEditsDirty)}pop.remove()});pop.appendChild(del);overlay.appendChild(pop);
     });
     overlay.appendChild(el);overlay.appendChild(menu);
@@ -2050,89 +2147,95 @@ function createSubrowForAddedTable(pageNo,parent,overlay,items,scale){
   if(!addedPdfTables[pageNo])addedPdfTables[pageNo]=[];addedPdfTables[pageNo].push(row);
   faithfulPdfRendered[pageNo]=false;renderFaithfulPdfPage(pageNo).then(function(){markPdfEditsDirty();if(nextY+row.rowHeight>data.height-4)toast('زیرردیف ثبت شد؛ در خروجی PDF در صفحهٔ ادامه درج می‌شود.','success')});
 }
-var pendingPostalForm=null;
-function openPostalFormDialog(pageNo,group,overlay,items,scale,geom){
-  pendingPostalForm={pageNo:pageNo,group:group,overlay:overlay,items:items,scale:scale,geom:geom};
-  var dialog=document.getElementById('postyarFormDialog'),rowsHost=document.getElementById('pyFormRows');
-  rowsHost.innerHTML='';addPostalEntryRow(rowsHost,0);
-  dialog.classList.add('open');dialog.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
-  setTimeout(function(){var first=rowsHost.querySelector('input:not([readonly])');if(first)first.focus();},80);
-}
-function closePostalFormDialog(){var dialog=document.getElementById('postyarFormDialog');if(dialog){dialog.classList.remove('open');dialog.setAttribute('aria-hidden','true')}document.body.style.overflow='';pendingPostalForm=null;}
-function addPostalEntryRow(host,index){
-  var wrap=document.createElement('section');wrap.className='py-form-row';wrap.dataset.entryIndex=index;
-  var title=document.createElement('div');title.className='py-form-row-title';title.innerHTML='<span>'+ (index===0?'فرم اصلی':'ردیف زیرمجموعه '+fa(index)) +'</span><span style="color:#15803d">● '+(index===0?'فرم جدید':'مرتبط')+'</span>';wrap.appendChild(title);
-  var grid=document.createElement('div');grid.className='py-form-grid';
-  POSTAL_TABLE_HEADERS.forEach(function(label,ci){var field=document.createElement('div');field.className='py-form-field';var lab=document.createElement('label');lab.textContent=label;var input=document.createElement('input');input.type='text';input.autocomplete='off';input.spellcheck=false;input.dataset.col=ci;input.setAttribute('aria-label',label);input.placeholder='';
-    if(ci===9){input.value='';input.readOnly=true;input.placeholder='قفل‌شده';input.title='این فیلد طبق ساختار پستی قفل است';}
-    else{input.addEventListener('input',function(){if([0,1,2,3,4,7].indexOf(ci)>=0){var st=input.selectionStart,en=input.selectionEnd;input.value=input.value.replace(/[0-9٠-٩]/g,function(d){return d>='0'&&d<='9'?'۰۱۲۳۴۵۶۷۸۹'.charAt(+d):'۰۱۲۳۴۵۶۷۸۹'.charAt('٠١٢٣٤٥٦٧٨٩'.indexOf(d))});try{input.setSelectionRange(st,en)}catch(e){}}});}
-    field.appendChild(lab);field.appendChild(input);grid.appendChild(field);
-  });wrap.appendChild(grid);host.appendChild(wrap);
-}
-function createAddedPdfTable(pageNo,group,overlay,items,scale){
-  var data=faithfulPdfPageData[pageNo];if(!data)return;
-  var rows=group.items||[];var endTop=rows.reduce(function(m,it){return Math.max(m,it.top+it.height*1.5)},group.start||0);group.endTop=endTop;
-  var geom=getPdfTableGeometry(group,items,data.width,scale);geom.y=endTop+Math.max(3,geom.rowHeight*.2);
-  var related=(addedPdfTables[pageNo]||[]).filter(function(t){return t.groupId===group.id||t.parentGroupId===group.id;});related.forEach(function(t){geom.y=Math.max(geom.y,t.y+t.rowHeight)});
-  openPostalFormDialog(pageNo,group,overlay,items,scale,geom);
-}
-function commitPostalEntryRows(){
-  if(!pendingPostalForm)return;
-  var ctx=pendingPostalForm,host=document.getElementById('pyFormRows'),entryRows=Array.prototype.slice.call(host.querySelectorAll('.py-form-row'));
-  var values=entryRows.map(function(row){return Array.prototype.map.call(row.querySelectorAll('input'),function(input){return input.readOnly?'':String(input.value||'').replace(/[\r\n]+/g,' ').trim()})});
-  if(!values.some(function(row){return row.some(function(v){return !!v})})){toast('لطفاً دست‌کم یک فیلد را تکمیل کنید','error');return;}
-  var pageNo=ctx.pageNo,geom=ctx.geom,data=faithfulPdfPageData[pageNo],rowHeight=geom.rowHeight;
-  // Overflow is retained in the document model; the PDF export places rows that do not fit on dedicated continuation pages.
-  if(!addedPdfTables[pageNo])addedPdfTables[pageNo]=[];
-  var parentId='form-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
-  values.forEach(function(rowValues,i){var table={id:parentId+'-'+i,groupId:ctx.group.id,parentGroupId:ctx.group.id,parentId:i?parentId+'-0':null,x:geom.x,y:geom.y+i*rowHeight,width:geom.width,rowHeight:rowHeight,colWidths:geom.colWidths.slice(),values:rowValues,formIndex:i,formParent:parentId};addedPdfTables[pageNo].push(table)});
-  closePostalFormDialog();faithfulPdfRendered[pageNo]=false;renderFaithfulPdfPage(pageNo).then(function(){markPdfEditsDirty();toast('فرم ثبت شد؛ برای جلوگیری از هم‌پوشانی، ردیف‌های جدید در صفحهٔ ادامهٔ رسمی درج می‌شوند','success')});
-}
-(function bindPostalFormDialog(){
-  var close=document.getElementById('pyFormClose'),cancel=document.getElementById('pyFormCancel'),add=document.getElementById('pyAddSubrow'),form=document.getElementById('postyarFormEntryForm'),dialog=document.getElementById('postyarFormDialog'),host=document.getElementById('pyFormRows');
-  if(close)close.addEventListener('click',closePostalFormDialog);if(cancel)cancel.addEventListener('click',closePostalFormDialog);
-  if(add)add.addEventListener('click',function(){var count=host.querySelectorAll('.py-form-row').length;addPostalEntryRow(host,count)});
-  if(form)form.addEventListener('submit',function(e){e.preventDefault();commitPostalEntryRows()});
-  if(dialog)dialog.addEventListener('click',function(e){if(e.target===dialog)closePostalFormDialog()});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&dialog&&dialog.classList.contains('open'))closePostalFormDialog()});
-})();
 function addPdfSectionMenus(overlay,pageNo,items,scale){
+  // منوها به بدنه صفحه منتقل می‌شوند تا مستقل از زوم PDF و محدوده canvas باشند.
+  function placeFloatingPanel(panel,anchor){
+    var r=anchor.getBoundingClientRect(),gap=8,pad=10,vv=window.visualViewport;
+    var vw=vv?vv.width:window.innerWidth,vh=vv?vv.height:window.innerHeight;
+    var ox=vv?vv.offsetLeft:0,oy=vv?vv.offsetTop:0,visualScale=vv?Math.max(1,vv.scale||1):1;
+    panel.style.position='fixed';panel.style.left='0px';panel.style.top='0px';
+    panel.style.right='auto';panel.style.bottom='auto';panel.style.zIndex='2147483001';
+    panel.style.width=Math.min(270/visualScale,vw-2*pad)+'px';panel.style.maxWidth=(vw-2*pad)+'px';
+    panel.style.maxHeight=Math.min(vh*.58,440/visualScale)+'px';panel.style.overflowY='auto';
+    panel.style.zoom=String(1/visualScale);document.body.appendChild(panel);
+    var w=panel.getBoundingClientRect().width,h=panel.getBoundingClientRect().height;
+    var left=Math.max(pad,Math.min(r.right-w,ox+vw-w-pad));
+    var top=r.bottom+h+gap<=oy+vh-pad?r.bottom+gap:r.top-h-gap;
+    top=Math.max(oy+pad,Math.min(top,oy+vh-h-pad));
+    panel.style.left=Math.round(left)+'px';panel.style.top=Math.round(top)+'px';
+  }
+  function makeAction(text,color,handler){
+    var b=document.createElement('button');b.type='button';b.textContent=text;
+    b.style.color=color||'#334155';b.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();handler();});return b;
+  }
+  if(!window.__postyarSectionMenuOutsideClose){
+    window.__postyarSectionMenuOutsideClose=true;
+    document.addEventListener('click',function(ev){
+      if(ev.target.closest&& (ev.target.closest('.pdf-section-pop')||ev.target.closest('.pdf-section-menu')))return;
+      document.querySelectorAll('.pdf-section-pop').forEach(function(menu){menu.remove()});
+    },true);
+    window.addEventListener('resize',function(){document.querySelectorAll('.pdf-section-pop').forEach(function(m){m.remove()})},{passive:true});
+    if(window.visualViewport){window.visualViewport.addEventListener('resize',function(){document.querySelectorAll('.pdf-section-pop').forEach(function(m){m.remove()})},{passive:true});}
+    window.addEventListener('scroll',function(){document.querySelectorAll('.pdf-section-pop').forEach(function(m){m.remove()})},{passive:true,capture:true});
+  }
   var groups=pdfDeletionGroups(items);
   groups.forEach(function(group){
-    var btn=document.createElement('button');btn.type='button';btn.className='pdf-section-menu';btn.textContent='⋮';btn.title='گزینه‌های این بخش';
-    btn.style.left='3px';btn.style.top=Math.max(2,group.start*scale)+'px';
-    btn.setAttribute('aria-label','گزینه‌های بخش PDF');
+    var btn=document.createElement('button');btn.type='button';btn.className='pdf-section-menu';btn.textContent='⋮';btn.title='گزینه‌های این جدول';
+    btn.style.left='1px';btn.style.top=Math.max(2,group.start*scale)+'px';
+    btn.setAttribute('aria-label','گزینه‌های جدول PDF');
     btn.addEventListener('click',function(ev){
       ev.preventDefault();ev.stopPropagation();
-      var existing=overlay.querySelector('.pdf-section-pop');if(existing)existing.remove();
-      var pop=document.createElement('div');pop.className='pdf-section-pop';pop.style.left='31px';pop.style.top=Math.max(2,group.start*scale)+'px';
-      var action=document.createElement('button');action.type='button';action.textContent=deletedPdfSections[pageNo+':'+group.id]?'↩ برداشتن علامت حذف':'🔴 حذف این بخش';
-      action.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();pop.remove();toggleDeletedPdfSection(pageNo,group,group.items);});
-      pop.appendChild(action);
-      var addAction=document.createElement('button');addAction.type='button';addAction.textContent='＋ افزودن فرم ۱';addAction.style.color='#15803d';
-      addAction.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();pop.remove();createAddedPdfTable(pageNo,group,overlay,items,scale);});
-      pop.appendChild(addAction);overlay.appendChild(pop);
+      document.querySelectorAll('.pdf-section-pop').forEach(function(m){m.remove()});
+      var pop=document.createElement('div');pop.className='pdf-section-pop';
+      pop.style.width='min(270px,calc(100vw - 24px))';pop.style.boxSizing='border-box';
+      pop.style.padding='9px';pop.style.borderRadius='17px';pop.style.background='rgba(255,255,255,.98)';
+      pop.style.border='1px solid #e6eaf0';pop.style.boxShadow='0 18px 48px rgba(15,23,42,.22)';
+      pop.style.backdropFilter='blur(14px)';pop.style.webkitBackdropFilter='blur(14px)';pop.style.direction='rtl';
+      var head=document.createElement('div');head.textContent='مدیریت جدول';head.style.cssText='font:800 13px Tahoma,sans-serif;color:#1e293b;padding:8px 10px 10px;border-bottom:1px solid #edf0f4;margin-bottom:5px';pop.appendChild(head);
+      var wholeKey=pageNo+':'+group.id;
+      var wholeDeleted=!!deletedPdfSections[wholeKey];
+      var rowsAllDeleted=!!(group.rows&&group.rows.length&&group.rows.every(function(row){return !!deletedPdfSections[pageNo+':'+group.id+':'+row.id]}));
+      var whole=makeAction(wholeDeleted?'↩ لغو حذف کل جدول':(rowsAllDeleted?'↩ لغو حذف همه ردیف‌ها':'🔴 حذف کل جدول'),wholeDeleted||rowsAllDeleted?'#16834b':'#b91c1c',function(){
+        pop.remove();
+        if(wholeDeleted){toggleDeletedPdfSection(pageNo,group,group.items);return;}
+        if(rowsAllDeleted){
+          if(!confirm('حذف همه ردیف‌های این جدول لغو شود؟'))return;
+          group.rows.forEach(function(row){delete deletedPdfSections[pageNo+':'+group.id+':'+row.id]});
+          faithfulPdfRendered[pageNo]=false;renderFaithfulPdfPage(pageNo).then(markPdfEditsDirty);return;
+        }
+        toggleDeletedPdfSection(pageNo,group,group.items);
+      });pop.appendChild(whole);
+      if(group.rows&&group.rows.length){
+        var choose=makeAction('مدیریت ردیف‌ها  ›','#334155',function(){
+          pop.innerHTML='';var title=document.createElement('div');title.textContent='مدیریت ردیف‌های جدول';title.style.cssText='font:800 13px Tahoma,sans-serif;color:#1e293b;padding:8px 10px 11px';pop.appendChild(title);
+          var back=makeAction('‹ بازگشت به گزینه‌ها','#64748b',function(){pop.remove();btn.click()});back.style.borderBottom='1px solid #edf0f4';pop.appendChild(back);
+          group.rows.forEach(function(row){
+            var rowKey=pageNo+':'+group.id+':'+row.id, isDeleted=!!deletedPdfSections[rowKey];
+            var label=isDeleted?'↩ لغو حذف ردیف '+fa(String(row.label)):'🔴 حذف ردیف '+fa(String(row.label));
+            var itemBtn=makeAction(label,isDeleted?'#16834b':'#b91c1c',function(){
+              var rowGroup={id:group.id+':'+row.id,start:row.top,items:row.items,statusKey:row.statusKey||''};
+              pop.remove();toggleDeletedPdfSection(pageNo,rowGroup,row.items);
+            });itemBtn.style.borderBottom='1px solid #f1f5f9';pop.appendChild(itemBtn);
+          });
+          placeFloatingPanel(pop,btn);
+        });pop.appendChild(choose);
+      }
+      placeFloatingPanel(pop,btn);
     });
     overlay.appendChild(btn);
   });
-  // Mark deleted text in-place. Use the exact source text-run bounds (not the inferred whole-cell
-  // bounds) and an opaque white backing so the original black glyphs cannot show through in red.
-  // Narrow text-run bounds keep the white patch away from the table's cell borders.
+  // Apply red styling only to the text runs saved in each deletion record.
   Object.keys(deletedPdfSections).forEach(function(k){
     var sec=deletedPdfSections[k];if(sec.page!==pageNo)return;
     (sec.keys||[]).forEach(function(key){
       var field=Array.prototype.find.call(overlay.querySelectorAll('.pdf-original-field'),function(el){return el.dataset.editKey===key;});
       if(!field)return;
       var item=(items||[]).find(function(it){return it.key===key;});if(!item)return;
-      var scale=Number(item.displayScale)||1;
-      field.classList.add('section-deleted');
-      field.style.left=(item.x*scale)+'px';
-      field.style.top=(item.top*scale)+'px';
-      field.style.width=Math.max(3,item.width*scale)+'px';
-      field.style.height=Math.max(5,item.height*scale*1.18)+'px';
+      var itemScale=Number(item.displayScale)||1;
+      field.classList.add('section-deleted');field.style.left=(item.x*itemScale)+'px';field.style.top=(item.top*itemScale)+'px';
+      field.style.width=Math.max(3,item.width*itemScale)+'px';field.style.height=Math.max(5,item.height*itemScale*1.18)+'px';
       field.style.padding='0';field.style.margin='0';field.style.whiteSpace='nowrap';field.style.overflow='hidden';
-      field.style.fontSize=Math.max(7,item.height*scale*.9)+'px';
-      field.style.textAlign='center';field.style.border='0';field.style.borderRadius='0';field.style.boxShadow='none';field.style.zIndex='3';
+      field.style.fontSize=Math.max(7,item.height*itemScale*.9)+'px';field.style.textAlign='center';field.style.border='0';field.style.borderRadius='0';field.style.boxShadow='none';field.style.zIndex='3';
       field.style.color='#dc2626';field.style.background='#fff';field.style.textShadow='none';field.style.webkitTextStroke='0';
       if(sec.statusKey===key){field.value='حذف شده';field.classList.add('section-status');}
       else{field.value=Object.prototype.hasOwnProperty.call(faithfulPdfEdits,key)?cleanPdfText(faithfulPdfEdits[key]):item.text;}
@@ -2152,6 +2255,12 @@ function filterFaithfulPdfPages(query){
   var count=$('#pdfFilterCount');if(count)count.textContent=query?(fa(shown)+' صفحهٔ مطابق'):'همهٔ صفحه‌ها';
 }
 function clearFaithfulPdfFilter(){var input=$('#pdfPageFilter');if(input)input.value='';filterFaithfulPdfPages('');}
+
+// No extra canvas/text-mask layers are added over the source PDF.
+// The editable input itself covers only the source text glyph bounds while editing.
+function restorePdfRulePixels(ctx, sourceImage, width, height, region){ return; }
+function createPdfOriginalTextMask(overlay, sourceCanvas, item, scale){ return null; }
+
 async function renderFaithfulPdfPage(pageNo){
   if(!faithfulPdf||faithfulPdfRendered[pageNo])return;
   faithfulPdfRendered[pageNo]=true;
@@ -2205,6 +2314,26 @@ async function renderFaithfulPdfPage(pageNo){
     var idHeaders=items.filter(function(it){return norm(it.text)===norm('کد شناسایی')});
     if(idHeaders.length){items.forEach(function(it){if(it.locked)return;var center=it.x+it.width/2;if(idHeaders.some(function(h){return Math.abs(center-(h.x+h.width/2))<Math.max(10,baseViewport.width*.025)}))it.locked=true;});}
     var scale=displayScale;
+    // Identify the actual table columns from their printed headers, preserving the source PDF layout.
+    var columnHeaders=[];
+    [['پلاک','plaque',4],['طبقه','floor',3],['واحد','unit',3],['بلوک/ورودی','block',null]].forEach(function(def){
+      items.filter(function(it){return norm(it.text)===norm(def[0]);}).forEach(function(h){
+        columnHeaders.push({label:def[0],type:def[1],maxLength:def[2],x:h.x+h.width/2,y:h.top});
+      });
+    });
+    var locationTypeHeaders=items.filter(function(h){return norm(h.text)===norm('نوع مکان')});
+    items.forEach(function(it){
+      it.numericColumn=null;it.locationTypeColumn=false;
+      var center=it.x+it.width/2;
+      // The location-type column is special: its valid values include negative codes (-1, -2, ...).
+      it.locationTypeColumn=locationTypeHeaders.some(function(h){return it.top>h.top+Math.max(2,it.height*.25)&&Math.abs(center-(h.x+h.width/2))<=Math.max(10,baseViewport.width*.025)});
+      var nearby=columnHeaders.filter(function(h){return Math.abs(center-h.x)<=Math.max(10,baseViewport.width*.025);});
+      if(nearby.length){
+        nearby.sort(function(a,b){return Math.abs(center-a.x)-Math.abs(center-b.x);});
+        var candidate=nearby.find(function(h){return it.top>h.y+Math.max(2,it.height*.25);});
+        if(candidate)it.numericColumn=candidate;
+      }
+    });
     // Infer the full editable cell from text neighbors on the same line, so tapping the blank
     // portion of a boxed field can also activate editing instead of only the printed glyphs.
     items.forEach(function(it){
@@ -2216,57 +2345,129 @@ async function renderFaithfulPdfPage(pageNo){
       var cellRight=next?((textRight+next.x)/2):Math.min(baseViewport.width,textRight+Math.max(it.width*2,baseViewport.width*.07));
       it.cellX=cellLeft;it.cellWidth=Math.max(it.width,cellRight-cellLeft);
     });
+    // Add one genuinely empty editable slot in the unit column only when the first data row has an empty unit cell.
+    // This is an overlay field: it does not draw over, repaint, or alter the original PDF table/grid.
+    (function addOneEmptyUnitField(){
+      var unitHeader=columnHeaders.filter(function(h){return h.type==='unit';}).find(function(h){
+        return columnHeaders.some(function(p){return p.type==='plaque'&&Math.abs(p.y-h.y)<=Math.max(8,baseViewport.height*.012);}) &&
+               columnHeaders.some(function(f){return f.type==='floor'&&Math.abs(f.y-h.y)<=Math.max(8,baseViewport.height*.012);});
+      });
+      if(!unitHeader)return;
+      var rowTolerance=Math.max(3,baseViewport.height*.004);
+      var rows=[];
+      items.forEach(function(it){
+        if(it.top<=unitHeader.y+rowTolerance||it.locked)return;
+        var row=rows.find(function(r){return Math.abs(r.top-it.top)<=Math.max(rowTolerance,it.height*.45);});
+        if(!row){row={top:it.top,height:it.height,items:[]};rows.push(row);}row.items.push(it);row.height=Math.max(row.height,it.height);
+      });
+      rows.sort(function(a,b){return a.top-b.top;});
+      var target=rows.find(function(r){return r.items.some(function(it){return ['plaque','floor','block'].some(function(type){return columnHeaders.filter(function(h){return h.type===type;}).some(function(h){return Math.abs((it.x+it.width/2)-h.x)<=Math.max(10,baseViewport.width*.025);});});});});
+      if(!target)return;
+      var unitHasValue=target.items.some(function(it){return Math.abs((it.x+it.width/2)-unitHeader.x)<=Math.max(10,baseViewport.width*.025);});
+      if(unitHasValue)return;
+      var unitHeaders=columnHeaders.filter(function(h){return ['plaque','floor','unit','block'].indexOf(h.type)>=0;}).sort(function(a,b){return a.x-b.x;});
+      var pos=unitHeaders.indexOf(unitHeader),leftEdge=pos>0?(unitHeaders[pos-1].x+unitHeader.x)/2:unitHeader.x-baseViewport.width*.025;
+      var rightEdge=pos>=0&&pos<unitHeaders.length-1?(unitHeader.x+unitHeaders[pos+1].x)/2:unitHeader.x+baseViewport.width*.025;
+      var syntheticIndex=items.reduce(function(max,it){return Math.max(max,Number(it.index)||0);},0)+1;
+      var emptyItem={key:pageNo+':'+syntheticIndex,index:syntheticIndex,text:'',original:'',x:Math.max(0,leftEdge),y:target.top+target.height,top:target.top,width:Math.max(8,rightEdge-leftEdge),height:target.height,locked:false,cellX:Math.max(0,leftEdge),cellWidth:Math.max(8,rightEdge-leftEdge),numericColumn:{label:'واحد',type:'unit',maxLength:3,x:unitHeader.x,y:unitHeader.y}};
+      items.push(emptyItem);
+    })();
     items.forEach(function(it){
       var field=document.createElement('input');field.type='text';field.className='pdf-original-field'+(it.locked?' locked':'');
       field.value=Object.prototype.hasOwnProperty.call(faithfulPdfEdits,it.key)?faithfulPdfEdits[it.key]:it.text;
       field.readOnly=!!it.locked;field.setAttribute('aria-label',it.locked?'متن ثابت PDF':'ویرایش متن در محل اصلی PDF');field.dataset.editKey=it.key;field.dataset.page=pageNo;
-      field.spellcheck=false;field.autocapitalize='off';field.autocomplete='off';field.enterKeyHint='done';field.setAttribute('enterkeyhint','done');field.setAttribute('inputmode',field.inputMode||'text');field.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();field.blur();}});
-      // Use the mobile numeric keypad for fields whose source value is numeric, without forcing it on names/addresses.
-      field.inputMode=/^[0-9۰-۹٠-٩]+$/.test(it.text.trim())?'numeric':(/^[0-9۰-۹٠-٩\s.,،/\-]+$/.test(it.text.trim())?'decimal':'text');
-      if(field.inputMode==='numeric')field.setAttribute('pattern','[0-9۰-۹٠-٩]*');
-      else if(field.inputMode==='decimal')field.setAttribute('pattern','[0-9۰-۹٠-٩.,،/\-]*');
-      // Numeric PDF fields always use Persian digits, even when the phone keyboard inserts Latin digits.
+      field.spellcheck=false;field.autocapitalize='off';field.autocomplete='off';field.enterKeyHint='done';field.setAttribute('enterkeyhint','done');
+      field.addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();field.blur();}if(ev.key==='\n'||ev.key==='\r'){ev.preventDefault();}});
+      // Numeric columns are detected from the original PDF headers, so even blank/empty cells get a numeric keypad.
+      var numericColumn=it.numericColumn;
+      var sourceLooksNumeric=/^[0-9۰-۹٠-٩]+$/.test(it.text.trim());
+      var sourceLooksDecimal=/^[0-9۰-۹٠-٩\s.,،/\-]+$/.test(it.text.trim());
+      field.inputMode=it.locationTypeColumn?'decimal':((numericColumn&&numericColumn.type!=='block')?'numeric':(numericColumn&&numericColumn.type==='block'?'decimal':(sourceLooksNumeric?'numeric':(sourceLooksDecimal?'decimal':'text'))));
+      if(it.locationTypeColumn)field.dataset.locationTypeColumn='1';
+      if(numericColumn&&numericColumn.maxLength)field.maxLength=numericColumn.maxLength;
+      if(field.inputMode==='numeric'){
+        field.setAttribute('pattern','[0-9۰-۹٠-٩]*');
+        field.setAttribute('inputmode','numeric');
+        field.setAttribute('autocomplete','off');
+      } else if(field.inputMode==='decimal') {
+        field.setAttribute('pattern','[0-9۰-۹٠-٩.,،/\-]*');
+        field.setAttribute('inputmode','decimal');
+        field.setAttribute('autocomplete','off');
+      }
+      // Prevent non-numeric text from entering numeric PDF cells, including paste and mobile keyboard input.
       if(field.inputMode==='numeric'||field.inputMode==='decimal'){
-        field.addEventListener('input',function(){
-          var start=field.selectionStart,end=field.selectionEnd,old=field.value;
-          var converted=old.replace(/[0-9٠-٩]/g,function(d){
-            if(d>='0'&&d<='9')return '۰۱۲۳۴۵۶۷۸۹'.charAt(d.charCodeAt(0)-48);
-            return '۰۱۲۳۴۵۶۷۸۹'.charAt('٠١٢٣٤٥٦٧٨٩'.indexOf(d));
-          });
-          if(converted!==old){field.value=converted;try{field.setSelectionRange(start,end)}catch(e){}}
+        field.addEventListener('beforeinput',function(ev){
+          if(ev.inputType==='insertText' && ev.data && !(field.inputMode==='numeric'?/^[0-9۰-۹٠-٩]+$/:/^[0-9۰-۹٠-٩.,،/\-]+$/).test(ev.data)) ev.preventDefault();
+        });
+        field.addEventListener('paste',function(ev){
+          var pasted=(ev.clipboardData||window.clipboardData).getData('text');
+          var allowed=field.inputMode==='numeric'?/^[0-9۰-۹٠-٩]+$/:/^[0-9۰-۹٠-٩.,،/\-]+$/;
+          if(pasted&&!allowed.test(pasted))ev.preventDefault();
         });
       }
-      var left=(typeof it.cellX==='number'?it.cellX:it.x)*scale,top=it.top*scale,w=Math.max(2,(typeof it.cellWidth==='number'?it.cellWidth:it.width)*scale),h=Math.max(5,it.height*scale*1.5);
+      // Always convert digits to Persian; numeric columns also reject non-numeric characters and enforce their length.
+      field.addEventListener('input',function(){
+        var start=field.selectionStart,end=field.selectionEnd,old=field.value;
+        var converted=old.replace(/[0-9٠-٩]/g,function(d){
+          if(d>='0'&&d<='9')return '۰۱۲۳۴۵۶۷۸۹'.charAt(d.charCodeAt(0)-48);
+          return '۰۱۲۳۴۵۶۷۸۹'.charAt('٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+        });
+        if(field.inputMode==='numeric')converted=converted.replace(/[^۰-۹]/g,'');
+        else if(field.inputMode==='decimal')converted=converted.replace(/[^۰-۹.,،/\-]/g,'');
+        if(field.maxLength>0)converted=converted.slice(0,field.maxLength);
+        if(converted!==old){field.value=converted;try{field.setSelectionRange(Math.min(start,converted.length),Math.min(end,converted.length))}catch(e){}}
+      });
+      var left=it.x*scale,top=it.top*scale,w=Math.max(3,it.width*scale),h=Math.max(5,it.height*scale*1.25);
       // The editable overlay occupies the inferred cell in-place; it never expands into a modal.
       field.style.left=left+'px';field.style.top=top+'px';field.style.width=Math.min(w,Math.max(2,viewport.width-left))+'px';field.style.height=h+'px';
       field.style.fontSize=Math.max(7,it.height*scale*.9)+'px';field.style.direction=/[\u0600-\u06FF]/.test(it.text)?'rtl':'ltr';field.style.textAlign='center';
       field.dataset.baseLeft=left;field.dataset.baseTop=top;field.dataset.baseWidth=Math.min(w,Math.max(2,viewport.width-left));field.dataset.baseHeight=h;field.dataset.baseFont=field.style.fontSize;
-      if(it.locked){field.style.color='transparent';field.style.background='transparent';}else if(Object.prototype.hasOwnProperty.call(faithfulPdfEdits,it.key)){field.classList.add('edited');field.style.color='#2563eb';field.style.background='rgba(239,246,255,.97)';}else{field.style.color='transparent';field.style.background='transparent';}
+      field.dataset.sourceX=it.x;field.dataset.sourceTop=it.top;field.dataset.sourceWidth=it.width;field.dataset.sourceHeight=it.height;field.dataset.displayScale=scale;field.dataset.baseText=it.text;
+      var originalText=cleanPdfText(it.text);
+      var hasSavedEdit=Object.prototype.hasOwnProperty.call(faithfulPdfEdits,it.key) && cleanPdfText(faithfulPdfEdits[it.key])!==originalText;
+      if(it.locked){field.style.color='transparent';field.style.background='transparent';}
+      else if(hasSavedEdit){field.classList.add('edited');field.style.color='#2563eb';field.style.background='#fff';}
+      else{field.classList.remove('edited');field.style.color='transparent';field.style.background='transparent';}
       if(!it.locked){
         field.addEventListener('focus',function(){
-          // Edit directly on top of the original PDF text: never move, resize, or enlarge the field.
+          // The input itself becomes the only visible copy while editing.
+          // Its measured text-run bounds keep the white cover away from table rules.
           field.classList.add('is-editing');
-          field.style.left=(Number(field.dataset.baseLeft)+1)+'px';
-          field.style.top=(Number(field.dataset.baseTop)+1)+'px';
-          field.style.width=Math.max(2,Number(field.dataset.baseWidth)-2)+'px';
-          field.style.height=Math.max(5,Number(field.dataset.baseHeight)-2)+'px';
-          field.style.fontSize=field.dataset.baseFont;
-          field.style.padding='0 1px';
+          var mobileEdit=window.matchMedia('(max-width:640px)').matches;
+          var baseL=Number(field.dataset.baseLeft),baseT=Number(field.dataset.baseTop),baseW=Number(field.dataset.baseWidth),baseH=Number(field.dataset.baseHeight);
+          var editW=mobileEdit?Math.min(Math.max(baseW*1.55,baseW+22),Math.max(baseW,window.innerWidth*.72)):baseW;
+          var editH=mobileEdit?Math.max(baseH*1.55,baseH+10):baseH;
+          field.style.left=(baseL+(baseW-editW)/2)+'px';
+          field.style.top=(baseT+(baseH-editH)/2)+'px';
+          field.style.width=Math.max(2,editW-2)+'px';
+          field.style.height=Math.max(5,editH-2)+'px';
+          field.style.fontSize=(parseFloat(field.dataset.baseFont)*(mobileEdit?.56:.66))+'px';
+          field.style.padding=mobileEdit?'2px 5px':'0 2px';
           field.style.whiteSpace='pre';
           field.style.overflow='hidden';
           field.style.color='#2563eb';
-          field.style.background='rgba(239,246,255,.98)';
+          field.style.background='#fff';
           field.style.border='1px solid #3b82f6';
-          field.style.borderRadius='4px';
+          field.style.borderRadius='2px';
           field.style.boxShadow='none';
           field.style.textAlign='center';
           field.style.zIndex='4';
         });
-        field.addEventListener('input',function(){faithfulPdfEdits[it.key]=cleanPdfText(field.value);field.classList.add('edited');markPdfEditsDirty()});
+        field.addEventListener('input',function(){
+          var next=cleanPdfText(field.value);
+          var previous=Object.prototype.hasOwnProperty.call(faithfulPdfEdits,it.key)?cleanPdfText(faithfulPdfEdits[it.key]):originalText;
+          if(next===originalText) delete faithfulPdfEdits[it.key];
+          else faithfulPdfEdits[it.key]=next;
+          field.classList.toggle('edited',next!==originalText);
+          if(next!==previous) markPdfEditsDirty();
+        });
         field.addEventListener('blur',function(){
-          faithfulPdfEdits[it.key]=cleanPdfText(field.value.trim());
-          field.value=faithfulPdfEdits[it.key];
-          var changed=faithfulPdfEdits[it.key]!==it.text;
+          var next=cleanPdfText(field.value.trim());
+          var previous=Object.prototype.hasOwnProperty.call(faithfulPdfEdits,it.key)?cleanPdfText(faithfulPdfEdits[it.key]):originalText;
+          var changed=next!==originalText;
+          if(changed) faithfulPdfEdits[it.key]=next;
+          else delete faithfulPdfEdits[it.key];
+          field.value=changed?next:it.text;
           field.classList.remove('is-editing');
           field.style.left=field.dataset.baseLeft+'px';
           field.style.top=field.dataset.baseTop+'px';
@@ -2274,6 +2475,22 @@ async function renderFaithfulPdfPage(pageNo){
           field.style.height=field.dataset.baseHeight+'px';
           field.style.fontSize=field.dataset.baseFont;
           field.style.padding='0 1px';
+          if(changed){
+            try{
+              var fitCtx=document.createElement('canvas').getContext('2d');
+              var originalSize=parseFloat(field.dataset.baseFont)||7;
+              var family=getComputedStyle(field).fontFamily||'Arial,Tahoma,sans-serif';
+              fitCtx.font='600 '+originalSize+'px '+family;
+              var needed=Math.ceil(fitCtx.measureText(next).width+14);
+              var baseWidth=Number(field.dataset.baseWidth)||needed;
+              var displayWidth=Math.min(Math.max(baseWidth,needed),Math.max(baseWidth,window.innerWidth-16));
+              var baseLeft=Number(field.dataset.baseLeft)||0;
+              var center=baseLeft+baseWidth/2;
+              field.style.left=Math.max(0,center-displayWidth/2)+'px';
+              field.style.width=displayWidth+'px';
+              field.style.fontSize=originalSize+'px';field.title=next;
+            }catch(_){field.title=next;}
+          }
           field.style.whiteSpace='pre';
           field.style.overflow='hidden';
           field.style.border='1px solid transparent';
@@ -2282,17 +2499,14 @@ async function renderFaithfulPdfPage(pageNo){
           field.style.zIndex='';
           field.style.textAlign='center';
           field.style.color=changed?'#2563eb':'transparent';
-          field.style.background=changed?'rgba(239,246,255,.97)':'transparent';
-          field.style.borderColor=changed?'rgba(37,99,235,.34)':'transparent';
-          field.style.left=changed?(Number(field.dataset.baseLeft)+1)+'px':field.dataset.baseLeft+'px';
-          field.style.top=changed?(Number(field.dataset.baseTop)+1)+'px':field.dataset.baseTop+'px';
-          field.style.width=changed?Math.max(2,Number(field.dataset.baseWidth)-2)+'px':field.dataset.baseWidth+'px';
-          field.style.height=changed?Math.max(5,Number(field.dataset.baseHeight)-2)+'px':field.dataset.baseHeight+'px';
+          field.style.background=changed?'#fff':'transparent';
+          field.style.borderColor='transparent';
           field.classList.toggle('edited',changed);
-          markPdfEditsDirty();
+          if(previous!== (changed?next:originalText)) markPdfEditsDirty();
         });
       }
       overlay.appendChild(field);
+      if(Object.prototype.hasOwnProperty.call(faithfulPdfEdits,it.key)&&cleanPdfText(faithfulPdfEdits[it.key])!==cleanPdfText(it.text)&&!it.locked){field.style.color='#2563eb';field.style.background='#fff';}
       it.displayScale=scale;
     });
     addPdfSectionMenus(overlay,pageNo,items,scale);
@@ -2368,7 +2582,15 @@ async function makeEditedOriginalPdf(){
       var x=Math.max(0,Math.floor(it.x*scaleX));
       var y=Math.max(0,Math.floor(it.top*scaleY));
       var w=Math.max(3,Math.ceil(it.width*scaleX));
+      var originalX=x,originalW=w;
       var h=Math.max(5,Math.ceil(it.height*scaleY*1.28));
+      var exportFontSize=Math.max(7,it.height*scaleY*.88);
+      // Keep the original PDF font size. Expand the replacement patch around the original
+      // text center when the new value is longer, instead of squeezing glyphs horizontally.
+      var measureCanvas=document.createElement('canvas'),measureContext=measureCanvas.getContext('2d');
+      measureContext.font=exportFontSize+'px Arial, Tahoma, sans-serif';
+      var measuredTextWidth=Math.ceil(measureContext.measureText(value).width+8);
+      if(measuredTextWidth>w){w=measuredTextWidth;x=Math.max(0,Math.floor(originalX+originalW/2-w/2));}
       var pad=3;
       var sx=Math.max(0,x-pad),sy=Math.max(0,y-pad);
       var sw=Math.min(baseCanvas.width-sx,w+pad*2),sh=Math.min(baseCanvas.height-sy,h+pad*2);
@@ -2377,6 +2599,7 @@ async function makeEditedOriginalPdf(){
       // nearby rules/background intact and avoids rasterizing the rest of the PDF page.
       var patch=document.createElement('canvas');patch.width=sw;patch.height=sh;
       var pc=patch.getContext('2d');pc.drawImage(baseCanvas,sx,sy,sw,sh,0,0,sw,sh);
+      var originalPatchPixels=pc.getImageData(0,0,sw,sh);
       var localX=x-sx,localY=y-sy;
       pc.save();
       if(value){
@@ -2385,18 +2608,21 @@ async function makeEditedOriginalPdf(){
         // The patch is limited to the text run (it.x/it.width/it.height), not the whole cell,
         // so table borders and neighbouring columns remain visible.
         pc.fillStyle='#ffffff';
-        var maskX=Math.max(0,localX-2), maskY=Math.max(0,localY-2);
-        var maskW=Math.min(sw-maskX,Math.max(2,w+4)), maskH=Math.min(sh-maskY,Math.max(3,h+4));
+        var originalLocalX=originalX-sx;
+        var maskX=Math.max(0,originalLocalX-2), maskY=Math.max(0,localY-2);
+        var maskW=Math.min(sw-maskX,Math.max(2,originalW+4)), maskH=Math.min(sh-maskY,Math.max(3,h+4));
         pc.fillRect(maskX,maskY,maskW,maskH);
         pc.fillStyle=change.deleted?'#dc2626':'#2563eb';pc.textBaseline='alphabetic';
-        var fontSize=Math.max(7,it.height*scaleY*.88);
+        var fontSize=exportFontSize;
         pc.font=fontSize+'px Arial, Tahoma, sans-serif';
         var rtl=/[\u0600-\u06FF]/.test(value);pc.direction=rtl?'rtl':'ltr';pc.textAlign='center';
         // Center replacement inside the original text run, keep it on one line.
         var baseline=localY+it.height*scaleY*.96;
         var tx=localX+w/2;
-        pc.lineJoin='round';pc.lineWidth=Math.max(1,fontSize*.06);pc.strokeStyle=change.deleted?'#dc2626':'#2563eb';pc.strokeText(value,tx,baseline,Math.max(2,w));
-        pc.fillText(value,tx,baseline,Math.max(2,w));
+        pc.lineJoin='round';pc.lineWidth=Math.max(1,fontSize*.06);pc.strokeStyle=change.deleted?'#dc2626':'#2563eb';pc.strokeText(value,tx,baseline);
+        pc.fillText(value,tx,baseline);
+        // Restore only long original grid-rule pixels after text replacement; never leave white breaks in table borders.
+        restorePdfRulePixels(pc,originalPatchPixels,sw,sh,{x:Math.max(0,localX-2),y:Math.max(0,localY-2),width:Math.min(sw,Math.max(2,w+4)),height:Math.min(sh,Math.max(3,h+4))});
       }
       pc.restore();
       var png=await out.embedPng(patch.toDataURL('image/png'));
@@ -2988,6 +3214,203 @@ window.copyQrHistory=copyQrHistory;
 #page-labels .qr-history-card{display:none!important}
 @media(max-width:560px){#page-labels .qr-shell{gap:10px;padding:0 0 18px}#page-labels .qr-hero{padding:15px;border-radius:14px}#page-labels .qr-project-card,#page-labels .qr-scanner-card,#page-labels .qr-result-card{padding:12px;border-radius:13px}#page-labels .qr-camera-stage{aspect-ratio:4/3;min-height:210px;max-height:320px}#page-labels .qr-camera-actions{flex-direction:row}#page-labels .qr-result-actions{flex-direction:row}#page-labels .qr-number{letter-spacing:2px}}
 </style>
+
+<script>
+(function(){
+'use strict';
+// مقدار نوع مکان فقط کد عددی است؛ کدهای دارای زیرخط در فرم به‌صورت عدد منفی ثبت می‌شوند.
+var locationTypes=['1','-1','2','-2','3','-3','4','5','-5','6','-6','7','8','-8','9','12','13','15','16'];
+var activities=[
+'خدمات املاک و مستغلات','فروش مواد غذایی','خدمات آرایشی و پیرایش بانوان یا مردانه','پرورش دام صنعتی یا سنتی','باغداری و زراعت','آموزش و پرورش','فروش پوشاک زنانه یا مردانه','تهیه و فروش نان','تهیه و عرضه غذا','فروش داروهای گیاهی','خدمات خرید و فروش اتومبیل','خدمات تعمیر خودرو سبک و سنگین','فروش ابزارآلات ساختمانی','تهیه و فروش شیرینی','فروش مصالح ساختمانی',
+'فروش موبایل','خدمات تعمیر موبایل','فروش آبمیوه و بستنی','خدمات آموزشی','خدمات تعمیر موتور سیکلت','خدمات تعمیر برق خودرو سبک و سنگین','فروش وسایل خرازی','خدمات دوخت لباس مردانه یا زنانه','خدمات بخش دولتی و عمومی','فروش میوه و تره بار','فروش مواد غذایی و غیره در فروشگاه‌ها','خدمات تاسیسات ساختمان','فروش وسایل منزل','خدمات شستشوی لباس','خدمات شستشوی ماشینی',
+'املاک','سوپر مارکت','آرایشگاه زنانه یا مردانه','دامداری','باغ','مدرسه ابتدایی یا دبیرستان','فروش پوشاک تک لباس','نانوایی','رستوران یا ساندویچی','عطاری','اتو گالری','مکانیکی','ابزار فروشی','قنادی','مصالح فروشی',
+'موبایل فروشی','تعمیرات موبایل','آبمیوه و بستنی فروشی','مدارس یا آموزشگاه‌های غیر دولتی','تعمیرگاه موتور سیکلت','باتری‌سازی','خرازی','خیاطی','دفتر پیشخوان دولت','میوه یا سبزی فروشی','فروشگاه‌های زنجیره‌ای','تاسیسات ساختمان','فروش وسایل خانگی','خشکشویی','کارواش'
+];
+activities=Array.from(new Set(activities));
+var $=function(id){return document.getElementById(id)};
+var backdrop=$('activityPickerBackdrop'),list=$('activityPickerList'),search=$('activityPickerSearch'),close=$('activityPickerClose'),activeField=null;
+var choice=$('activityPickerChoiceView'),textView=$('activityPickerTextView'),categoryView=$('activityPickerCategoryView'),textInput=$('activityPickerTextInput'),subtitle=$('activityPickerSubtitle'),activeListType='activity';
+if(!backdrop||!list||!search)return;
+function norm(v){return String(v||'').normalize('NFKC').replace(/[يى]/g,'ی').replace(/ك/g,'ک').replace(/[ۀة]/g,'ه').replace(/[إأ]/g,'ا').replace(/[ؤ]/g,'و').replace(/[\u200B-\u200F\u2060\uFEFF\u00AD]/g,'').replace(/[\sـ:：،,؛;()（）.\-]/g,'').toLowerCase()}
+var activityNorms=activities.map(function(a){return {label:a,n:norm(a)}});
+function isActivityField(field){
+ if(!field||field.classList.contains('locked'))return false;
+ var v=norm(field.value||field.textContent); if(!v)return false;
+ return activityNorms.some(function(a){return a.n===v||a.n.indexOf(v)>=0||v.indexOf(a.n)>=0});
+}
+function showView(which){
+ choice.hidden=which!=='choice';textView.hidden=which!=='text';categoryView.hidden=which!=='categories';
+ subtitle.textContent=which==='choice'?'روش وارد کردن مقدار این خانه را انتخاب کن.':which==='text'?'متن دلخواه را وارد کن؛ در همان خانه ثبت می‌شود.':(activeListType==='location'?'کد نوع مکان را انتخاب کن؛ مقدار دقیقاً در همین خانه ثبت می‌شود.':'از فهرست زیر یک فعالیت انتخاب کن.');
+ if(which==='text')setTimeout(function(){textInput.focus({preventScroll:true})},30);
+ if(which==='categories'){search.value='';render();setTimeout(function(){search.focus({preventScroll:true})},30)}
+}
+function open(field,kind){
+ activeField=field;activeListType=kind||'activity';
+ // انتخاب نوع مکان داخل پنل خود برنامه انجام می‌شود تا هیچ کادر سفیدِ شناور روی PDF باقی نماند.
+ if(activeListType==='location'){
+  $('activityPickerTitle').innerHTML='<span>⌖</span>انتخاب نوع مکان';
+  $('activityPickerTextInput').previousElementSibling.textContent='کد نوع مکان';
+  search.value='';search.placeholder='جست‌وجوی کد یا شرح نوع مکان…';
+  showView('categories');backdrop.classList.add('open');return;
+ }
+ $('activityPickerTitle').innerHTML='<span>✦</span>ویرایش اطلاعات خانه';$('activityPickerTextInput').previousElementSibling.textContent='متن دلخواه';
+ search.placeholder='جست‌وجوی فعالیت…';showView('choice');backdrop.classList.add('open')
+}
+function commit(value){
+ if(!activeField)return;
+ var f=activeField,val=String(value||'').trim();
+ if('value' in f)f.value=val;else f.textContent=val;
+ f.dispatchEvent(new Event('input',{bubbles:true}));f.dispatchEvent(new Event('change',{bubbles:true}));
+ f.blur();backdrop.classList.remove('open');activeField=null;
+}
+var locationTypeLabels={
+ '1':'۱ — مسکونی دارای سکنه','-1':'−۱ — مسکونی بدون سکنه','2':'۲ — کارگاه خدماتی دولتی','-2':'−۲ — دولتی و مسکونی',
+ '3':'۳ — کارگاه خصوصی','-3':'−۳ — خصوصی و مسکونی','4':'۴ — سایر کارگاه‌ها','5':'۵ — کارگاه خالی','-5':'−۵ — خالی و مسکونی',
+ '6':'۶ — مخروبه یا در حال تخریب','-6':'−۶ — در حال ساخت','7':'۷ — زمین محصور','8':'۸ — درِ جانبی','-8':'−۸ — پارکینگ',
+ '9':'۹ — سایر','12':'۱۲ — سازه دولتی خارج از بلوک','13':'۱۳ — سازه خصوصی خارج از بلوک','15':'۱۵ — غیرفعال خارج از بلوک','16':'۱۶ — نوساز / پیش‌فروش'
+};
+function render(){
+ var source=activeListType==='location'?locationTypes:activities;var q=norm(search.value);
+ var matches=source.filter(function(a){return !q||norm(a).indexOf(q)>=0|| (activeListType==='location'&&norm(locationTypeLabels[a]||'').indexOf(q)>=0)});list.innerHTML='';
+ if(!matches.length){var empty=document.createElement('div');empty.className='activity-picker-empty';empty.textContent=activeListType==='location'?'کدی با این عبارت پیدا نشد.':'فعالیتی با این عبارت پیدا نشد.';list.appendChild(empty);return}
+ matches.forEach(function(a){var b=document.createElement('button');b.type='button';b.className='activity-picker-option';
+  if(activeListType==='location'){b.textContent=locationTypeLabels[a]||a;b.dataset.code=a;}
+  else b.textContent=a;
+  b.addEventListener('click',function(){var chosen=activeListType==='location'?String(a).replace(/\d/g,function(d){return '۰۱۲۳۴۵۶۷۸۹'[Number(d)]}):a;commit(chosen)});list.appendChild(b)
+ })
+}
+function sameVisualRow(a,b){
+ if(!a||!b||a===b)return a===b;
+ var ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
+ if(!ra.width||!rb.width)return false;
+ var ca=ra.top+ra.height/2,cb=rb.top+rb.height/2;
+ return Math.abs(ca-cb)<=Math.max(5,Math.min(ra.height,rb.height)*0.8);
+}
+function isActivityColumnField(field){
+ if(!field||field.classList.contains('locked'))return false;
+ var page=field.closest('.pdf-original-page');
+ if(!page)return false;
+ var fr=field.getBoundingClientRect();
+ if(!fr.width||!fr.height)return false;
+ var fc=fr.left+fr.width/2;
+ // فقط ستون «نام خانوادگی/نوع فعالیت»؛ ستون «نام/نام کارگاه» و سایر ستون‌ها مستثنا هستند.
+ var labels=page.querySelectorAll('.pdf-original-field.locked');
+ for(var i=0;i<labels.length;i++){
+  var label=labels[i];
+  var title=norm(label.value||label.textContent);
+  if(title!==norm('نام خانوادگی/نوع فعالیت'))continue;
+  var r=label.getBoundingClientRect();
+  if(!r.width)continue;
+  var center=r.left+r.width/2;
+  var tolerance=Math.max(6,Math.min(18,(r.width+fr.width)*0.16));
+  if(Math.abs(fc-center)<=tolerance)return true;
+ }
+ return false;
+}
+function toLatinDigits(value){return String(value||'').replace(/[۰-۹٠-٩]/g,function(d){var fa='۰۱۲۳۴۵۶۷۸۹',ar='٠١٢٣٤٥٦٧٨٩';var i=fa.indexOf(d);return String(i>=0?i:ar.indexOf(d))})}
+function isLocationTypeField(field){
+ if(!field||field.classList.contains('locked'))return false;
+ // فقط خانه‌ای که همین حالا یکی از کدهای معتبر نوع مکان را دارد؛
+ // متن‌های عادی و اعداد ستون‌های دیگر هرگز انتخاب‌گر نوع مکان را باز نمی‌کنند.
+ var raw=('value' in field?field.value:field.textContent)||'';
+ var code=toLatinDigits(raw).trim().replace(/[−–]/g,'-');
+ if(locationTypes.indexOf(code)===-1)return false;
+ var page=field.closest('.pdf-original-page');if(!page)return false;
+ var fr=field.getBoundingClientRect(),fc=fr.left+fr.width/2;
+ var labels=page.querySelectorAll('.pdf-original-field.locked');
+ for(var i=0;i<labels.length;i++){
+  var t=norm(labels[i].value||labels[i].textContent);
+  if(t!==norm('نوع مکان'))continue;
+  var r=labels[i].getBoundingClientRect(),c=r.left+r.width/2;
+  // تطبیق ستونی سخت‌گیرانه: مرکز خانه باید نزدیک مرکز عنوان ستون باشد.
+  var tolerance=Math.max(7,Math.min(15,(r.width+fr.width)*0.18));
+  if(Math.abs(fc-c)<=tolerance)return true;
+ }
+ return false;
+}
+document.addEventListener('click',function(ev){
+ var field=ev.target.closest&&ev.target.closest('.pdf-original-field:not(.locked)');
+ // Activity picker is restricted to the exact activity column; it never opens on workshop-name cells.
+ var locationCell=isLocationTypeField(field);
+ var activityCell=isActivityColumnField(field);
+ if(!field||(!locationCell&&!activityCell))return;
+ ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();open(field,locationCell?'location':'activity')
+},true);
+$('activityPickerTextMode').addEventListener('click',function(){textInput.value=('value' in activeField?activeField.value:activeField.textContent)||'';showView('text')});
+$('activityPickerCategoryMode').addEventListener('click',function(){showView('categories')});
+$('activityPickerApplyText').addEventListener('click',function(){commit(textInput.value)});
+$('activityPickerBackFromText').addEventListener('click',function(){showView('choice')});
+$('activityPickerBackFromCategories').addEventListener('click',function(){showView('choice')});
+search.addEventListener('input',render);
+function dismiss(){backdrop.classList.remove('open');activeField=null;activeListType='activity';search.placeholder='جست‌وجوی فعالیت…'}
+close.addEventListener('click',dismiss);
+backdrop.addEventListener('click',function(ev){if(ev.target===backdrop)dismiss()});
+document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&backdrop.classList.contains('open'))dismiss();if(ev.key==='Enter'&&ev.target===textInput&&!ev.shiftKey){ev.preventDefault();commit(textInput.value)}});
+})();
+</script>
+
+<style id="postal-mobile-editability-tune">
+/* Mobile: enlarge the active editing target while keeping its center aligned to the original PDF field. */
+@media (max-width: 640px) {
+  .pdf-original-field.is-editing {
+    transform: scale(1.16, 1.32) !important;
+    transform-origin: center center !important;
+    font-size: max(7px, .62em) !important;
+    line-height: 1 !important;
+    padding-inline: 2px !important;
+    border-width: 1px !important;
+    z-index: 30 !important;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: geometricPrecision;
+  }
+  .pdf-original-field:focus {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+</style>
+
+<style id="postyar-pdf-only-zoom-and-final-polish">
+@media(max-width:640px){
+  .pdf-faithful-page-inner{display:block!important;position:relative!important;overflow:auto!important;overflow-x:auto!important;overflow-y:auto!important;max-width:100%!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;touch-action:pan-x pan-y!important;}
+  .pdf-faithful-page-inner>.pdf-original-page{transform-origin:top left!important;will-change:transform,width,height;}
+  .pdf-original-field.is-editing{transform:none!important;font-size:inherit!important;}
+  .pdf-section-pop{width:min(250px,calc(100vw - 24px))!important;max-height:55vh!important;border-radius:15px!important;padding:7px!important;}
+  .pdf-section-pop button{min-height:42px!important;font-size:12px!important;padding:9px 10px!important;}
+}
+</style>
+<script id="postyar-pdf-contained-pinch-zoom">
+(function(){
+ 'use strict';
+ var host=document.getElementById('pdfFaithfulPages');if(!host)return;
+ var gesture=null;
+ function distance(a,b){var x=a.clientX-b.clientX,y=a.clientY-b.clientY;return Math.sqrt(x*x+y*y)}
+ function pageAt(t){var p=t&&t.closest?t.closest('.pdf-original-page'):null;return p&&host.contains(p)?p:null}
+ function applyScale(page,scale){
+  var baseW=Number(page.dataset.zoomBaseW)||page.offsetWidth,baseH=Number(page.dataset.zoomBaseH)||page.offsetHeight;
+  if(!baseW||!baseH)return;
+  page.dataset.zoomBaseW=String(baseW);page.dataset.zoomBaseH=String(baseH);page.dataset.zoomScale=String(scale);
+  page.style.transformOrigin='top left';page.style.transform=scale===1?'none':'scale('+scale+')';
+  page.style.width=baseW+'px';page.style.height=baseH+'px';
+  var inner=page.parentElement;if(inner){inner.style.minHeight=(baseH*scale)+'px';inner.style.minWidth='0';}
+  var section=page.closest('.pdf-faithful-page');if(section){section.style.minHeight=(baseH*scale)+'px';}
+  page.style.marginBottom=((scale-1)*baseH)+'px';page.style.marginRight=((scale-1)*baseW)+'px';
+ }
+ host.addEventListener('touchstart',function(ev){
+  if(ev.touches.length!==2)return;var page=pageAt(ev.target);if(!page)return;
+  gesture={page:page,startDistance:distance(ev.touches[0],ev.touches[1]),startScale:Number(page.dataset.zoomScale)||1};
+ },{passive:true});
+ host.addEventListener('touchmove',function(ev){
+  if(!gesture||ev.touches.length!==2)return;ev.preventDefault();
+  var ratio=distance(ev.touches[0],ev.touches[1])/Math.max(1,gesture.startDistance);
+  var next=Math.max(1,Math.min(3.25,gesture.startScale*ratio));applyScale(gesture.page,Math.round(next*100)/100);
+ },{passive:false});
+ function end(ev){if(gesture&&(!ev.touches||ev.touches.length<2))gesture=null}
+ host.addEventListener('touchend',end,{passive:true});host.addEventListener('touchcancel',end,{passive:true});
+ document.addEventListener('gesturestart',function(ev){if(!pageAt(ev.target))ev.preventDefault()},{passive:false});
+ document.addEventListener('gesturechange',function(ev){if(!pageAt(ev.target))ev.preventDefault()},{passive:false});
+ document.addEventListener('gestureend',function(ev){if(!pageAt(ev.target))ev.preventDefault()},{passive:false});
+})();
+</script>
 </body>
 </html>
 <style id="postyar-new-form-placeholder-fix">
@@ -2996,18 +3419,7 @@ window.copyQrHistory=copyQrHistory;
 .pdf-added-table{outline:1px solid rgba(202,138,4,.28);outline-offset:1px;}
 @media(max-width:640px){.pdf-added-table-cell{padding:1px;font-size:7px!important}.pdf-added-table-cell.is-empty:empty::before{font-size:6px}}
 
-/* Polished data-entry sheet for new postal forms */
-#postyarFormDialog{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(15,23,42,.56);backdrop-filter:blur(7px)}
-#postyarFormDialog.open{display:flex}
-.py-form-panel{width:min(820px,100%);max-height:min(92dvh,900px);overflow:auto;background:#fff;border:1px solid #e2e8f0;border-radius:24px;box-shadow:0 28px 90px rgba(15,23,42,.28);direction:rtl}
-.py-form-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:19px 22px;background:linear-gradient(135deg,#f0fdf4,#f8fafc);border-bottom:1px solid #e2e8f0}
-.py-form-head h3{font-size:17px;font-weight:900;color:#14532d}.py-form-head p{font-size:12px;color:#64748b;margin-top:4px;line-height:1.8}
-.py-form-close{width:40px;height:40px;border:1px solid #dbe4ee;border-radius:13px;background:#fff;font-size:22px;color:#475569;flex-shrink:0}
-.py-form-body{padding:20px 22px}.py-form-note{display:flex;gap:9px;align-items:flex-start;padding:11px 13px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:13px;color:#475569;font-size:12px;line-height:1.8;margin-bottom:16px}
-.py-form-row{border:1px solid #dbe4ee;border-radius:17px;margin:0 0 14px;overflow:hidden;background:#fff}.py-form-row-title{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font-size:12px;font-weight:800;color:#334155}
-.py-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:14px}
-.py-form-field{display:flex;flex-direction:column;gap:6px;min-width:0}.py-form-field label{font-size:11px;font-weight:800;color:#475569}.py-form-field input,.py-form-field select{width:100%;min-width:0;height:43px;border:1px solid #dbe3ec;border-radius:11px;background:#fff;padding:0 11px;font-size:13px;color:#0f172a;transition:border-color .15s,box-shadow .15s}.py-form-field input:focus,.py-form-field select:focus{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}.py-form-field input[readonly]{background:#f1f5f9;color:#94a3b8;cursor:not-allowed}.py-form-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:15px 22px;border-top:1px solid #e2e8f0;background:#fbfdff}.py-form-actions .left,.py-form-actions .right{display:flex;gap:8px;flex-wrap:wrap}.py-form-btn{min-height:43px;padding:0 16px;border-radius:12px;font-size:12px;font-weight:800;border:1px solid #dbe3ec;background:#fff;color:#334155}.py-form-btn.primary{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border-color:#15803d}.py-form-btn.subtle-green{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
-@media(max-width:600px){#postyarFormDialog{padding:8px;align-items:flex-end}.py-form-panel{max-height:94dvh;border-radius:22px 22px 14px 14px}.py-form-head{padding:15px}.py-form-head h3{font-size:15px}.py-form-body{padding:13px}.py-form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:11px}.py-form-field input,.py-form-field select{height:44px;font-size:16px}.py-form-actions{padding:12px;align-items:stretch}.py-form-actions .left,.py-form-actions .right{width:100%}.py-form-actions .py-form-btn{flex:1}}
+
 
 </style>
 
@@ -3037,4 +3449,27 @@ window.copyQrHistory=copyQrHistory;
 #page-labels .qr-camera-actions{display:grid;grid-template-columns:1fr;gap:10px}
 #page-labels .qr-camera-actions #qrStopBtn:disabled{display:none}
 @media(prefers-reduced-motion:reduce){#page-labels #qrStartBtn{transition:none}}
+</style>
+<style id="postyar-mobile-redesign-v2">
+@media(max-width:640px){
+ .pdf-original-field.is-editing{transform:none!important;min-height:30px!important;line-height:1.15!important;border:1.5px solid #2563eb!important;border-radius:9px!important;background:linear-gradient(180deg,#fff,#f7faff)!important;box-shadow:0 5px 18px rgba(37,99,235,.22),0 0 0 3px rgba(59,130,246,.10)!important;padding:3px 6px!important;z-index:100!important;font-weight:600!important;text-rendering:geometricPrecision;-webkit-text-size-adjust:100%}
+ .pdf-original-field:focus{-webkit-tap-highlight-color:transparent;outline:none!important}
+ .pdf-original-field.edited{font-weight:600;text-rendering:geometricPrecision}
+ .activity-picker-backdrop{align-items:flex-end!important;padding:0!important;background:rgba(10,20,38,.48)!important}
+ .activity-picker{width:100%!important;max-width:none!important;max-height:88dvh!important;border-radius:26px 26px 0 0!important;padding-bottom:env(safe-area-inset-bottom,0px)!important;border:0!important;box-shadow:0 -14px 50px rgba(15,23,42,.22)!important}
+ .activity-picker-head{padding:19px 18px 14px!important}.activity-picker-title{font-size:18px!important}.activity-picker-subtitle{font-size:13px!important;line-height:1.8!important}
+ .activity-picker-choice-view,.activity-picker-text-view,.activity-picker-category-view{padding:14px!important}.activity-picker-mode{min-height:66px!important;padding:15px!important;border-radius:16px!important}
+ .activity-picker-mode b{font-size:15px!important}.activity-picker-mode small{font-size:12px!important;line-height:1.7!important}
+ .activity-picker-list{max-height:48dvh!important;padding:8px 12px!important}.activity-picker-option{min-height:54px!important;padding:12px 13px!important;font-size:14px!important;line-height:1.9!important;border-radius:14px!important}
+ .activity-picker-search input{min-height:50px!important;font-size:16px!important}.activity-picker-text-view textarea{font-size:16px!important;line-height:1.8!important;min-height:110px!important}
+ .activity-picker-actions button,.activity-picker-close{min-height:48px!important;font-size:14px!important;border-radius:13px!important}
+}
+</style>
+
+<style>
+/* منوی سه‌نقطه همیشه کنار دکمه و در محدوده دید باقی می‌ماند؛ مستقل از بزرگنمایی PDF */
+.pdf-section-pop{position:fixed!important;z-index:2147483001!important;min-width:0!important;width:min(270px,calc(100vw - 24px))!important;max-width:calc(100vw - 24px)!important;max-height:min(62vh,480px)!important;overflow-y:auto!important;overscroll-behavior:contain;border:1px solid #e6eaf0!important;border-radius:17px!important;background:rgba(255,255,255,.98)!important;box-shadow:0 18px 48px rgba(15,23,42,.22)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:9px!important}
+.pdf-section-pop button{display:flex!important;align-items:center;justify-content:flex-start;gap:8px;width:100%;min-height:44px;padding:11px 12px!important;border:0;border-radius:11px;background:transparent;text-align:right;white-space:normal;line-height:1.7;font:700 13px/1.7 Tahoma,sans-serif;cursor:pointer}
+.pdf-section-pop button:active{background:#f1f5f9!important}
+@media(max-width:640px){.pdf-section-pop{width:min(290px,calc(100vw - 24px))!important;max-height:58vh!important;border-radius:18px!important;padding:9px!important}.pdf-section-pop button{min-height:48px;font-size:13px;padding:12px!important}}
 </style>
